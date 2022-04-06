@@ -11,7 +11,7 @@ on:
       - 'setup.py'
       
 env:
-  PROJECT_SRC_DIR: ./my_component
+  PROJECT_SRC_DIR: ./flow_initiator
 
 jobs:
   Deploy-Py-Internal-Release:
