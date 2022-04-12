@@ -13,7 +13,7 @@ from types import SimpleNamespace
 from movai_core_shared.logger import Log
 from dal.scopes import scopes
 from flow_initiator.gflow import GFlow
-from dal.helpers import ParamParser
+from dal.helpers.parsers import ParamParser
 from movai_core_shared.consts import ROS1_NODELETSERVER
 from dal.models.model import Model
 
