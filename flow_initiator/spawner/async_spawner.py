@@ -17,7 +17,7 @@ import tempfile
 import time
 from asyncio.subprocess import Process
 from subprocess import SubprocessError
-from dal.movaidb import Lock
+from dal.models import Lock
 from dal.scopes import Package
 from dal.scopes import Robot
 from dal.models import Var
