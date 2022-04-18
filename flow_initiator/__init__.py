@@ -12,10 +12,12 @@
 import signal
 import argparse
 from .spawner import Core
+from dal.movaidb import RedisClient
 
 
 def main():
     """spawner entrypoint"""
+    RedisClient.enable_db("db_global")
 
     sig_handler = lambda sig, *_: app.shutdown()
     signal.signal(signal.SIGINT, sig_handler)
