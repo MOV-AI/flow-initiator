@@ -190,6 +190,7 @@ class Core:
         Lock.enabled_locks = []
 
     def run(self):
+
         self.loop.run_until_complete(self.spin())
         # will exit later
         self.loop.stop()
