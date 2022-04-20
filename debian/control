@@ -1,0 +1,12 @@
+Source: flow-initiator
+Maintainer: Maintainer <maintainer@mov.ai>
+Section: unknown
+Priority: optional
+Build-Depends: debhelper (>= 7.4.3)
+Homepage: https://github.com/MOV-AI/flow-initiator
+Standards-Version: 3.9.1
+
+Package: flow-initiator
+Architecture: all
+Depends: ${misc:Depends}
+Description: Flow initiator
