@@ -1,0 +1,12 @@
+#!/bin/bash
+# post install script
+
+# this should require movai-backend to be installed
+
+if [ "$1" == "configure" ]; then
+    /usr/bin/python3 -m pip install flow-initiator==$PKG_VERSION || exit 1
+
+elif [ "$1" == "abort-remove" ]; then
+
+    python3 -m pip uninstall -y flow-initiator==$PKG_VERSION || true
+fi
