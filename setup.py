@@ -18,6 +18,6 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     classifiers=["Programming Language :: Python :: 3"],
-    install_requires=["dal==1.0.0.20", "movai_core_shared==1.0.0.7"],
+    install_requires=["dal==1.0.0.21", "movai_core_shared==1.0.0.8"],
     entry_points={},
 )
