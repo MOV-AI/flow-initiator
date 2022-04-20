@@ -4,7 +4,6 @@
 
 [![Deploy - On branch main/release Push](https://github.com/MOV-AI/repository-template-python-component/actions/workflows/DeployOnMergeMain.yml/badge.svg?branch=dev)](https://github.com/MOV-AI/repository-template-python-component/actions/workflows/DeployOnMergeMain.yml)
 
-
 ## [DELETE ME ON INSTANTIATION] Template Description
 
 Template to be used if you are going to create a python component.
