@@ -73,4 +73,3 @@ version section can be:
 - patch
 
 You don't need to worry about the 4th digit, as the CI system does the automatic bump of it.
-
