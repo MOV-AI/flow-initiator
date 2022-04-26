@@ -3,7 +3,7 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-requiremets = [
+requirements = [
     "aiohttp==3.6.2",
     "aiohttp-cors==0.7.0",
     "aioredis==1.3.0",
@@ -28,6 +28,6 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     classifiers=["Programming Language :: Python :: 3"],
-    install_requires=requiremets,
+    install_requires=requirements,
     entry_points={},
 )
