@@ -17,7 +17,7 @@ from dal.scopes import scopes
 from dal.helpers.parsers import ParamParser
 
 # for typing
-from flow_initiator.models.flow import Flow
+from dal.models import Flow
 
 from movai_core_shared.consts import (
     ROS1_NODELET,

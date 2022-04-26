@@ -31,7 +31,7 @@ from movai_core_shared.logger import Log
 
 try:
     # Todo: check if we can remove ros1 dependency
-    from deprecated.gdnode.protocols.ros1 import ROS1
+    from gd_node.protocols.ros1 import ROS1
 
     gdnode_exist = True
 except ImportError:
