@@ -58,6 +58,9 @@ For ROS melodic distribution :
 
 For ROS noetic distribution :
 
+
+You don't need to worry about the 4th digit, as the CI system does the automatic bump of it.
+=======
     docker run -t flow_initiator:noetic
 
 ## Development stack
