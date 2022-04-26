@@ -17,8 +17,7 @@ Parameters list that can be set through environment variables:
 
 
 
-
-## Build
+## Development Setup
 
 The complete build process requires 2 steps :
 - a python module building step which will create a `.whl` file
