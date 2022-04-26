@@ -3,6 +3,9 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+with open("requirements.txt", "r") as req_file:
+    requiremets = req_file.read().splitlines()
+
 # TODO Adapt your project configuration to your own project.
 # The name of the package is the one to be used in runtime.
 # The 'install_requires' is where you specify the package dependencies of your package. They will be automaticly installed, before your package.  # noqa: E501
@@ -18,6 +21,6 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     classifiers=["Programming Language :: Python :: 3"],
-    install_requires=["dal==1.0.0.23", "movai_core_shared==1.0.0.8"],
+    install_requires=requiremets,
     entry_points={},
 )
