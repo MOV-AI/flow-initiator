@@ -4,7 +4,6 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 requirements = [
-    "async-timeout==3.0.1",
     "aiohttp==3.6.2",
     "aiohttp-cors==0.7.0",
     "aioredis==1.3.0",
