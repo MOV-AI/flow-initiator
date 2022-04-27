@@ -240,7 +240,6 @@ class FlowMonitor:
                         continue
 
                     # Let's analyse the value (right side) -> if "~" in port_inst replace by node_inst/
-                    node_inst = None
                     try:
                         temp_value = re.findall(LINK_REGEX, value)
                         node_inst, _, port_inst, _, port_name = temp_value[0]
