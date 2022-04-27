@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 requirements = [
-    "aiohttp==3.6.2",
+    "aiohttp==3.8.1",
     "aiohttp-cors==0.7.0",
     "aioredis==1.3.0",
     "uvloop==0.14.0",
