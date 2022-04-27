@@ -18,7 +18,7 @@ requirements = [
 # The 'install_requires' is where you specify the package dependencies of your package. They will be automaticly installed, before your package.  # noqa: E501
 setuptools.setup(
     name="flow-initiator",
-    version="1.0.1-4",
+    version="1.0.1-5",
     author="Backend team",
     author_email="backend@mov.ai",
     description="Dummy description",
