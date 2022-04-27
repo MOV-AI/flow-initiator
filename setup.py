@@ -3,8 +3,16 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-with open("requirements.txt", "r") as req_file:
-    requiremets = req_file.read().splitlines()
+requirements = [
+    "async-timeout==3.0.1",
+    "aiohttp==3.6.2",
+    "aiohttp-cors==0.7.0",
+    "aioredis==1.3.0",
+    "uvloop==0.14.0",
+    "dal==1.0.0.23",
+    "movai_core_shared==1.0.0.8",
+    "gd_node==1.0.0.6",
+]
 
 # TODO Adapt your project configuration to your own project.
 # The name of the package is the one to be used in runtime.
@@ -21,6 +29,6 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     classifiers=["Programming Language :: Python :: 3"],
-    install_requires=requiremets,
+    install_requires=requirements,
     entry_points={},
 )
