@@ -8,9 +8,9 @@ requirements = [
     "aiohttp-cors==0.7.0",
     "aioredis==1.3.0",
     "uvloop==0.14.0",
-    "dal==1.0.0.25",
-    "movai_core_shared==1.0.0.8",
-    "gd_node==1.0.0.7",
+    "dal==1.0.0.29",
+    "movai_core_shared==1.0.0.10",
+    "gd_node==1.0.0.9",
 ]
 
 # TODO Adapt your project configuration to your own project.
