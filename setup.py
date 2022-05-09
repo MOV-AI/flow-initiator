@@ -4,13 +4,14 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 requirements = [
+    "async-timeout==3.0.1",
     "aiohttp==3.6.2",
     "aiohttp-cors==0.7.0",
     "aioredis==1.3.0",
     "uvloop==0.14.0",
     "dal==1.0.0.29",
     "movai_core_shared==1.0.0.10",
-    "gd_node==1.0.0.9",
+    "gd_node==1.0.0.9"
 ]
 
 # TODO Adapt your project configuration to your own project.
@@ -18,7 +19,7 @@ requirements = [
 # The 'install_requires' is where you specify the package dependencies of your package. They will be automaticly installed, before your package.  # noqa: E501
 setuptools.setup(
     name="flow-initiator",
-    version="1.0.1-4",
+    version="1.0.1-7",
     author="Backend team",
     author_email="backend@mov.ai",
     description="Dummy description",
