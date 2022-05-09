@@ -9,9 +9,9 @@ requirements = [
     "aiohttp-cors==0.7.0",
     "aioredis==1.3.0",
     "uvloop==0.16.0",
-    "dal==1.0.0.25",
-    "movai_core_shared==1.0.0.8",
-    "gd_node==1.0.0.7",
+    "dal==1.0.0.29",
+    "movai_core_shared==1.0.0.10",
+    "gd_node==1.0.0.9"
 ]
 
 # TODO Adapt your project configuration to your own project.
@@ -19,7 +19,7 @@ requirements = [
 # The 'install_requires' is where you specify the package dependencies of your package. They will be automaticly installed, before your package.  # noqa: E501
 setuptools.setup(
     name="flow-initiator",
-    version="1.0.1-5",
+    version="1.0.1-9",
     author="Backend team",
     author_email="backend@mov.ai",
     description="Dummy description",
