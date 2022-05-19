@@ -58,6 +58,7 @@ class FlowMonitor:
         self.ros_types = [ROS1_NODE, ROS1_NODELET]
         # self.ros_types = [ROS1_NODELET, ROS1_NODE, ROS1_PLUGIN]
         self.param_parser = None
+        self.cached_remaps = {}
 
     def load(self, flow_name: str) -> list:
         """Load a specific flow, returns starting commands"""
@@ -202,24 +203,28 @@ class FlowMonitor:
         """
         remaps = flow.remaps
         output = {}
-        for remap in remaps:
-            to_ports = remaps[remap]["To"]
-            from_ports = remaps[remap]["From"]
+        if flow.name in self.cached_remaps:
+            output =  self.cached_remaps[flow.name]
+        else:
+            for remap in remaps:
+                to_ports = remaps[remap]["To"]
+                from_ports = remaps[remap]["From"]
 
-            for port in to_ports + from_ports:
-                try:
-                    p = re.findall(LINK_REGEX, port)
-                    node_inst, _, port_inst, _, port_name = p[0]
-                    # port.split("/")
-                except ValueError:
-                    raise Exception(
-                        "ValueError: Link in Flow should be in format"
-                        '"Node_inst/Port_inst/Port_name"'
-                    )
-                if node_inst not in output:
-                    output[node_inst] = {}
-                # output[node_inst]["/".join([port_inst, port_name])] = remap
-                output[node_inst][port] = remap
+                for port in to_ports + from_ports:
+                    try:
+                        p = re.findall(LINK_REGEX, port)
+                        node_inst, _, port_inst, _, port_name = p[0]
+                        # port.split("/")
+                    except ValueError:
+                        raise Exception(
+                            "ValueError: Link in Flow should be in format"
+                            '"Node_inst/Port_inst/Port_name"'
+                        )
+                    if node_inst not in output:
+                        output[node_inst] = {}
+                    # output[node_inst]["/".join([port_inst, port_name])] = remap
+                    output[node_inst][port] = remap
+            self.cached_remaps[flow.name] = output
         if node_name is not None:
             if node_name in output:
                 # flow.get_node_type(node_name)
