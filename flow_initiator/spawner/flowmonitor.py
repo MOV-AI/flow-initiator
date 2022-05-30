@@ -243,19 +243,19 @@ class FlowMonitor:
                     ):
                         continue
 
-                        # Lets analyse the value (right side) -> if "~" in port_inst replace by node_inst/
-                        temp_value = re.search(LINK_REGEX, value)
-                        if temp_value is not None:
-                            node_inst, _, port_inst, _, port_name = temp_value.groups()
-                            if port_inst.startswith("~"):
-                                port_inst = port_inst.replace("~", node_inst + "/", 1)
-                                # rebuild the value with the change
-                                value = "%s/%s/%s" % (node_inst, port_inst, port_name)
-                        # when the link is in the wrong format (only middle part)
-                        else:
-                            if node_inst is None:
-                                node_inst = list(output.keys())[-1]
-                            value = value.replace("~", node_inst + "/", 1)
+                    # Lets analyse the value (right side) -> if "~" in port_inst replace by node_inst/
+                    temp_value = re.search(LINK_REGEX, value)
+                    if temp_value is not None:
+                        node_inst, _, port_inst, _, port_name = temp_value.groups()
+                        if port_inst.startswith("~"):
+                            port_inst = port_inst.replace("~", node_inst + "/", 1)
+                            # rebuild the value with the change
+                            value = "%s/%s/%s" % (node_inst, port_inst, port_name)
+                    # when the link is in the wrong format (only middle part)
+                    else:
+                        if node_inst is None:
+                            node_inst = list(output.keys())[-1]
+                        value = value.replace("~", node_inst + "/", 1)
 
                     if node_type in [
                         ROS1_NODE,
