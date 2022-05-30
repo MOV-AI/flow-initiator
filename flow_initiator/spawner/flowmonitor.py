@@ -101,11 +101,11 @@ class FlowMonitor:
             self.active_flow = None
 
     def transition(
-            self,
-            node_name: str,
-            port_name: str,
-            active_states: set = None,
-            transition_msg=None,
+        self,
+        node_name: str,
+        port_name: str,
+        active_states: set = None,
+        transition_msg=None,
     ) -> list:
         """ "Get commands for the transition"""
 
@@ -162,9 +162,9 @@ class FlowMonitor:
                         is_state = node_dep_inst.node_template.Type == MOVAI_STATE
                         # do not launch dummy nodes or plugins
                         if (
-                                not node_dep_inst.is_dummy
-                                and not node_dep_inst.node_template.Type == ROS1_PLUGIN
-                                and node_dep_inst.is_node_to_launch
+                            not node_dep_inst.is_dummy
+                            and not node_dep_inst.node_template.Type == ROS1_PLUGIN
+                            and node_dep_inst.is_node_to_launch
                         ):
                             to_launch = (
                                 node_dependency,
@@ -213,12 +213,12 @@ class FlowMonitor:
 
                 for port in to_ports + from_ports:
                     p = re.search(LINK_REGEX, port)
-                    if p is not None and len(p.groups()) == 5:
+                    if p is not None:
                         node_inst, _, port_inst, _, port_name = p.groups()
-                    else :
+                    else:
                         raise ValueError(
                             "ValueError: Link in Flow should be in format"
-                            "\"Node_inst/Port_inst/Port_name\""
+                            '"Node_inst/Port_inst/Port_name"'
                         )
                     if node_inst not in output:
                         output[node_inst] = {}
@@ -233,43 +233,45 @@ class FlowMonitor:
                     # skip start or end links
                     links_to_skip = ["START", "END"]
                     if any(
-                            list(
-                                map(
-                                    lambda x: x in port_remap.split("/")[-1].upper()
-                                              or x in value.split("/")[-1].upper(),
-                                    links_to_skip,
-                                )
+                        list(
+                            map(
+                                lambda x: x in port_remap.split("/")[-1].upper()
+                                or x in value.split("/")[-1].upper(),
+                                links_to_skip,
                             )
+                        )
                     ):
                         continue
 
-                    # Lets analyse the value (right side) -> if "~" in port_inst replace by node_inst/
+                        # Lets analyse the value (right side) -> if "~" in port_inst replace by node_inst/
                         temp_value = re.search(LINK_REGEX, value)
-                        if temp_value is not None and len(temp_value.groups()) == 5:
+                        if temp_value is not None:
                             node_inst, _, port_inst, _, port_name = temp_value.groups()
-                            if port_inst.startswith('~'):
-                                port_inst = port_inst.replace(
-                                    '~', node_inst+'/', 1)
+                            if port_inst.startswith("~"):
+                                port_inst = port_inst.replace("~", node_inst + "/", 1)
                                 # rebuild the value with the change
-                                value = "%s/%s/%s" % (node_inst,
-                                                    port_inst, port_name)
+                                value = "%s/%s/%s" % (node_inst, port_inst, port_name)
                         # when the link is in the wrong format (only middle part)
                         else:
                             if node_inst is None:
                                 node_inst = list(output.keys())[-1]
-                            value = value.replace('~', node_inst+'/', 1)
+                            value = value.replace("~", node_inst + "/", 1)
 
-                    if node_type in [ROS1_NODE, ROS1_NODELET, ROS2_NODE, ROS2_LIFECYCLENODE]:
-                        actionlib_types = [
-                            ROS1_ACTIONSERVER, ROS1_ACTIONCLIENT]
+                    if node_type in [
+                        ROS1_NODE,
+                        ROS1_NODELET,
+                        ROS2_NODE,
+                        ROS2_LIFECYCLENODE,
+                    ]:
+                        actionlib_types = [ROS1_ACTIONSERVER, ROS1_ACTIONCLIENT]
                         p = re.findall(LINK_REGEX, port_remap)
                         node_inst, _, port_inst, _, port_name = p[0]
                         # flow.get_node(node_name)['PortsInst'][port_inst]['Template'] in actionlib_types:
                         if (
-                                flow.full.NodeInst[node_name]
-                                        .node_template.PortsInst[port_inst]
-                                        .Template
-                                in actionlib_types
+                            flow.full.NodeInst[node_name]
+                            .node_template.PortsInst[port_inst]
+                            .Template
+                            in actionlib_types
                         ):
                             output_list.append(
                                 "%s/%s:=%s" % (port_inst, port_name, value)
@@ -286,7 +288,7 @@ class FlowMonitor:
         return output
 
     def get_node_Parameters(
-            self, node_name: str, flow: Flow, check_plugins: bool = True
+        self, node_name: str, flow: Flow, check_plugins: bool = True
     ) -> list:
         """Return node parameters based on type"""
         output = []
@@ -359,7 +361,7 @@ class FlowMonitor:
             self.param_parser.parse(
                 key,
                 (
-                        node_inst.CmdLine.get(key) or SimpleNamespace(Value=value.Value)
+                    node_inst.CmdLine.get(key) or SimpleNamespace(Value=value.Value)
                 ).Value,
                 node_name,
                 node_inst,
