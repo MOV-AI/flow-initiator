@@ -90,6 +90,7 @@ class FlowMonitor:
     def unload(self) -> None:
         """Unload flow"""
         self.cache_commands = {}
+        self.cached_remaps = {}
         if self.active_flow:
             dependencies_down = copy.deepcopy(self.active_dependencies)
             for dependency in self.dependencies:
