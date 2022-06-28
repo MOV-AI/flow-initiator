@@ -15,7 +15,7 @@ import pickle
 import traceback
 
 import aioredis
-
+import zmq.asyncio
 import rospy
 from dal.models import Lock
 from dal.movaidb import RedisClient
@@ -35,6 +35,11 @@ class Core:
     RUNNING = False
 
     def __init__(self, fargs: argparse.Namespace):
+        """
+        Core constructor
+        Args:
+            fargs:  arguments for initialization
+        """
         type(self).RUNNING = True
 
         # self.loop = uvloop.new_event_loop()
@@ -82,7 +87,15 @@ class Core:
         self.tasks = []
 
     def handle_exception(self, loop, context):
-        """Handle Exceptions"""
+        """
+        Handle Exceptions for all the threads
+        Args:
+            loop: event loop
+            context: the context of the exception
+
+        Returns: None
+
+        """
         msg = context.get("exception", context["message"])
         tb_str = traceback.format_exception(
             etype=type(msg), value=msg, tb=msg.__traceback__
@@ -90,7 +103,14 @@ class Core:
         LOGGER.error("\n" + "".join(tb_str))
 
     def _rosout_callback(self, msg):
-        """Catch ROS log output and log to system logger"""
+        """
+        Catch ROS log output and log to system logger
+        Args:
+            msg: the ros message
+
+        Returns: None
+
+        """
         level = msg.level
         if level == 2:  # info
             LOGGER.info(msg.msg, name=msg.name, function=msg.function)
@@ -104,7 +124,11 @@ class Core:
             LOGGER.debug(msg.msg, name=msg.name, function=msg.function)
 
     async def connect(self) -> None:
-        """Create database connections"""
+        """
+        Create database connections
+        Returns: None
+
+        """
 
         self.databases = await RedisClient.get_client()
 
@@ -124,9 +148,17 @@ class Core:
         self.conn_local_sub = aioredis.Redis(_conn_local_sub)
 
     async def task_subscriber(
-        self, subscriber: str, connection: aioredis.Redis
+        self, subscriber: dict, connection: aioredis.Redis
     ) -> None:
-        """Calls a callback every time it gets a message."""
+        """
+        Calls a callback every time it gets a message
+        Args:
+            subscriber (dict): the subscriber dict with the configuration.
+            connection (aioredis.Redis): the connection
+
+        Returns: None
+
+        """
         channel = subscriber["channel"][0]
         callback = subscriber["callback"]
 
@@ -140,7 +172,11 @@ class Core:
                 pass
 
     async def register_sub(self) -> None:
-        """Subscribe to key."""
+        """
+        Subscribe to key.
+        Returns: None
+
+        """
         for subscriber in self.subscribers:
             LOGGER.info(
                 f"Subscribing to key: {subscriber['key']} - {subscriber['db_pop']} - {subscriber['db_sub']}"
@@ -153,14 +189,26 @@ class Core:
             self.loop.create_task(self.task_subscriber(subscriber, conn))
 
     async def unregister_sub(self) -> None:
-        """Unsubscribe key"""
+        """
+        Unsubscribe key
+        Returns: None
+
+        """
         LOGGER.info("Unregistering subscribers.")
         for subscriber in self.subscribers:
             conn_sub = getattr(self, subscriber["db_sub"])
             await conn_sub.punsubscribe("__keyspace@*__:*%s*" % subscriber["key"])
 
     async def callback(self, msg: tuple, connection: aioredis.Redis) -> None:
-        """Callback that processes commands coming from redis"""
+        """
+        Callback that processes commands coming from redis
+        Args:
+            msg (tuple): the  redis message
+            connection (aioredis.Redis): the connection
+
+        Returns: None
+
+        """
         _, key = msg[0].decode("utf-8").split(":", 1)
         if msg[1].decode("utf-8") == "rpush":
             if connection:
@@ -171,8 +219,91 @@ class Core:
                     result = pickle.loads(_result)
                 await self.spawner.process_command(result)
 
+    @staticmethod
+    def close_port(sockets: list, context: zmq.Context) -> None:
+        """
+        Close all the ports
+        Args:
+            sockets: list of ZMQ ports
+            context: the context that been used to open them
+
+        Returns: None
+
+        """
+        for socket in sockets:
+            if isinstance(socket, zmq.Socket):
+                socket.close()
+        context.terminate(1)
+
+    async def ports_loop(self):
+        """
+        Async method for the ports loop
+        Getting request from ports, and respond to the sender
+
+        """
+        context = zmq.asyncio.Context()
+        file_socket = None
+        try:
+            poller = zmq.asyncio.Poller()
+            file_socket = context.socket(zmq.ROUTER)
+            file_socket.bind(MOVAI_SPAWNER_FILE_SOCKET)
+            poller.register(file_socket, zmq.POLLIN)
+        except OSError as e:
+            LOGGER.error("failed to init to spawner file socket")
+            LOGGER.error(e)
+            self.close_port([file_socket], context)
+            return
+        while self.RUNNING and file_socket:
+            try:
+                sock = dict(await poller.poll())
+
+                if file_socket in sock:
+                    req = await file_socket.recv_multipart()
+                    self.loop.create_task(self._handle_socket(req, file_socket))
+            except TypeError:
+                continue
+            except zmq.ZMQError:
+                continue
+        self.close_port([file_socket], context)
+
+    async def _handle_socket(self, req_msg: list, server: zmq.Socket):
+        """
+        Handler for the zmq socket
+        Args:
+            req_msg (list): request list, in ZMQ style
+            server (zmq.Socket): the socket that received the message
+
+        Returns: None
+
+        """
+        # receive data
+        if len(req_msg) == 3:
+            # in case sender just use send
+            msg_index = 2
+        else:
+            # in case when sending json
+            msg_index = 1
+        buffer = req_msg[msg_index]
+        if buffer is None:
+            return
+        LOGGER.info(f"<- {buffer}")
+        try:
+            request = json.loads(buffer)
+            await self.spawner.process_command(request)
+            req_msg[msg_index] = "Got request & successfully proccessed".encode("utf8")
+        except json.JSONDecodeError as e:
+            LOGGER.error(f"can't parse command: {buffer}")
+            LOGGER.error(e)
+            req_msg[msg_index] = "can't parse command: {buffer}".encode("utf8")
+        finally:
+            await server.send_multipart(req_msg)
+
     async def stop(self) -> None:
-        """Calls all methods necessary to stop movai core."""
+        """
+        Calls all methods necessary to stop movai core.
+        Returns: None
+
+        """
         LOGGER.info("STOP Called.")
         await self.unregister_sub()
         self.conn.close()
@@ -190,18 +321,33 @@ class Core:
         Lock.enabled_locks = []
 
     def run(self):
+        """
+        Running function, start the loop
+        Returns: None
 
+        """
         self.loop.run_until_complete(self.spin())
         # will exit later
         self.loop.stop()
 
     def shutdown(self):
+        """
+        Shutdown function, closing everything.
+        Returns: None
+
+        """
         self.RUNNING = False
 
     async def spin(self) -> None:
-        """Runs the main loop. Exiting spin stops movai core."""
+        """
+        Runs the main loop. Exiting spin stops movai core.
+        Returns: None
+
+        """
         await self.connect()
         await self.register_sub()
+
+        self.loop.create_task(self.ports_loop())
         while self.RUNNING:
             # robot keep alive
             await self.spawner.fn_update_robot()
