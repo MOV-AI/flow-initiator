@@ -25,6 +25,7 @@ from .async_spawner import Spawner
 # importing database profile automatically registers the database connections
 from rosgraph_msgs.msg import Log as RosOutMsg
 from movai_core_shared.logger import Log, LogAdapter
+RedisClient.enable_db("db_global")
 
 LOGGER = LogAdapter(Log.get_logger("spawner.mov.ai"))
 
