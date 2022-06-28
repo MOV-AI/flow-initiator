@@ -6,9 +6,17 @@
    Developers:
    - Alexandre Pires  (alexandre.pires@mov.ai) - 2020
 """
+import warnings
 
 from .async_spawner import Spawner
 from .async_movaicore import Core
+from .exceptions import (
+    NotInstalled,
+    OrchestratorException,
+    SystemStartupException,
+    FirmwareUpdateException,
+    RobotConfigException,
+)
 
 
 __all__ = ["Spawner", "Core"]

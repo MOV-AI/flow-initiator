@@ -55,12 +55,12 @@ class FlowMonitor:
         self.cache_commands = {}
         self.dependencies = []
         self.ros_types = [ROS1_NODE, ROS1_NODELET]
-        # self.ros_types = [ROS1_NODELET, ROS1_NODE, ROS1_PLUGIN]
         self.param_parser = None
         self.cached_remaps = {}
 
     def load(self, flow_name: str) -> list:
         """Load a specific flow, returns starting commands"""
+        # Todo: update the code to get container images and container names
         LOGGER.info(("load flow {}".format(flow_name)))
 
         try:
@@ -122,8 +122,8 @@ class FlowMonitor:
                 nodes_to_transit, self.active_flow, transition_msg=transition_msg
             )
 
-        except Exception as e:
-            LOGGER.error(e)
+        except Exception:
+            LOGGER.error()
             return []
 
     def load_ros2_lifecycle(self) -> list:
@@ -188,8 +188,8 @@ class FlowMonitor:
                         self.get_node_EnvVars(node_name, flow),
                     )
                 )
-            except Exception as e:
-                LOGGER.error(e)
+            except Exception:
+                LOGGER.error()
 
         return commands_to_launch
 
@@ -376,7 +376,7 @@ class FlowMonitor:
 
         return output
 
-    def get_node_packages(self, node_name: str) -> dict:
+    def get_node_packages(self, node_name: str) -> list:
         """Return node packages"""
         if self.active_flow is None:
             raise Exception("No flow active.")
@@ -395,7 +395,7 @@ class FlowMonitor:
         # .get_node_type(node_name)
         return self.active_flow.full.NodeInst[node_name].node_template.Type
 
-    def get_template_packages(self, node_name: str, flow: Flow) -> dict:
+    def get_template_packages(self, node_name: str, flow: Flow) -> list:
         """Return node template packages"""
         output = []  # [{"name": package_name, "file": package_file, "path": package_path}]
 
@@ -437,11 +437,7 @@ class FlowMonitor:
                 if "/opt/" in path:
                     output = [path]
                 else:
-                    dev_path = "".join([ROS1_USER_WS, "/lib", path])
-                    if os.path.exists(dev_path) is False:
-                        output = ["".join([ROS1_LIB, path])]
-                    else:
-                        output = [dev_path]
+                    output = ["".join([ROS1_LIB, path])]
         elif node_type in [ROS2_NODE, ROS2_LIFECYCLENODE]:
             path = node_template.Path
             if "/opt/" in path:
