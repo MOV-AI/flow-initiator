@@ -60,7 +60,7 @@ class FlowMonitor:
 
     def load(self, flow_name: str) -> list:
         """Load a specific flow, returns starting commands"""
-        # Todo: update the code to get container images and container names
+        # TODO: update the code to get container images and container names
         LOGGER.info(("load flow {}".format(flow_name)))
 
         try:
@@ -144,6 +144,8 @@ class FlowMonitor:
 
     def get_commands(self, nodes: list, flow: Flow, transition_msg=None) -> list:
         """Get commands to launch nodes"""
+        # TODO: update the code to get container images and container names
+        LOGGER.info(("load flow {}".format(flow_name)))
         commands_to_launch = []
         for node_name in nodes:
 

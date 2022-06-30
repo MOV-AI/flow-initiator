@@ -401,6 +401,7 @@ class Spawner:
 
         if self.flow_monitor.active_flow is None:
             self._logger.info("START flow {}".format(kwargs["flow"]))
+            # TODO: need to chenage the flow monitor to pass container_conf as a dict
             commmands_to_launch = self.flow_monitor.load(flow)
             if len(commmands_to_launch) == 0:
                 # nothing to launch
@@ -580,14 +581,14 @@ class Spawner:
                 self.loop.create_task(node_to_kill.kill())
 
         tasks = []
-        for command in commmands_to_launch:
+        for command, container_conf in commmands_to_launch:
             if command[0] in nodes_to_launch:
                 packages = self.flow_monitor.get_node_packages(command[0])
                 await self.dump_packages(packages)
                 # launch element
                 tasks.append(
                     self.loop.create_task(
-                        self.launch_element(command, wait=True, env=command[4])
+                        self.launch_element(command, wait=True, env=command[4], container_conf=container_conf)
                     )
                 )
 
@@ -694,11 +695,11 @@ class Spawner:
         self._logger.debug(f"RUN node {node}")
 
         tasks = []
-        for command in commmands_to_launch:
+        for command, container_conf in commmands_to_launch:
             if command[0] in nodes_to_launch:
                 tasks.append(
                     self.loop.create_task(
-                        self.launch_element(command, wait=True, env=command[4])
+                        self.launch_element(command, wait=True, env=command[4], container_conf=container_conf)
                     )
                 )
         await asyncio.gather(*tasks, loop=self.loop)
