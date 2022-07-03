@@ -35,7 +35,6 @@ from movai_core_shared.envvars import (
     ROS1_NODELET_CMD,
     ROS2_LIB,
     APP_PATH,
-    ROS1_USER_WS,
 )
 
 from movai_core_shared.logger import Log
@@ -132,20 +131,21 @@ class FlowMonitor:
         for lc_node in self.active_flow.get_lifecycle_nodes():
             if lc_node not in [name[0] for name in commands_to_launch]:
                 commands_to_launch.append(
-                    (
-                        lc_node,
-                        self.get_node_cmd(lc_node, self.active_flow),
-                        self.active_flow.full.NodeInst[lc_node].is_persistent,
-                        False,
-                        self.get_node_EnvVars(lc_node, self.active_flow),
-                    )
+                    {
+                        "node": lc_node,
+                        "command": self.get_node_cmd(lc_node, self.active_flow),
+                        "persistent": self.active_flow.full.NodeInst[lc_node].is_persistent,
+                        "state": False,
+                        "env": self.get_node_EnvVars(lc_node, self.active_flow),
+                        "cont_conf": self.get_container_conf(lc_node, self.active_flow),
+                    }
                 )
         return commands_to_launch
 
     def get_commands(self, nodes: list, flow: Flow, transition_msg=None) -> list:
         """Get commands to launch nodes"""
         # TODO: update the code to get container images and container names
-        LOGGER.info(("load flow {}".format(flow_name)))
+        LOGGER.info(("load flow {}".format(flow.name)))
         commands_to_launch = []
         for node_name in nodes:
 
@@ -166,13 +166,14 @@ class FlowMonitor:
                             and not node_dep_inst.node_template.Type == ROS1_PLUGIN
                             and node_dep_inst.is_node_to_launch
                         ):
-                            to_launch = (
-                                node_dependency,
-                                cmd,
-                                node_dep_inst.is_persistent,
-                                is_state,
-                                self.get_node_EnvVars(node_dependency, flow),
-                            )
+                            to_launch = {
+                                "node": node_dependency,
+                                "command": cmd,
+                                "presistent": node_dep_inst.is_persistent,
+                                "state": is_state,
+                                "env": self.get_node_EnvVars(node_dependency, flow),
+                                "cont_conf": self.get_container_conf(node_dependency, flow),
+                            }
                             if to_launch not in commands_to_launch:
                                 commands_to_launch.append(to_launch)
                                 self.cache_commands[node_dependency] = to_launch
@@ -182,13 +183,14 @@ class FlowMonitor:
                 # tuple(node_name, command, is_persistent, is_state)
                 is_state = node_inst.node_template.Type == MOVAI_STATE
                 commands_to_launch.append(
-                    (
-                        node_name,
-                        cmd,
-                        node_inst.is_persistent,
-                        is_state,
-                        self.get_node_EnvVars(node_name, flow),
-                    )
+                    {
+                        "node": node_name,
+                        "command": cmd,
+                        "persistent": node_inst.is_persistent,
+                        "state": is_state,
+                        "env": self.get_node_EnvVars(node_name, flow),
+                        "cont_conf": self.get_container_conf(node_dependency, flow),
+                    }
                 )
             except Exception:
                 LOGGER.error()
@@ -323,14 +325,26 @@ class FlowMonitor:
 
         return output
 
+    def get_container_conf(self, node_name: str, flow: Flow) -> dict:
+        """
+        Get container configuration for running node in a container
+         Args:
+            node_name (str): the node name instance in the flow
+            flow (Flow): The flow file
+
+        Returns:
+            dict: The parameters of the container
+                  see docker run, to see all of the options
+        """
+        node_inst = flow.full.NodeInst[node_name]
+        return node_inst.node_template.container_conf
+
     def get_node_EnvVars(self, node_name: str, flow: Flow) -> dict:
         """Return node environment variables"""
         node_inst = flow.full.NodeInst[node_name]
         params = node_inst.node_template.EnvVar
         node_type = node_inst.node_template.Type
         output = {}
-
-        node_type = node_inst.node_template.Type
 
         n_types = {
             ROS2_NODE: ENVIRON_ROS2,

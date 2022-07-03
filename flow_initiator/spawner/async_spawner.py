@@ -16,21 +16,22 @@ import pickle
 import signal
 import tempfile
 import time
+from typing import Union
 from asyncio.subprocess import Process
 from subprocess import SubprocessError
-
-from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
-from movai_core_shared.logger import Log
+from dal.models.lock import Lock
+from dal.scopes.package import Package
+from dal.scopes.robot import Robot
+from dal.models.var import Var
 from movai_core_shared.consts import (
     ROS2_LIFECYCLENODE,
     TIMEOUT_PROCESS_SIGINT,
     TIMEOUT_PROCESS_SIGTERM,
 )
-
-from dal.models.lock import Lock
-from dal.scopes.package import Package
-from dal.scopes.robot import Robot
-from dal.models.var import Var
+from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
+from movai_core_shared.logger import Log
+from flow_initiator.spawner.elements import ElementsGenerator, BaseElement
+from .exceptions import RunError
 
 
 try:
@@ -64,7 +65,7 @@ class Spawner:
             robot: robot object
             network: The docker network name
         """
-        self._logger = Logger("spawner.mov.ai")
+        self._logger = Log.get_logger("spawner.mov.ai")
         self._stdout = open(f"{APP_LOGS}/stdout", "w")
         self.loop = loop
         self.lock = asyncio.Lock(loop=self.loop)
@@ -249,7 +250,7 @@ class Spawner:
 
 
         """
-
+        # Todo: make it work for containers
         running = await element.is_running()
         if not running:
             self._logger.warning(f"Node: {node_name} isn't running anymore")
@@ -274,6 +275,7 @@ class Spawner:
 
     async def launch_element(
         self,
+        node: str,
         command: tuple,
         wait: bool = True,
         add_to: str = None,
@@ -297,15 +299,14 @@ class Spawner:
         self._logger.info(
             (
                 "Launching command (persistent: {}) {}".format(
-                    command[2], " ".join(command[1])
-                )
+                    kwargs.get("persistent", False), " ".join(command))
             )
         )
         cwd = cwd or self.temp_dir.name
         elem = None
         try:
             elem = await self.generator.elements_generator(
-                *command[1],
+                *command,
                 stdin=None,
                 stdout=self._stdout,
                 stderr=self._stdout,
@@ -316,16 +317,16 @@ class Spawner:
             )
             # Todo: maybe add to a specific flow
             if add_to is not None:
-                getattr(self, add_to)[command[0]] = elem
+                getattr(self, add_to)[node] = elem
             else:
                 if command[2]:  # is node persistent
-                    getattr(self, "persistent_nodes_lchd")[command[0]] = elem
+                    getattr(self, "persistent_nodes_lchd")[node] = elem
                 else:
-                    getattr(self, "nodes_lchd")[command[0]] = elem
+                    getattr(self, "nodes_lchd")[node] = elem
             if command[3]:
-                self.active_states.add(command[0])
+                self.active_states.add(node)
             if wait:
-                self.loop.create_task(self.await_element(elem, command[0]))
+                self.loop.create_task(self.await_element(elem, node))
         except (SubprocessError, OSError, ValueError, TypeError, RunError) as e:
             self._logger.critical("An error occurred while starting a flow, see errors")
             self._logger.critical(e)
@@ -414,19 +415,19 @@ class Spawner:
             # they also need to be activated
             ros2_lifecycle_nodes_to_activate = []
             for lc_node in self.flow_monitor.load_ros2_lifecycle():
-                if lc_node[0] not in [command[0] for command in commmands_to_launch]:
+                if lc_node["node"] not in [command["node"] for command in commmands_to_launch]:
                     commmands_to_launch.append(lc_node)
                 else:
-                    ros2_lifecycle_nodes_to_activate.append(lc_node[0])
+                    ros2_lifecycle_nodes_to_activate.append(lc_node["node"])
 
             tasks = []
             try:
                 for command in commmands_to_launch:
-                    packages = self.flow_monitor.get_node_packages(command[0])
+                    packages = self.flow_monitor.get_node_packages(command["node"])
                     await self.dump_packages(packages)
                     tasks.append(
                         self.loop.create_task(
-                            self.launch_element(command, wait=True, env=command[4])
+                            self.launch_element(wait=True, **command)
                         )
                     )
 
@@ -582,13 +583,13 @@ class Spawner:
 
         tasks = []
         for command, container_conf in commmands_to_launch:
-            if command[0] in nodes_to_launch:
+            if command["name"] in nodes_to_launch:
                 packages = self.flow_monitor.get_node_packages(command[0])
                 await self.dump_packages(packages)
                 # launch element
                 tasks.append(
                     self.loop.create_task(
-                        self.launch_element(command, wait=True, env=command[4], container_conf=container_conf)
+                        self.launch_element(wait=True, **command)
                     )
                 )
 
@@ -696,10 +697,10 @@ class Spawner:
 
         tasks = []
         for command, container_conf in commmands_to_launch:
-            if command[0] in nodes_to_launch:
+            if command["node"] in nodes_to_launch:
                 tasks.append(
                     self.loop.create_task(
-                        self.launch_element(command, wait=True, env=command[4], container_conf=container_conf)
+                        self.launch_element(wait=True, **command)
                     )
                 )
         await asyncio.gather(*tasks, loop=self.loop)
