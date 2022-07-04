@@ -6,19 +6,19 @@ import tarfile
 from socket import gethostname
 from time import localtime
 from typing import Optional
-from deprecated.spawner.container_tools import (
+from flow_initiator.spawner.container_tools import (
     ContainerManager,
     NetworkManager,
     VolumeManager,
     ImageManager,
 )
-from deprecated.spawner.exceptions import (
+from flow_initiator.spawner.exceptions import (
     OrchestratorException,
     FailedUpgradeCertificate,
 )
-from deprecated.logger import Logger
+from movai_core_shared.logger import Log
 
-log = Logger("orchestrator")
+log = Log.get_logger("orchestrator")
 
 
 class Orchestrator:

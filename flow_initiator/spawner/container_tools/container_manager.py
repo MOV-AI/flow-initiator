@@ -9,10 +9,10 @@ from docker.types import Mount
 from docker.models.containers import Container, ContainerCollection
 from docker.errors import NotFound
 from . import DockerBaseManager, check_dockerd
-from deprecated.spawner.exceptions import OrchestratorException
-from deprecated.logger import Logger
+from flow_initiator.spawner.exceptions import OrchestratorException
+from movai_core_shared.logger import Log
 
-log = Logger("ContainerManager")
+log = Log.get_logger("ContainerManager")
 
 
 class ContainerManager(DockerBaseManager):

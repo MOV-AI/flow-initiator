@@ -9,9 +9,9 @@ from typing import Optional
 from docker.models.images import Image
 from docker.errors import APIError, ImageNotFound, ImageLoadError
 from . import DockerBaseManager, check_dockerd
-from deprecated.logger import Logger
+from movai_core_shared.logger import Log
 
-log = Logger("ContainerManager")
+log = Log.get_logger("ContainerManager")
 
 
 class ImageManager(DockerBaseManager):
