@@ -13,9 +13,9 @@ import asyncio
 from abc import abstractmethod, ABC
 from typing import Tuple, Optional
 
-from deprecated.spawner.elements import ElementType
-from deprecated.api.consts import TIMEOUT_PROCESS_SIGINT, TIMEOUT_PROCESS_SIGTERM
-from deprecated.spawner.exceptions import RunError
+from flow_initiator.spawner.elements import ElementType
+from movai_core_shared.consts import TIMEOUT_PROCESS_SIGINT, TIMEOUT_PROCESS_SIGTERM
+from flow_initiator.spawner.exceptions import RunError
 
 
 class BaseElement(ABC):

@@ -1,9 +1,9 @@
-from deprecated.spawner.elements import (
+from flow_initiator.spawner.elements import (
     ProcessElement,
     ContainerLauncher,
     AttachedProcessLauncher,
 )
-from deprecated.spawner.container_tools import Orchestrator
+from flow_initiator.spawner.container_tools import Orchestrator
 import asyncio
 
 
