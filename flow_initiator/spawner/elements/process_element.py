@@ -11,8 +11,8 @@ import asyncio
 import signal
 from typing import Tuple, Optional
 
-from deprecated.spawner.elements import BaseElement
-from deprecated.spawner.exceptions import RunError
+from flow_initiator.spawner.elements import BaseElement
+from flow_initiator.spawner.exceptions import RunError
 
 
 class ProcessElement(BaseElement):

@@ -8,7 +8,7 @@
    - Dor Marcous  (dor@mov.ai) - 2021
 """
 from typing import Tuple, Optional
-from deprecated.spawner.elements import ContainerLauncher
+from flow_initiator.spawner.elements import ContainerLauncher
 
 DEFAULT_LABELS = None
 

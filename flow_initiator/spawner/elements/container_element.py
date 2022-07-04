@@ -9,8 +9,8 @@
 """
 import os
 from typing import Tuple, Optional
-from deprecated.spawner.elements import BaseElement
-from deprecated.spawner.container_tools import Orchestrator
+from flow_initiator.spawner.elements import BaseElement
+from flow_initiator.spawner.container_tools import Orchestrator
 
 SRC_LOC = os.getenv("MOVAI_SRC_DIR", "/home/")
 
