@@ -7,13 +7,13 @@ from functools import wraps
 from typing import Callable, Optional
 
 from docker.errors import NotFound, APIError
-from deprecated.spawner.exceptions import OrchestratorException
-from deprecated.envvars import DOCKER_REGISTRY
+from flow_initiator.spawner.exceptions import OrchestratorException
+from movai_core_shared.envvars import DOCKER_REGISTRY
 
 from .ttdocker_client import TTDockerClient
-from deprecated.logger import Logger
+from movai_core_shared.logger import Log
 
-log = Logger("DockerBaseManager")
+log = Log.get_logger("DockerBaseManager")
 
 
 class DockerBaseManager:
