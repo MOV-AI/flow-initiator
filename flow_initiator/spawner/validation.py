@@ -9,10 +9,11 @@
     Spawner commands validator
 """
 
+from typing import Optional
 from movai_core_shared.exceptions import CommandError, ActiveFlowError
+from movai_core_shared.logger import Log
 
-
-log = Logger("spawner.mov.ai")
+log = Log.get_logger("spawner.mov.ai")
 
 METHOD = 0
 HELP = 1

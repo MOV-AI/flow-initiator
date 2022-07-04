@@ -9,9 +9,9 @@ from docker.models.networks import Network
 from docker.errors import NotFound
 from typing import Optional, Union
 from . import DockerBaseManager, check_dockerd
-from deprecated.logger import Logger
+from movai_core_shared.logger import Log
 
-log = Logger("NetworkManager")
+log = Log.get_logger("NetworkManager")
 
 
 class NetworkManager(DockerBaseManager):

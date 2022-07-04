@@ -5,10 +5,10 @@ from typing import Optional
 from docker.errors import NotFound
 from docker.models.volumes import Volume
 
-from deprecated.spawner.container_tools import DockerBaseManager, check_dockerd
-from deprecated.logger import Logger
+from flow_initiator.spawner.container_tools import DockerBaseManager, check_dockerd
+from movai_core_shared.logger import Log
 
-log = Logger("VolumeManager")
+log = Log.get_logger("VolumeManager")
 
 
 class VolumeManager(DockerBaseManager):

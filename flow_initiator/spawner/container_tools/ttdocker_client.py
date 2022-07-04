@@ -1,9 +1,9 @@
 import docker
 import requests
-from deprecated.logger import Logger
-from deprecated.envvars import DOCKERD_ATTEMPTS
+from movai_core_shared.logger import Log
+from movai_core_shared.envvars import DOCKERD_ATTEMPTS
 
-log = Logger("Docker-Client")
+log = Log.get_logger("Docker-Client")
 
 
 class TTAPIClient(docker.APIClient):
