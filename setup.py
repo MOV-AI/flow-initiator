@@ -9,6 +9,8 @@ requirements = [
     "movai-core-shared==2.4.1.13",
     "data-access-layer==2.4.1.22",
     "gd-node==2.4.1.15",
+    "async-timeout==3.0.1",
+    "docker==5.0.3"
 ]
 
 
