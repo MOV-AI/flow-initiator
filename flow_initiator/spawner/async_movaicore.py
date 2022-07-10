@@ -13,6 +13,7 @@ import asyncio
 import os
 import pickle
 import traceback
+import json
 
 import aioredis
 import zmq.asyncio
@@ -25,6 +26,7 @@ from .async_spawner import Spawner
 # importing database profile automatically registers the database connections
 from rosgraph_msgs.msg import Log as RosOutMsg
 from movai_core_shared.logger import Log, LogAdapter
+from movai_core_shared.envvars import MOVAI_SPAWNER_FILE_SOCKET
 
 LOGGER = LogAdapter(Log.get_logger("spawner.mov.ai"))
 
