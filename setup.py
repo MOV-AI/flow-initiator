@@ -12,6 +12,7 @@ requirements = [
     "dal==1.0.0.29",
     "movai_core_shared==1.0.0.10",
     "gd_node==1.0.0.9",
+    "docker==5.0.3"
 ]
 
 # TODO Adapt your project configuration to your own project.
