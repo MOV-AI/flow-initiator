@@ -192,7 +192,7 @@ class FlowMonitor:
                         "persistent": node_inst.is_persistent,
                         "state": is_state,
                         "env": self.get_node_EnvVars(node_name, flow),
-                        "cont_conf": self.get_container_conf(node_dependency, flow),
+                        "cont_conf": self.get_container_conf(node_name, flow),
                     }
                 )
             except Exception:
