@@ -4,7 +4,6 @@ from flow_initiator.spawner.elements import (
     AttachedProcessLauncher,
 )
 from flow_initiator.spawner.container_tools import Orchestrator
-import asyncio
 
 
 class ElementsGenerator:
@@ -40,7 +39,6 @@ class ElementsGenerator:
             kwargs.pop("stderr")
             kwargs.pop("cwd")
             if "network" not in kwargs:
-                kwargs["network"] = self.network_name
                 kwargs["network"] = self.network_name
             if "attach" in kwargs and kwargs["attach"]:
                 elem = AttachedProcessLauncher(
