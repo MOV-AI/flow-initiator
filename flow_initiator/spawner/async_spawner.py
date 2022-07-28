@@ -13,21 +13,15 @@ import concurrent.futures
 import os
 import re
 import pickle
-import signal
 import tempfile
 import time
 from typing import Union
-from asyncio.subprocess import Process
 from subprocess import SubprocessError
 from dal.models.lock import Lock
 from dal.scopes.package import Package
 from dal.scopes.robot import Robot
 from dal.models.var import Var
-from movai_core_shared.consts import (
-    ROS2_LIFECYCLENODE,
-    TIMEOUT_PROCESS_SIGINT,
-    TIMEOUT_PROCESS_SIGTERM,
-)
+from movai_core_shared.consts import ROS2_LIFECYCLENODE
 from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
 from movai_core_shared.logger import Log
 from flow_initiator.spawner.elements import ElementsGenerator, BaseElement
@@ -196,7 +190,7 @@ class Spawner:
         for _, value in elements.items():
             tasks.append(value.kill())
         # wait for all get_keys tasks to run
-        _values = await asyncio.gather(*tasks)
+        await asyncio.gather(*tasks)
 
         # Release active locks
         for key in list(self.acq_locks.keys()):
@@ -217,7 +211,7 @@ class Spawner:
         for _, element in elements.items():
             tasks.append(element.kill())
         # wait for all get_keys tasks to run
-        _values = self.loop.create_task(asyncio.gather(*tasks))
+        self.loop.create_task(asyncio.gather(*tasks))
 
         # need to check all nodes are dead before cleaning parameter server cuz dyn req
         ROS1.clean_parameter_server()
@@ -403,8 +397,8 @@ class Spawner:
         if self.flow_monitor.active_flow is None:
             self._logger.info("START flow {}".format(kwargs["flow"]))
             # TODO: need to chenage the flow monitor to pass container_conf as a dict
-            commmands_to_launch = self.flow_monitor.load(flow)
-            if len(commmands_to_launch) == 0:
+            commands_to_launch = self.flow_monitor.load(flow)
+            if len(commands_to_launch) == 0:
                 # nothing to launch
                 return
 
@@ -415,14 +409,14 @@ class Spawner:
             # they also need to be activated
             ros2_lifecycle_nodes_to_activate = []
             for lc_node in self.flow_monitor.load_ros2_lifecycle():
-                if lc_node["node"] not in [command["node"] for command in commmands_to_launch]:
-                    commmands_to_launch.append(lc_node)
+                if lc_node["node"] not in [command["node"] for command in commands_to_launch]:
+                    commands_to_launch.append(lc_node)
                 else:
                     ros2_lifecycle_nodes_to_activate.append(lc_node["node"])
 
             tasks = []
             try:
-                for command in commmands_to_launch:
+                for command in commands_to_launch:
                     packages = self.flow_monitor.get_node_packages(command["node"])
                     await self.dump_packages(packages)
                     tasks.append(
@@ -525,19 +519,19 @@ class Spawner:
             self._logger.error("No flow active. START a flow first.")
             return
 
-        commmands_to_launch = self.flow_monitor.transition(
+        commands_to_launch = self.flow_monitor.transition(
             node, port, self.active_states, transition_msg=trans_msg
         )
 
         if (
-            len(set.difference(self.active_states, {node})) + len(commmands_to_launch)
+            len(set.difference(self.active_states, {node})) + len(commands_to_launch)
             == 0
         ):
             # if after stopping the node, we are left with not state nodes,
             # it's time to die
             return await self.stop_flow()
 
-        all_nodes_to_launch = [command[0] for command in commmands_to_launch]
+        all_nodes_to_launch = [command[0] for command in commands_to_launch]
         nodes_to_kill = [
             node for node in self.nodes_lchd if node not in all_nodes_to_launch
         ]
@@ -582,7 +576,7 @@ class Spawner:
                 self.loop.create_task(node_to_kill.kill())
 
         tasks = []
-        for command, container_conf in commmands_to_launch:
+        for command, container_conf in commands_to_launch:
             if command["name"] in nodes_to_launch:
                 packages = self.flow_monitor.get_node_packages(command[0])
                 await self.dump_packages(packages)
@@ -676,10 +670,10 @@ class Spawner:
             return
         # todo: think how to add multiple flow running together
         # maybe multiple flow monitors
-        commmands_to_launch = self.flow_monitor.get_commands(
+        commands_to_launch = self.flow_monitor.get_commands(
             [node], self.flow_monitor.active_flow
         )
-        all_nodes_to_launch = [command[0] for command in commmands_to_launch]
+        all_nodes_to_launch = [command[0] for command in commands_to_launch]
 
         nodes_to_launch = [
             node
@@ -696,7 +690,7 @@ class Spawner:
         self._logger.debug(f"RUN node {node}")
 
         tasks = []
-        for command, container_conf in commmands_to_launch:
+        for command, container_conf in commands_to_launch:
             if command["node"] in nodes_to_launch:
                 tasks.append(
                     self.loop.create_task(

@@ -49,9 +49,10 @@ class ContainerLauncher(BaseElement):
 
         """
         super().__init__(*args, **kwargs)
+        # TODO: add check that container_conf containes name, and image
         kwargs.pop("logger")
-        self.name = kwargs["name"]
         self.running_args = dict(kwargs["container_conf"])
+        self.name =self.running_args["name"]
         self._orchestrator = orchestrator
         if "volumes" in self.running_args:
             self.running_args["volumes"][SRC_LOC] = {
