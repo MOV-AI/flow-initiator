@@ -4,7 +4,7 @@
    Proprietary and confidential
 
    Developers:
-   - Tiago Teixeira (tiago.teixeira@mov.ai) - 2020
+   - Dor Marcous  (dor@mov.ai) - 2021
 
     Spawner module initialization
 """

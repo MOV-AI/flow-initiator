@@ -38,9 +38,10 @@ class ElementsGenerator:
             kwargs.pop("stdout")
             kwargs.pop("stderr")
             kwargs.pop("cwd")
-            if "network" not in kwargs:
+            conf = kwargs["container_conf"]
+            if "network" not in conf:
                 kwargs["network"] = self.network_name
-            if "attach" in kwargs and kwargs["attach"]:
+            if "attach" in conf and conf["attach"]:
                 elem = AttachedProcessLauncher(
                     orchestrator=self.orchestrator, command=args, **kwargs
                 )

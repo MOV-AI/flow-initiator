@@ -8,6 +8,7 @@
    - Dor Marcous  (dor@mov.ai) - 2021
 """
 from typing import Tuple, Optional
+from movai_core_shared.exceptions import CommandError
 from flow_initiator.spawner.elements import ContainerLauncher
 
 DEFAULT_LABELS = None
@@ -32,7 +33,9 @@ class AttachedProcessLauncher(ContainerLauncher):
 
         """
         super().__init__(*args, **kwargs)
-        self.cmd = kwargs["command"]
+        if "command" not in self.running_args:
+            raise CommandError(f"Missing command when attaching process in a running container: {self.name}")
+        self.cmd = self.running_args["command"]
         self.exit_code = None
         self.output = None
 
