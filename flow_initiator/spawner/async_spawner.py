@@ -691,11 +691,11 @@ class Spawner:
         self._logger.debug(f"RUN node {node}")
 
         tasks = []
-        for command, container_conf in commands_to_launch:
-            if command["node"] in nodes_to_launch:
+        for command_dict in commands_to_launch:
+            if command_dict["node"] in nodes_to_launch:
                 tasks.append(
                     self.loop.create_task(
-                        self.launch_element(wait=True, **command)
+                        self.launch_element(wait=True, **command_dict)
                     )
                 )
         await asyncio.gather(*tasks, loop=self.loop)

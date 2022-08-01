@@ -140,7 +140,7 @@ class FlowMonitor:
                         "persistent": self.active_flow.full.NodeInst[lc_node].is_persistent,
                         "state": False,
                         "env": self.get_node_EnvVars(lc_node, self.active_flow),
-                        "cont_conf": self.get_container_conf(lc_node, self.active_flow),
+                        "container_conf": self.get_container_conf(lc_node, self.active_flow),
                     }
                 )
         return commands_to_launch
@@ -175,7 +175,7 @@ class FlowMonitor:
                                 "presistent": node_dep_inst.is_persistent,
                                 "state": is_state,
                                 "env": self.get_node_EnvVars(node_dependency, flow),
-                                "cont_conf": self.get_container_conf(node_dependency, flow),
+                                "container_conf": self.get_container_conf(node_dependency, flow),
                             }
                             if to_launch not in commands_to_launch:
                                 commands_to_launch.append(to_launch)
@@ -192,7 +192,7 @@ class FlowMonitor:
                         "persistent": node_inst.is_persistent,
                         "state": is_state,
                         "env": self.get_node_EnvVars(node_name, flow),
-                        "cont_conf": self.get_container_conf(node_name, flow),
+                        "container_conf": self.get_container_conf(node_name, flow),
                     }
                 )
             except Exception:
@@ -346,7 +346,7 @@ class FlowMonitor:
                   see docker run, to see all of the options
         """
         node_inst = flow.full.NodeInst[node_name]
-        return node_inst.node_template.container_conf
+        return node_inst.node_template.ContainerConf
 
     def get_node_EnvVars(self, node_name: str, flow: Flow) -> dict:
         """Return node environment variables"""
