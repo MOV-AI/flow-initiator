@@ -24,8 +24,8 @@ from dal.models.var import Var
 from movai_core_shared.consts import ROS2_LIFECYCLENODE
 from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
 from movai_core_shared.logger import Log
+from movai_core_shared.exceptions import CommandError, ActiveFlowError, RunError
 from flow_initiator.spawner.elements import ElementsGenerator, BaseElement
-from .exceptions import RunError
 
 
 try:
@@ -37,7 +37,6 @@ except ImportError:
     gdnode_exist = False
 
 from .flowmonitor import FlowMonitor
-from movai_core_shared.exceptions import CommandError, ActiveFlowError
 from .validation import CommandValidator
 
 
@@ -321,7 +320,7 @@ class Spawner:
                 self.active_states.add(node)
             if wait:
                 self.loop.create_task(self.await_element(elem, node))
-        except (SubprocessError, OSError, ValueError, TypeError, RunError) as e:
+        except (SubprocessError, OSError, ValueError, TypeError, RunError, CommandError) as e:
             self._logger.critical("An error occurred while starting a flow, see errors")
             self._logger.critical(e)
             if elem is not None:
