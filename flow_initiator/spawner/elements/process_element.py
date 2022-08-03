@@ -35,10 +35,6 @@ class ProcessElement(BaseElement):
             **kwargs:
         """
         super().__init__(*args, **kwargs)
-        if args is not None and len(args) > 1:
-            self.commands = args
-        else:
-            self.commands = kwargs.get("command", None)
         self.cwd = kwargs.get("cwd", None)
         self.env = kwargs.get("wait", None)
         stdout = kwargs.get("stdout", None)

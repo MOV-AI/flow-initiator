@@ -36,6 +36,10 @@ class BaseElement(ABC):
 
         """
         self._logger = kwargs.pop("logger", None)
+        if args is not None and len(args) > 1:
+            self.commands = args
+        else:
+            self.commands = kwargs.get("command", None)
 
     @abstractmethod
     async def run(self):

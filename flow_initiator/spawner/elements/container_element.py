@@ -64,6 +64,9 @@ class ContainerLauncher(BaseElement):
                 SRC_LOC: {"bind": "/opt/mov.ai/app", "mode": "rw"}
             }
         self.running_args["hostname"] = self.name
+        if "command" not in self.running_args:
+            self.running_args["command"] = self.commands
+
 
     @property
     def return_code(self) -> Optional[int]:
