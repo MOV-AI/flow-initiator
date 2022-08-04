@@ -52,6 +52,7 @@ class ContainerLauncher(BaseElement):
         # TODO: add check that container_conf containes name, and image
         kwargs.pop("logger")
         self.running_args = dict(kwargs["container_conf"])
+        # TODO: running args are all in scopetree type, need to make them strings
         self.name =self.running_args["name"]
         self._orchestrator = orchestrator
         if "volumes" in self.running_args:
