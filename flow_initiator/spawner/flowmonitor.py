@@ -195,8 +195,8 @@ class FlowMonitor:
                         "container_conf": self.get_container_conf(node_name, flow),
                     }
                 )
-            except Exception:
-                LOGGER.error()
+            except Exception as e:
+                LOGGER.error(e)
 
         return commands_to_launch
 
@@ -499,7 +499,7 @@ class FlowMonitor:
             # TODO use envvar to check if in development mode
             cmd.extend(["-d"])
 
-            if node_type == MOVAI_STATE:
+            if node_type == MOVAI_STATE and transition_msg is not None:
                 cmd.extend(["-m", "%s" % transition_msg])
 
         cmd.extend(self.get_node_Parameters(node_name, flow))
