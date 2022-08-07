@@ -346,7 +346,18 @@ class FlowMonitor:
                   see docker run, to see all of the options
         """
         node_inst = flow.full.NodeInst[node_name]
-        return node_inst.node_template.ContainerConf
+        cont_conf_dict = dict()
+        try:
+            cont_conf = node_inst.node_template.ContainerConf
+            if cont_conf is not None:
+                for k, v in cont_conf.serialize().items():
+                    cont_conf_dict[k] = v["Value"]
+                self.LOGGER.debug(f"node: {node_name} have container configuration: {cont_conf_dict}")
+        except AttributeError:
+            # backward compatible check for old schema without container configuration
+            pass
+        return cont_conf_dict
+
 
     def get_node_EnvVars(self, node_name: str, flow: Flow) -> dict:
         """Return node environment variables"""

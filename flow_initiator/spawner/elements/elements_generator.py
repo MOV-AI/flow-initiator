@@ -50,4 +50,5 @@ class ElementsGenerator:
                     orchestrator=self.orchestrator, command=args, **kwargs
                 )
         await elem.run()
+        # TODO: check that the element is running, and if not throw an exception
         return elem
