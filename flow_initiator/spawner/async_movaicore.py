@@ -84,7 +84,7 @@ class Core:
         # [{"key": "key_pattern", "callback": callback, "channel": None, "db_pop": "db_pop", "db_sub": "db_sub"}, ]
         # db_pop: connection to pop the key
         # db_sub: connection to subscribe to key
-        self.spawner = Spawner(self.loop, self.robot, fargs.verbose)
+        self.spawner = Spawner(self.loop, self.robot, fargs.verbose, "flow-private")
 
         # subscribe to /rosout_agg
         rospy.init_node("movai_logger", anonymous=True)

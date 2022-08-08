@@ -49,7 +49,7 @@ class Spawner:
     EMERGENCY_FLAG = False
 
     def __init__(
-        self, loop: asyncio.AbstractEventLoop, robot: Robot, network: str = None
+        self, loop: asyncio.AbstractEventLoop, robot: Robot, debug: bool = False, network: str = None
     ):
         """
         Flow initator constructor
@@ -306,6 +306,7 @@ class Spawner:
                 cwd=cwd,
                 env=env,
                 logger=self._logger,
+                node=node,
                 **kwargs,
             )
             # Todo: maybe add to a specific flow
