@@ -40,7 +40,7 @@ class ElementsGenerator:
             kwargs.pop("cwd")
             conf = kwargs["container_conf"]
             if "network" not in conf:
-                kwargs["network"] = self.network_name
+                conf["network"] = self.network_name
             if "attach" in conf and conf["attach"]:
                 elem = AttachedProcessLauncher(
                     orchestrator=self.orchestrator, command=args, **kwargs
@@ -50,5 +50,4 @@ class ElementsGenerator:
                     orchestrator=self.orchestrator, command=args, **kwargs
                 )
         await elem.run()
-        # TODO: check that the element is running, and if not throw an exception
         return elem
