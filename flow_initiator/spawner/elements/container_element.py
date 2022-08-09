@@ -59,7 +59,7 @@ class ContainerLauncher(BaseElement):
         self.running_args["hostname"] = self.name
         if "command" not in self.running_args:
             self.running_args["command"] = self.commands
-            #self.running_args["entrypoint"] = self.commands
+            # self.running_args["entrypoint"] = self.commands
 
 
     @property
