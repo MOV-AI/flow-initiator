@@ -250,6 +250,7 @@ class Spawner:
         if not running:
             self._logger.warning(f"Node: {node_name} isn't running anymore")
         if node_name in self.nodes_lchd:
+            # Todo: need to here a wait command for container to end
             del self.nodes_lchd[node_name]
         elif node_name in self.persistent_nodes_lchd:
             del self.persistent_nodes_lchd[node_name]
@@ -276,6 +277,7 @@ class Spawner:
         add_to: str = None,
         cwd: str = None,
         env: list = None,
+        state: bool = False,
         **kwargs,
     ) -> None:
         """
@@ -286,15 +288,16 @@ class Spawner:
             add_to: a specific group
             cwd: current working directory
             env: environment variables
+            state: is it a state node
 
         Returns: None
 
         """
         # todo: maybe add which flow is running from
+        persistent = kwargs.pop("persistent", False)
         self._logger.info(
             (
-                "Launching command (persistent: {}) {}".format(
-                    kwargs.get("persistent", False), " ".join(command))
+                "Launching command (persistent: {}) {}".format(persistent, " ".join(command))
             )
         )
         cwd = cwd or self.temp_dir.name
@@ -315,11 +318,11 @@ class Spawner:
             if add_to is not None:
                 getattr(self, add_to)[node] = elem
             else:
-                if command[2]:  # is node persistent
+                if persistent:  # is node persistent
                     getattr(self, "persistent_nodes_lchd")[node] = elem
                 else:
                     getattr(self, "nodes_lchd")[node] = elem
-            if command[3]:
+            if state:
                 self.active_states.add(node)
             if wait:
                 self.loop.create_task(self.await_element(elem, node))
@@ -533,9 +536,9 @@ class Spawner:
             # it's time to die
             return await self.stop_flow()
 
-        all_nodes_to_launch = [command[0] for command in commands_to_launch]
+        all_nodes_to_launch = [command["node"] for command in commands_to_launch]
         nodes_to_kill = [
-            node for node in self.nodes_lchd if node not in all_nodes_to_launch
+            node.name for node in self.nodes_lchd if node not in all_nodes_to_launch
         ]
         nodes_to_launch = [
             node
@@ -578,9 +581,9 @@ class Spawner:
                 self.loop.create_task(node_to_kill.kill())
 
         tasks = []
-        for command, container_conf in commands_to_launch:
-            if command["name"] in nodes_to_launch:
-                packages = self.flow_monitor.get_node_packages(command[0])
+        for command in commands_to_launch:
+            if command["node"] in nodes_to_launch:
+                packages = self.flow_monitor.get_node_packages(command["node"])
                 await self.dump_packages(packages)
                 # launch element
                 tasks.append(
