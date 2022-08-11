@@ -234,7 +234,7 @@ class Spawner:
             if not lock.persistent:
                 lock.release()
 
-    async def await_element(self, element: BaseElement, node_name: str) -> None:
+    async def clean_element(self, element: BaseElement, node_name: str) -> None:
         """
         Wait for the element to end
         Args:
@@ -245,8 +245,8 @@ class Spawner:
         """
         # Todo: make it work for containers
         running = await element.is_running()
-        if not running:
-            self._logger.warning(f"Node: {node_name} isn't running anymore")
+        if running:
+            self._logger.warning(f"Node: {node_name} is still running")
         if node_name in self.nodes_lchd:
             # Todo: need to here a wait command for container to end
             del self.nodes_lchd[node_name]
@@ -271,7 +271,6 @@ class Spawner:
         self,
         node: str,
         command: tuple,
-        wait: bool = True,
         add_to: str = None,
         cwd: str = None,
         env: list = None,
@@ -282,7 +281,6 @@ class Spawner:
         Launch element, add to list and create task to wait for its end
         Args:
             command: the running line
-            wait: if true, run a task that will wait for the process to end
             add_to: a specific group
             cwd: current working directory
             env: environment variables
@@ -322,8 +320,6 @@ class Spawner:
                     getattr(self, "nodes_lchd")[node] = elem
             if state:
                 self.active_states.add(node)
-            if wait:
-                self.loop.create_task(self.await_element(elem, node))
         except (SubprocessError, OSError, ValueError, TypeError, RunError, CommandError) as e:
             self._logger.critical("An error occurred while starting a flow, see errors")
             self._logger.critical(e)
@@ -424,7 +420,7 @@ class Spawner:
                     await self.dump_packages(packages)
                     tasks.append(
                         self.loop.create_task(
-                            self.launch_element(wait=True, **command)
+                            self.launch_element(wait=False, **command)
                         )
                     )
 
@@ -536,7 +532,7 @@ class Spawner:
 
         all_nodes_to_launch = [command["node"] for command in commands_to_launch]
         nodes_to_kill = [
-            node.name for node in self.nodes_lchd if node not in all_nodes_to_launch
+            node for node in self.nodes_lchd if node not in all_nodes_to_launch
         ]
         nodes_to_launch = [
             node
@@ -576,7 +572,8 @@ class Spawner:
                 await self.ros2_lifecycle(node_name, cmd)
             else:
                 node_to_kill = self.nodes_lchd[node_name]
-                self.loop.create_task(node_to_kill.kill())
+                self.loop.create_task(self.process_kill(node=node_name, command="kill"))
+                #node_to_kill.kill())
 
         tasks = []
         for command in commands_to_launch:
@@ -738,6 +735,7 @@ class Spawner:
             return
 
         await element.kill()
+        self.loop.create_task(self.clean_element(element, node))
 
     async def ros2_lifecycle(self, node_name: str, command):
         """Handles ROS2 Lifecycle managed nodes
