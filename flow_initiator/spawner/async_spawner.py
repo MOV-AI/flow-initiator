@@ -176,9 +176,6 @@ class Spawner:
         self._logger.debug("Spawner: terminating elements.")
 
         self.flow_monitor.active_flow = None
-        self.persistent_nodes_lchd = {}
-        self.nodes_lchd = {}
-        self.core_lchd = {}
         self.active_states = set()
         await self.fn_update_robot()
 
@@ -189,10 +186,13 @@ class Spawner:
 
         tasks = []
         for _, value in elements.items():
-            tasks.append(value.kill())
+            tasks.append(self.loop.create_task(value.kill()))
         # wait for all get_keys tasks to run
         await asyncio.gather(*tasks)
 
+        self.persistent_nodes_lchd = {}
+        self.nodes_lchd = {}
+        self.core_lchd = {}
         # Release active locks
         for key in list(self.acq_locks.keys()):
             Lock(**self.acq_locks.pop(key)).release()
@@ -212,12 +212,12 @@ class Spawner:
         for _, element in elements.items():
             tasks.append(element.kill())
         # wait for all get_keys tasks to run
-        self.loop.create_task(asyncio.gather(*tasks))
-
-        # need to check all nodes are dead before cleaning parameter server cuz dyn req
-        ROS1.clean_parameter_server()
-        # Clean dead nodes still registered in ros master
-        ROS1.rosnode_cleanup()
+        await asyncio.gather(*tasks)
+        if gdnode_exist:
+            # need to check all nodes are dead before cleaning parameter server cuz dyn req
+            ROS1.clean_parameter_server()
+            # Clean dead nodes still registered in ros master
+            ROS1.rosnode_cleanup()
 
         # Clean all Flow Vars
         Var.delete_all(scope="Flow")
@@ -326,7 +326,7 @@ class Spawner:
             self._logger.critical("An error occurred while starting a flow, see errors")
             self._logger.critical(e)
             if elem is not None:
-                elem.kill()
+                await elem.kill()
 
     async def process_command(self, command_dict: Union[bytes, dict]) -> None:
         """
@@ -573,9 +573,8 @@ class Spawner:
                 cmd = ["ros2", "lifecycle", "set", node_name, "deactivate"]
                 await self.ros2_lifecycle(node_name, cmd)
             else:
-                node_to_kill = self.nodes_lchd[node_name]
                 self.loop.create_task(self.process_kill(node=node_name, command="kill"))
-                #node_to_kill.kill())
+                # node_to_kill.kill())
 
         tasks = []
         for command in commands_to_launch:
@@ -845,7 +844,7 @@ class Spawner:
             if self.should_skip_node(node_name):
                 continue
             kwargs_local = {"command": "KILL", "node": node_name}
-            tasks.append(self.process_kill(**kwargs_local))
+            tasks.append(self.loop.create_task(self.process_kill(**kwargs_local)))
 
         # wait for all get_keys tasks to run
         await asyncio.gather(*tasks)
