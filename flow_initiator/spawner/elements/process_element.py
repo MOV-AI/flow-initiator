@@ -36,7 +36,7 @@ class ProcessElement(BaseElement):
         """
         super().__init__(*args, **kwargs)
         self.cwd = kwargs.get("cwd", None)
-        self.env = kwargs.get("wait", None)
+        self.env = kwargs.get("env", None)
         stdout = kwargs.get("stdout", None)
         if self.commands is None or stdout is None:
             self._logger.error("RUN command failed.")
