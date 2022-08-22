@@ -58,6 +58,7 @@ class FlowMonitor:
         self.ros_types = [ROS1_NODE, ROS1_NODELET]
         # self.ros_types = [ROS1_NODELET, ROS1_NODE, ROS1_PLUGIN]
         self.param_parser = None
+        self.cached_remaps = {}
 
     def load(self, flow_name: str) -> list:
         """Load a specific flow, returns starting commands"""
@@ -89,6 +90,7 @@ class FlowMonitor:
     def unload(self) -> None:
         """Unload flow"""
         self.cache_commands = {}
+        self.cached_remaps = {}
         if self.active_flow:
             dependencies_down = copy.deepcopy(self.active_dependencies)
             for dependency in self.dependencies:
@@ -202,24 +204,27 @@ class FlowMonitor:
         """
         remaps = flow.remaps
         output = {}
-        for remap in remaps:
-            to_ports = remaps[remap]["To"]
-            from_ports = remaps[remap]["From"]
+        node_inst = None
+        if flow.name in self.cached_remaps:
+            output = self.cached_remaps[flow.name]
+        else:
+            for remap in remaps:
+                to_ports = remaps[remap]["To"]
+                from_ports = remaps[remap]["From"]
 
-            for port in to_ports + from_ports:
-                try:
-                    p = re.findall(LINK_REGEX, port)
-                    node_inst, _, port_inst, _, port_name = p[0]
-                    # port.split("/")
-                except ValueError:
-                    raise Exception(
-                        "ValueError: Link in Flow should be in format"
-                        '"Node_inst/Port_inst/Port_name"'
-                    )
-                if node_inst not in output:
-                    output[node_inst] = {}
-                # output[node_inst]["/".join([port_inst, port_name])] = remap
-                output[node_inst][port] = remap
+                for port in to_ports + from_ports:
+                    p = re.search(LINK_REGEX, port)
+                    if p is not None:
+                        node_inst, _, port_inst, _, port_name = p.groups()
+                    else:
+                        raise ValueError(
+                            "ValueError: Link in Flow should be in format"
+                            '"Node_inst/Port_inst/Port_name"'
+                        )
+                    if node_inst not in output:
+                        output[node_inst] = {}
+                    output[node_inst][port] = remap
+            self.cached_remaps[flow.name] = output
         if node_name is not None:
             if node_name in output:
                 # flow.get_node_type(node_name)
@@ -239,16 +244,18 @@ class FlowMonitor:
                     ):
                         continue
 
-                    # Let's analyse the value (right side) -> if "~" in port_inst replace by node_inst/
-                    try:
-                        temp_value = re.findall(LINK_REGEX, value)
-                        node_inst, _, port_inst, _, port_name = temp_value[0]
+                    # Lets analyse the value (right side) -> if "~" in port_inst replace by node_inst/
+                    temp_value = re.search(LINK_REGEX, value)
+                    if temp_value is not None:
+                        node_inst, _, port_inst, _, port_name = temp_value.groups()
                         if port_inst.startswith("~"):
                             port_inst = port_inst.replace("~", node_inst + "/", 1)
                             # rebuild the value with the change
                             value = "%s/%s/%s" % (node_inst, port_inst, port_name)
                     # when the link is in the wrong format (only middle part)
-                    except IndexError:
+                    else:
+                        if node_inst is None:
+                            node_inst = list(output.keys())[-1]
                         value = value.replace("~", node_inst + "/", 1)
 
                     if node_type in [
