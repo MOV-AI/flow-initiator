@@ -11,7 +11,7 @@ requirements = [
     "uvloop==0.16.0",
     "dal==1.0.0.29",
     "movai_core_shared==1.0.0.10",
-    "gd_node==1.0.0.9"
+    "gd_node==1.0.0.9",
 ]
 
 # TODO Adapt your project configuration to your own project.
