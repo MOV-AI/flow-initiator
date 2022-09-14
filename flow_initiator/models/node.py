@@ -8,8 +8,9 @@
    - Manuel Silva  (manuel.silva@mov.ai) - 2020
 """
 from movai_core_shared.consts import ROS1_NODELET, MOVAI_STATE, ROS1_PLUGIN
-from dal.scopes import scopes
-from dal.models import Model
+
+from dal.scopes.scopestree import scopes
+from dal.models.model import Model
 
 
 class Node(Model):

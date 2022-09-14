@@ -17,17 +17,21 @@ import tempfile
 import time
 from asyncio.subprocess import Process
 from subprocess import SubprocessError
-from dal.models import Lock
-from dal.scopes import Package
-from dal.scopes import Robot
-from dal.models import Var
+
+from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
+from movai_core_shared.logger import Log
 from movai_core_shared.consts import (
     ROS2_LIFECYCLENODE,
     TIMEOUT_PROCESS_SIGINT,
     TIMEOUT_PROCESS_SIGTERM,
 )
-from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
-from movai_core_shared.logger import Log
+
+from dal.models.lock import Lock
+from dal.scopes.package import Package
+from dal.scopes.robot import Robot
+from dal.models.var import Var
+
+
 
 try:
     # Todo: check if we can remove ros1 dependency

@@ -17,14 +17,18 @@ import traceback
 import aioredis
 
 import rospy
-from dal.models import Lock
+
+from movai_core_shared.logger import Log, LogAdapter
+
+from dal.scopes.robot import Robot
+from dal.models.lock import Lock
 from dal.movaidb import RedisClient
-from dal.scopes import Robot
+
 from .async_spawner import Spawner
 
 # importing database profile automatically registers the database connections
 from rosgraph_msgs.msg import Log as RosOutMsg
-from movai_core_shared.logger import Log, LogAdapter
+
 
 LOGGER = LogAdapter(Log.get_logger("spawner.mov.ai"))
 

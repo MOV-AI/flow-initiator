@@ -12,8 +12,8 @@
 
 """
 
-from dal.models import Message
-from dal.models import Callback
+from dal.models.message import Message
+from dal.models.callback import Callback
 
 
 def main():

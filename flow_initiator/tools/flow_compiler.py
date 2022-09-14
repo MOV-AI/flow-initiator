@@ -9,7 +9,7 @@ import json
 
 from collections import namedtuple
 
-from dal.scopes import scopes
+from dal.scopes.scopestree import scopes
 from movai_core_shared.consts import MOVAI_STATE
 
 # typing
