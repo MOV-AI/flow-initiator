@@ -11,6 +11,6 @@
     use `python3 -m spawner` to launch
 """
 
-from . import main
+from flow_initiator import main
 
 main()
