@@ -125,8 +125,8 @@ class FlowMonitor:
                 nodes_to_transit, self.active_flow, transition_msg=transition_msg
             )
 
-        except Exception:
-            LOGGER.error()
+        except Exception as e:
+            LOGGER.error(e)
             return []
 
     def load_ros2_lifecycle(self) -> list:
