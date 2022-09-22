@@ -24,7 +24,7 @@ from dal.scopes.robot import Robot
 from dal.models.lock import Lock
 from dal.movaidb import RedisClient
 
-from flow_initiator.spawner.async_spawner import Spawner
+from .async_spawner import Spawner
 
 # importing database profile automatically registers the database connections
 from rosgraph_msgs.msg import Log as RosOutMsg
