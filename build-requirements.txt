@@ -5,11 +5,3 @@ bump2version
 flake8
 pylint
 black
-
-
-# to be removed : runtime requirements
-aioredis==1.3.0
-uvloop==0.14.0
-
-
-gd_node==1.0.1.0
