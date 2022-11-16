@@ -9,8 +9,10 @@
 """
 
 import unittest
-from flow_initiator.spawner.validation import CommandValidator
+
 from movai_core_shared.exceptions import CommandError, ActiveFlowError
+
+from flow_initiator.spawner.validation import CommandValidator
 
 
 class TestSpawner(unittest.TestCase):

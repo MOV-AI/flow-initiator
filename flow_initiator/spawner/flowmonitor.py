@@ -465,7 +465,7 @@ class FlowMonitor:
         elif node_type == ROS1_PLUGIN:
             output = []
         else:
-            output = ["/usr/bin/python3", f"{APP_PATH}/GD_Node.py"]
+            output = ["gd_node"]
         return output
 
     def get_node_cmd(self, node_name: str, flow: Flow, transition_msg=None) -> list:
