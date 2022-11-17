@@ -6,13 +6,13 @@ with open("README.md", "r") as fh:
 requirements = [
     "aioredis==1.3.0",
     "uvloop==0.14.0",
-    "gd_node==1.0.1.0"
+    "gd_node==2.4.0.0"
 ]
 
 
 setuptools.setup(
     name="flow-initiator",
-    version="1.0.1-10",
+    version="2.4.0-0",
     author="Backend team",
     author_email="backend@mov.ai",
     description="Dummy description",
