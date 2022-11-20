@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 requirements = [
     "aioredis==1.3.0",
     "uvloop==0.14.0",
-    "gd_node==2.4.0.0"
+    "gd_node==2.4.*"
 ]
 
 
