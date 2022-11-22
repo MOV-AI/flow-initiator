@@ -26,16 +26,18 @@ class TestSpawner(unittest.TestCase):
         """
 
         # implemented commands
-        impl_commands = ["START",
-                         "STOP",
-                         "TRANS",
-                         "LOCK",
-                         "UNLOCK",
-                         "RUN",
-                         "KILL",
-                         "HELP",
-                         "EMERGENCY_SET",
-                         "EMERGENCY_UNSET"]
+        impl_commands = [
+            "START",
+            "STOP",
+            "TRANS",
+            "LOCK",
+            "UNLOCK",
+            "RUN",
+            "KILL",
+            "HELP",
+            "EMERGENCY_SET",
+            "EMERGENCY_UNSET",
+        ]
 
         validator = CommandValidator()
 
@@ -58,5 +60,5 @@ class TestSpawner(unittest.TestCase):
                 self.assertTrue(validator.validate_command(**command))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
