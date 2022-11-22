@@ -45,7 +45,6 @@ from dal.models.flow import Flow
 from dal.helpers.parsers import ParamParser
 
 
-
 LOGGER = Log.get_logger("spawner.mov.ai")
 
 
@@ -111,9 +110,7 @@ class FlowMonitor:
         """ "Get commands for the transition"""
 
         try:
-            nodes_to_transit = self.active_flow.get_node_transitions(
-                node_name, port_name
-            )
+            nodes_to_transit = self.active_flow.get_node_transitions(node_name, port_name)
 
             for state in active_states or set():
                 if state != node_name:
@@ -274,9 +271,7 @@ class FlowMonitor:
                             .Template
                             in actionlib_types
                         ):
-                            output_list.append(
-                                "%s/%s:=%s" % (port_inst, port_name, value)
-                            )
+                            output_list.append("%s/%s:=%s" % (port_inst, port_name, value))
                         else:
                             output_list.append("%s:=%s" % (port_inst, value))
                     else:
@@ -288,9 +283,7 @@ class FlowMonitor:
             return []
         return output
 
-    def get_node_Parameters(
-        self, node_name: str, flow: Flow, check_plugins: bool = True
-    ) -> list:
+    def get_node_Parameters(self, node_name: str, flow: Flow, check_plugins: bool = True) -> list:
         """Return node parameters based on type"""
         output = []
         node_type = flow.full.NodeInst[node_name].node_template.Type
@@ -306,9 +299,7 @@ class FlowMonitor:
                 for key, value in list(params.items()):
                     if value is None:
                         del params[key]
-                rosparam.upload_params(
-                    "/%s/%s" % (node_name, plugin_path), params, False
-                )
+                rosparam.upload_params("/%s/%s" % (node_name, plugin_path), params, False)
 
         params = flow.get_node_params(node_name)
         if node_type in self.ros_types:
@@ -361,9 +352,7 @@ class FlowMonitor:
         params = [
             self.param_parser.parse(
                 key,
-                (
-                    node_inst.CmdLine.get(key) or SimpleNamespace(Value=value.Value)
-                ).Value,
+                (node_inst.CmdLine.get(key) or SimpleNamespace(Value=value.Value)).Value,
                 node_name,
                 node_inst,
                 flow.ref,
@@ -408,9 +397,7 @@ class FlowMonitor:
 
     def get_template_packages(self, node_name: str, flow: Flow) -> dict:
         """Return node template packages"""
-        output = (
-            []
-        )  # [{"name": package_name, "file": package_file, "path": package_path}]
+        output = []  # [{"name": package_name, "file": package_file, "path": package_path}]
 
         node_template = flow.full.NodeInst[node_name].node_template
         packages = node_template.PackageDepends
