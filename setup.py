@@ -4,22 +4,15 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 requirements = [
-    "async-timeout==3.0.1",
-    "aiohttp==3.8.1",
-    "aiohttp-cors==0.7.0",
     "aioredis==1.3.0",
     "uvloop==0.14.0",
-    "dal==1.0.0.29",
-    "movai_core_shared==1.0.0.10",
-    "gd_node==1.0.0.9",
+    "gd_node==2.4.*"
 ]
 
-# TODO Adapt your project configuration to your own project.
-# The name of the package is the one to be used in runtime.
-# The 'install_requires' is where you specify the package dependencies of your package. They will be automaticly installed, before your package.  # noqa: E501
+
 setuptools.setup(
     name="flow-initiator",
-    version="1.0.1-10",
+    version="2.4.0-0",
     author="Backend team",
     author_email="backend@mov.ai",
     description="Dummy description",
@@ -30,5 +23,11 @@ setuptools.setup(
     include_package_data=True,
     classifiers=["Programming Language :: Python :: 3"],
     install_requires=requirements,
-    entry_points={},
+    entry_points={
+        "console_scripts":[
+            "flow_compiler = flow_initiator.tools.flow_compiler:main",
+            "flow_initiator = flow_initiator:main",
+            "init_local_db = flow_initiator.tools.init_local_db:main"
+        ]
+        },
 )

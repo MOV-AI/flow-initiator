@@ -11,8 +11,9 @@
 
 import signal
 import argparse
-from .spawner import Core
 from dal.movaidb import RedisClient
+from .spawner import Core
+
 
 
 def main():

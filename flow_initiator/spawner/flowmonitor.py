@@ -11,13 +11,7 @@ import re
 import copy
 import rosparam
 from types import SimpleNamespace
-
 import os
-from dal.scopes import scopes
-from dal.helpers.parsers import ParamParser
-
-# for typing
-from dal.models import Flow
 
 from movai_core_shared.consts import (
     ROS1_NODELET,
@@ -45,6 +39,12 @@ from movai_core_shared.envvars import (
 )
 
 from movai_core_shared.logger import Log
+
+from dal.models.scopestree import scopes
+from dal.models.flow import Flow
+from dal.helpers.parsers import ParamParser
+
+
 
 LOGGER = Log.get_logger("spawner.mov.ai")
 
@@ -465,7 +465,7 @@ class FlowMonitor:
         elif node_type == ROS1_PLUGIN:
             output = []
         else:
-            output = ["/usr/bin/python3", f"{APP_PATH}/GD_Node.py"]
+            output = ["gd_node"]
         return output
 
     def get_node_cmd(self, node_name: str, flow: Flow, transition_msg=None) -> list:
