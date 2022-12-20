@@ -1,4 +1,8 @@
 # requirements for the execution of tests and packaging. Not runtime requirements.
+rospkg
+pyyaml
+pyros-genmsg
+py3rosmsgs
 pytest
 pytest-cov
 mock
