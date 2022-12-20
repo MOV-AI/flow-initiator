@@ -8,6 +8,7 @@ on:
       - dev
       - main
       - 'releases/**'
+      - test/QAP-1556
     paths-ignore:
       - '.bumpversion.cfg'
       - 'setup.py'
