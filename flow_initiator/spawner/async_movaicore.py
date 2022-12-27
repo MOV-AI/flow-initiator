@@ -19,7 +19,9 @@ import aioredis
 import zmq.asyncio
 import rospy
 
-
+from movai_core_shared.logger import Log, LogAdapter
+from movai_core_shared.envvars import MOVAI_SPAWNER_FILE_SOCKET, MOVAI_ZMQ_SOCKET
+from movai_core_shared.core.zmq_client import create_certificates
 from dal.scopes.robot import Robot
 from dal.models.lock import Lock
 from dal.movaidb import RedisClient
@@ -28,8 +30,6 @@ from .async_spawner import Spawner
 
 # importing database profile automatically registers the database connections
 from rosgraph_msgs.msg import Log as RosOutMsg
-from movai_core_shared.logger import Log, LogAdapter
-from movai_core_shared.envvars import MOVAI_SPAWNER_FILE_SOCKET
 
 LOGGER = Log.get_logger("spawner.mov.ai")
 USER_LOGGER = LogAdapter(LOGGER)
@@ -247,40 +247,51 @@ class Core:
         """
         context = zmq.asyncio.Context()
         file_socket = None
+        tcp_socket = None
         try:
             poller = zmq.asyncio.Poller()
+            # encrypted tcp port config
+            tcp_socket = context.socket(zmq.ROUTER)
+            tcp_socket.bind(f"tcp://*:{MOVAI_ZMQ_SOCKET}")
+            public_key, secret_key = create_certificates("/tmp/", "key")
+            tcp_socket.curve_publickey = public_key
+            tcp_socket.curve_secretkey = secret_key
+            tcp_socket.setsockopt(zmq.CURVE_SERVER, True)
+            poller.register(tcp_socket, zmq.POLLIN)
+            self.robot.set_pub_key(public_key.decode("utf8"))  # local set
+            # local file socket config
             file_socket = context.socket(zmq.ROUTER)
             file_socket.bind(MOVAI_SPAWNER_FILE_SOCKET)
             poller.register(file_socket, zmq.POLLIN)
         except OSError as e:
             LOGGER.error("failed to init to spawner file socket")
             LOGGER.error(e)
-            self.close_port([file_socket], context)
+            self.close_port([file_socket, tcp_socket], context)
             return
         while self.RUNNING and file_socket:
             try:
                 sock = dict(await poller.poll())
-
                 if file_socket in sock:
-                    req = await file_socket.recv_multipart()
-                    self.loop.create_task(self._handle_socket(req, file_socket))
+                    self.loop.create_task(self._handle_socket(file_socket))
+                if tcp_socket in sock:
+                    self.loop.create_task(self._handle_socket(tcp_socket))
             except TypeError:
                 continue
             except zmq.ZMQError:
                 continue
         self.close_port([file_socket], context)
 
-    async def _handle_socket(self, req_msg: list, server: zmq.Socket):
+    async def _handle_socket(self, server: zmq.Socket):
         """
         Handler for the zmq socket
         Args:
-            req_msg (list): request list, in ZMQ style
             server (zmq.Socket): the socket that received the message
 
         Returns: None
 
         """
         # receive data
+        req_msg = await server.recv_multipart()
         if len(req_msg) == 3:
             # in case sender just use send
             msg_index = 2
@@ -293,7 +304,7 @@ class Core:
         LOGGER.info(f"<- {buffer}")
         try:
             request = json.loads(buffer)
-            await self.spawner.process_command(request)
+            self.loop.create_task(self.spawner.process_command(request))
             req_msg[msg_index] = "Got request & successfully proccessed".encode("utf8")
         except json.JSONDecodeError as e:
             LOGGER.error(f"can't parse command: {buffer}")
