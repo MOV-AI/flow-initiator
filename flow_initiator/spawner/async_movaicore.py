@@ -254,6 +254,7 @@ class Core:
             tcp_socket = context.socket(zmq.ROUTER)
             tcp_socket.bind(f"tcp://*:{MOVAI_ZMQ_SOCKET}")
             public_key, secret_key = create_certificates("/tmp/", "key")
+            self.robot.set_pub_key(public_key)
             tcp_socket.curve_publickey = public_key
             tcp_socket.curve_secretkey = secret_key
             tcp_socket.setsockopt(zmq.CURVE_SERVER, True)
