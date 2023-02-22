@@ -131,13 +131,14 @@ class Spawner(CommandValidator):
         }
         active_scene = self.robot.Status.get("active_scene", "") if data["active_flow"] else ""
         data.update({"active_scene": active_scene})
+        self.robot.update_status(data, db="local")
 
         # run robot update in a thread executor so it does not block
         await self.loop.run_in_executor(None, self.th_robot_update, self.robot.name, data)
 
     def th_robot_update(self, robot_name: str, data: dict) -> None:
         """robot update blocks, should run in a thread executor"""
-        Robot.cls_update_status(robot_name, data, db="all")
+        Robot.cls_update_status(robot_name, data, db="global")
 
     async def stop(self) -> None:
         """Stop all processes"""
