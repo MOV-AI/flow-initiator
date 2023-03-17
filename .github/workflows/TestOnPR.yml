@@ -26,7 +26,7 @@ jobs:
       sonar_token: ${{ secrets.SONAR_TOKEN }}
 
   CI-version:
-    needs: [CI]
+    needs: [CI-pip]
     runs-on: ubuntu-20.04
     outputs:
       version: ${{ steps.info.outputs.version }}
