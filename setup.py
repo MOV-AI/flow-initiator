@@ -8,7 +8,7 @@ requirements = [
     "aiohttp==3.8.1",
     "aiohttp-cors==0.7.0",
     "aioredis==1.3.0",
-    "uvloop==0.14.0",
+    "uvloop==0.16.0",
     "dal==1.0.0.29",
     "movai_core_shared==1.0.0.10",
     "gd_node==1.0.0.9",
