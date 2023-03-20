@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 requirements = [
     "async-timeout==4.0.2",
-    "aiohttp==3.6.2",
+    "aiohttp==3.8.1",
     "aiohttp-cors==0.7.0",
     "aioredis==1.3.0",
     "uvloop==0.14.0",
@@ -19,7 +19,7 @@ requirements = [
 # The 'install_requires' is where you specify the package dependencies of your package. They will be automaticly installed, before your package.  # noqa: E501
 setuptools.setup(
     name="flow-initiator",
-    version="1.0.1-9",
+    version="1.0.1-10",
     author="Backend team",
     author_email="backend@mov.ai",
     description="Dummy description",
