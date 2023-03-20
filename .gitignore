@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# .deb
+debian/flow-initiator/DEBIAN/
+debian/.debhelper

@@ -17,14 +17,18 @@ import traceback
 import aioredis
 
 import rospy
-from dal.models import Lock
+
+from movai_core_shared.logger import Log, LogAdapter
+
+from dal.scopes.robot import Robot
+from dal.models.lock import Lock
 from dal.movaidb import RedisClient
-from dal.scopes import Robot
+
 from .async_spawner import Spawner
 
 # importing database profile automatically registers the database connections
 from rosgraph_msgs.msg import Log as RosOutMsg
-from movai_core_shared.logger import Log, LogAdapter
+
 
 LOGGER = LogAdapter(Log.get_logger("spawner.mov.ai"))
 
@@ -84,9 +88,7 @@ class Core:
     def handle_exception(self, loop, context):
         """Handle Exceptions"""
         msg = context.get("exception", context["message"])
-        tb_str = traceback.format_exception(
-            etype=type(msg), value=msg, tb=msg.__traceback__
-        )
+        tb_str = traceback.format_exception(etype=type(msg), value=msg, tb=msg.__traceback__)
         LOGGER.error("\n" + "".join(tb_str))
 
     def _rosout_callback(self, msg):
@@ -123,9 +125,7 @@ class Core:
         _conn_local_sub = await self.databases.local_pubsub.acquire()
         self.conn_local_sub = aioredis.Redis(_conn_local_sub)
 
-    async def task_subscriber(
-        self, subscriber: str, connection: aioredis.Redis
-    ) -> None:
+    async def task_subscriber(self, subscriber: str, connection: aioredis.Redis) -> None:
         """Calls a callback every time it gets a message."""
         channel = subscriber["channel"][0]
         callback = subscriber["callback"]

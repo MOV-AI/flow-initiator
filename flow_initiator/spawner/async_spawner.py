@@ -17,17 +17,20 @@ import tempfile
 import time
 from asyncio.subprocess import Process
 from subprocess import SubprocessError
-from dal.models import Lock
-from dal.scopes import Package
-from dal.scopes import Robot
-from dal.models import Var
+
+from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
+from movai_core_shared.logger import Log
 from movai_core_shared.consts import (
     ROS2_LIFECYCLENODE,
     TIMEOUT_PROCESS_SIGINT,
     TIMEOUT_PROCESS_SIGTERM,
 )
-from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
-from movai_core_shared.logger import Log
+
+from dal.models.lock import Lock
+from dal.scopes.package import Package
+from dal.scopes.robot import Robot
+from dal.models.var import Var
+
 
 try:
     # Todo: check if we can remove ros1 dependency
@@ -47,9 +50,7 @@ class Spawner(CommandValidator):
 
     EMERGENCY_FLAG = False
 
-    def __init__(
-        self, loop: asyncio.AbstractEventLoop, robot: Robot, debug: bool = False
-    ):
+    def __init__(self, loop: asyncio.AbstractEventLoop, robot: Robot, debug: bool = False):
         self._logger = Log.get_logger("spawner.mov.ai")
         self._stdout = open(f"{APP_LOGS}/stdout", "w")
         self.loop = loop
@@ -128,19 +129,16 @@ class Spawner(CommandValidator):
             "locks": Lock.enabled_locks,
             "timestamp": time.time(),
         }
-        active_scene = (
-            self.robot.Status.get("active_scene", "") if data["active_flow"] else ""
-        )
+        active_scene = self.robot.Status.get("active_scene", "") if data["active_flow"] else ""
         data.update({"active_scene": active_scene})
+        self.robot.update_status(data, db="local")
 
         # run robot update in a thread executor so it does not block
-        await self.loop.run_in_executor(
-            None, self.th_robot_update, self.robot.name, data
-        )
+        await self.loop.run_in_executor(None, self.th_robot_update, self.robot.name, data)
 
     def th_robot_update(self, robot_name: str, data: dict) -> None:
         """robot update blocks, should run in a thread executor"""
-        Robot.cls_update_status(robot_name, data, db="all")
+        Robot.cls_update_status(robot_name, data, db="global")
 
     async def stop(self) -> None:
         """Stop all processes"""
@@ -220,9 +218,7 @@ class Spawner(CommandValidator):
             for key, value in self.nodes_lchd.items()
         ]
         _ = [
-            pids.setdefault(
-                "%s" % value["pid"], {"node": key, "ref": self.persistent_nodes_lchd}
-            )
+            pids.setdefault("%s" % value["pid"], {"node": key, "ref": self.persistent_nodes_lchd})
             for key, value in self.persistent_nodes_lchd.items()
         ]
 
@@ -240,17 +236,13 @@ class Spawner(CommandValidator):
         log_msg = "**  Node {} ({}) terminated with code {}  **".format(
             node_name, pid, process.returncode
         )
-        self._logger.info(log_msg) if process.returncode == 0 else self._logger.error(
-            log_msg
-        )
+        self._logger.info(log_msg) if process.returncode == 0 else self._logger.error(log_msg)
 
     async def terminate_process(self, process_key: dict, node_name: str) -> None:
         """Terminate process"""
         process = process_key["process"]
         self._logger.info(
-            "Spawner: Trying to terminate node {} ({})".format(
-                node_name, process_key["pid"]
-            )
+            "Spawner: Trying to terminate node {} ({})".format(node_name, process_key["pid"])
         )
         try:
             process.send_signal(signal.SIGINT)
@@ -288,9 +280,7 @@ class Spawner(CommandValidator):
                     sigterm_sent = True
 
             if current_time > t_init + timeout_int + timeout_term:
-                self._logger.error(
-                    "Sending SIGKILL to node {} ({})".format(node_name, str(pid))
-                )
+                self._logger.error("Sending SIGKILL to node {} ({})".format(node_name, str(pid)))
                 process.kill()
                 return None
             await asyncio.sleep(0.2)
@@ -305,11 +295,7 @@ class Spawner(CommandValidator):
     ) -> None:
         """Launch process, add to list and create task to wait for its end"""
         self._logger.info(
-            (
-                "Launching command (persistent: {}) {}".format(
-                    command[2], " ".join(command[1])
-                )
-            )
+            ("Launching command (persistent: {}) {}".format(command[2], " ".join(command[1])))
         )
         # self._logger.debug(f"Environment vars: %s) {env}")
         cwd = cwd or self.temp_dir.name
@@ -361,9 +347,7 @@ class Spawner(CommandValidator):
         [params.setdefault(key, value) for key, value in _params.items()]
 
         if params.get("command", None) is None:
-            self._logger.error(
-                "Command not found. Push 'command=HELP' to get available commands."
-            )
+            self._logger.error("Command not found. Push 'command=HELP' to get available commands.")
             return
 
         # get command callback
@@ -441,9 +425,7 @@ class Spawner(CommandValidator):
                 # wait until all are launched
                 await asyncio.gather(*tasks, loop=self.loop)
             except (SubprocessError, OSError, ValueError, TypeError) as e:
-                self._logger.critical(
-                    "An error occurred while starting a flow, see errors"
-                )
+                self._logger.critical("An error occurred while starting a flow, see errors")
                 self._logger.critical(e)
                 for task in tasks:
                     task.cancel()
@@ -495,9 +477,7 @@ class Spawner(CommandValidator):
 
         trans_msg = pickle.dumps(data)
         if type(self).EMERGENCY_FLAG and not self.should_skip_node(node):
-            self._logger.warning(
-                "EMERGENCY button was pressed, Terminating transition!!"
-            )
+            self._logger.warning("EMERGENCY button was pressed, Terminating transition!!")
             return
 
         if not all([command, node, port]):
@@ -516,18 +496,13 @@ class Spawner(CommandValidator):
             node, port, self.active_states, transition_msg=trans_msg
         )
 
-        if (
-            len(set.difference(self.active_states, {node})) + len(commmands_to_launch)
-            == 0
-        ):
+        if len(set.difference(self.active_states, {node})) + len(commmands_to_launch) == 0:
             # if after stopping the node, we are left with not state nodes,
             # it's time to die
             return await self.stop_flow()
 
         all_nodes_to_launch = [command[0] for command in commmands_to_launch]
-        nodes_to_kill = [
-            node for node in self.nodes_lchd if node not in all_nodes_to_launch
-        ]
+        nodes_to_kill = [node for node in self.nodes_lchd if node not in all_nodes_to_launch]
         nodes_to_launch = [
             node
             for node in all_nodes_to_launch
@@ -576,9 +551,7 @@ class Spawner(CommandValidator):
                 # launch process
                 # self._logger.info(("command in process_command:{}/{}/{}".format(command[0], command[2], command[1])))
                 tasks.append(
-                    self.loop.create_task(
-                        self.launch_process(command, wait=True, env=command[4])
-                    )
+                    self.loop.create_task(self.launch_process(command, wait=True, env=command[4]))
                 )
 
         if type(self).EMERGENCY_FLAG and not self.should_skip_node(node):
@@ -649,9 +622,7 @@ class Spawner(CommandValidator):
             )
             return
 
-        commmands_to_launch = self.flow_monitor.get_commands(
-            [node], self.flow_monitor.active_flow
-        )
+        commmands_to_launch = self.flow_monitor.get_commands([node], self.flow_monitor.active_flow)
         all_nodes_to_launch = [command[0] for command in commmands_to_launch]
 
         nodes_to_launch = [
@@ -661,9 +632,7 @@ class Spawner(CommandValidator):
         ]
 
         if not nodes_to_launch:
-            self._logger.warning(
-                "Node {} is already launched or was not found".format(node)
-            )
+            self._logger.warning("Node {} is already launched or was not found".format(node))
             return
 
         self._logger.debug(f"RUN node {node}")
@@ -672,9 +641,7 @@ class Spawner(CommandValidator):
         for command in commmands_to_launch:
             if command[0] in nodes_to_launch:
                 tasks.append(
-                    self.loop.create_task(
-                        self.launch_process(command, wait=True, env=command[4])
-                    )
+                    self.loop.create_task(self.launch_process(command, wait=True, env=command[4]))
                 )
         await asyncio.gather(*tasks, loop=self.loop)
 
@@ -697,14 +664,10 @@ class Spawner(CommandValidator):
 
         self._logger.debug(f"KILL node {node}")
 
-        process = self.nodes_lchd.get(node, None) or self.persistent_nodes_lchd.get(
-            node, None
-        )
+        process = self.nodes_lchd.get(node, None) or self.persistent_nodes_lchd.get(node, None)
 
         if process is None:
-            self._logger.warning(
-                "Could not kill Node {} because is not launched".format(node)
-            )
+            self._logger.warning("Could not kill Node {} because is not launched".format(node))
             return
 
         await self.terminate_process(process, node)
@@ -786,9 +749,7 @@ class Spawner(CommandValidator):
             if invalids:
                 msg_invalid_checksum = "Checksum {} for file {} is invalid."
                 for result, file_name, checksum in invalids:
-                    self._logger.critical(
-                        msg_invalid_checksum.format(checksum, file_name)
-                    )
+                    self._logger.critical(msg_invalid_checksum.format(checksum, file_name))
 
     async def process_emergency_set(self, **kwargs):
         """activates EMERGENCY button pressed, all active states will be killed unless it matches
