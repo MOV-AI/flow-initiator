@@ -9,7 +9,7 @@ on:
       - 'setup.py'
 
 jobs:
-  CI:
+  CI-pip:
     uses: MOV-AI/.github/.github/workflows/py-deb-workflow.yml@v1
     with:
       deploy: 'true'
@@ -22,3 +22,46 @@ jobs:
       nexus_publisher_password: ${{ secrets.NEXUS_PUBLISHER_PWD }}
       gh_token: ${{ secrets.GITHUB_TOKEN }}
       sonar_token: ${{ secrets.SONAR_TOKEN }}
+
+  CI-version:
+    needs: [CI-pip]
+    runs-on: ubuntu-20.04
+    outputs:
+      version: ${{ steps.info.outputs.version }}
+    steps:
+      - name: Download a single artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: packages
+          path: dist
+
+      - name: Calc version
+        id: info
+        run: |
+          package_name=$(find dist -type f -name *.whl)
+          NEW_VERSIONING='[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+'
+          version=$(echo $package_name | grep -Eo $NEW_VERSIONING )
+          echo $version
+          echo "::set-output name=version::$version"
+
+  CI-docker-noetic:
+    needs: [CI-version]
+    uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@v1
+    with:
+      docker_file: docker/noetic/Dockerfile
+      docker_image: qa/flow-initiator-noetic
+      public: false
+      public_image: ce/flow-initiator-noetic
+      github_ref: ${{ github.ref }}
+      deploy: true
+      version: ${{ needs.CI-version.outputs.version }}
+      push_latest: true
+      snyk_check: true
+      build_args: PIP_PACKAGE_REPO=https://artifacts.cloud.mov.ai/repository/pypi-integration/simple
+      download_artifact: true
+    secrets:
+      registry_user: ${{ secrets.PORTUS_APP_USER }}
+      registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
+      pub_registry_user: ${{ secrets.PORTUS_APP_USER }}
+      pub_registry_password: ${{ secrets.PORTUS_APP_TOKEN }}
+      snyk_token: ${{ secrets.SNYK_TOKEN }}
