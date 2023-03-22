@@ -51,7 +51,7 @@ jobs:
     uses: MOV-AI/.github/.github/workflows/docker-workflow.yml@v1
     with:
       docker_file: docker/noetic/Dockerfile
-      docker_image: devops/flow-initiator-noetic
+      docker_image: develop/flow-initiator-noetic
       public: false
       public_image: ce/flow-initiator-noetic
       github_ref: ${{ github.ref }}
