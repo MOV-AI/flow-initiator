@@ -1,11 +1,11 @@
 # flow-initator
-Flow initiator is the node orchistration tool of the MOV.AI platform. 
-Respnsible for executing the flow by lunching killing and monitoring the nodes for 
+Flow initiator is the node orchistration tool of the MOV.AI platform.
+Respnsible for executing the flow by lunching killing and monitoring the nodes for
 activating and transisining between the Flow states, for fulfilling the flow logic
 
 ## Usage
 
-The Flow initiator is activated with the follwoing command: 
+The Flow initiator is activated with the follwoing command:
 
     python3 -m flow_initiator
 
@@ -39,11 +39,6 @@ The complete build process requires 2 steps :
 
 ## build docker images
 
-For ROS melodic distribution :
-
-    docker build -t flow_initiator:melodic -f docker/melodic/Dockerfile .
-
-
 For ROS noetic distribution :
 
     docker build -t flow_initiator:noetic -f docker/noetic/Dockerfile .
@@ -51,12 +46,9 @@ For ROS noetic distribution :
 
 ## Basic Run
 
-For ROS melodic distribution :
-
-    docker run -t flow_initiator:melodic
-
 For ROS noetic distribution :
 
+    docker run -t flow_initiator:noetic
 
 You don't need to worry about the 4th digit, as the CI system does the automatic bump of it.
 =======
@@ -64,16 +56,13 @@ You don't need to worry about the 4th digit, as the CI system does the automatic
 
 ## Development stack
 
-For ROS melodic distribution :
-
-    export FLOW_INITIATOR_DISTRO=melodic
-    docker-compose -f tests/docker-compose.yml up -d
-
 For ROS noetic distribution :
 
-    export FLOW_INITIATOR_DISTRO=noetic
-    docker-compose -f tests/docker-compose.yml up -d
+    sudo chmod 777 -Rf  tests/{logs,shared,userspace}
+    docker-compose -f tests/docker-compose.yml up --build -d
 
+Cleaning :
 
+    docker-compose -f tests/docker-compose.yml down --remove-orphans --volumes
 
 

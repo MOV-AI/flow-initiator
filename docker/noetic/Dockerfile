@@ -2,7 +2,9 @@
 ARG DOCKER_REGISTRY="registry.cloud.mov.ai"
 ARG ENV="qa"
 ARG BASE_IMAGE="spawner-base-noetic"
-ARG TAG="v3.1.10"
+ARG TAG="v3.1.12"
+ARG PIP_PACKAGE_REPO="https://artifacts.cloud.mov.ai/repository/pypi-experimental/simple"
+
 FROM ${DOCKER_REGISTRY}/${ENV}/${BASE_IMAGE}:${TAG} AS Flow-Initiator
 
 # Labels
@@ -36,6 +38,17 @@ RUN \
     apt-get clean -y > /dev/null && \
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/* && \
+    # Clean temp files
+    rm -rf /tmp/*
+# Copy PIP package
+COPY dist /tmp/dist
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN setup-pypi-env.sh INT && \
+    python3 -m pip install --no-cache-dir \
+    --index-url="$PIP_PACKAGE_REPO" \
+    --extra-index-url https://pypi.org/simple \
+    /tmp/dist/*.whl && \
     # Clean temp files
     rm -rf /tmp/*
 
