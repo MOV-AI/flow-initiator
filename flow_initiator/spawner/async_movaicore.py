@@ -180,8 +180,8 @@ class Core:
         await self.spawner.stop()
         tasks = [
             task
-            for task in asyncio.Task.all_tasks()
-            if task is not asyncio.tasks.Task.current_task()
+            for task in asyncio.all_tasks()
+            if task is not asyncio.current_task()
         ]
         list(map(lambda task: task.cancel(), tasks))
         await asyncio.gather(*tasks, return_exceptions=True)
