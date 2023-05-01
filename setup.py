@@ -6,7 +6,9 @@ with open("README.md", "r") as fh:
 requirements = [
     "aioredis==1.3.1",
     "uvloop==0.14.0",
-    "gd-node==2.4.1.12"
+    "movai-core-shared==2.4.1.10",
+    "data-access-layer==2.4.1.17",
+    "gd-node==2.4.1.13",
 ]
 
 
@@ -24,7 +26,7 @@ setuptools.setup(
     classifiers=["Programming Language :: Python :: 3"],
     install_requires=requirements,
     entry_points={
-        "console_scripts":[
+        "console_scripts": [
             "flow_compiler = flow_initiator.tools.flow_compiler:main",
             "flow_initiator = flow_initiator:main",
             "init_local_db = flow_initiator.tools.init_local_db:main"
