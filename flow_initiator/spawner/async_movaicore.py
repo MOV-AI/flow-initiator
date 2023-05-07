@@ -232,9 +232,8 @@ class Core:
         Returns: None
 
         """
-        for socket in self.sockets:
-            if isinstance(socket, zmq.Socket):
-                socket.close()
+        if isinstance(self.tcp_socket, zmq.Socket):
+            self.tcp_socket.close()
         context.terminate(1)
 
     async def ports_loop(self):
@@ -262,7 +261,7 @@ class Core:
                 continue
             except zmq.ZMQError:
                 continue
-        self.close_port([file_socket], context)
+        self.close_port(context)
 
     async def _handle_socket(self, req_msg: list):
         """
