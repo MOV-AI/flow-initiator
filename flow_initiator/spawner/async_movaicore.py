@@ -20,7 +20,7 @@ import zmq.asyncio
 import rospy
 
 from movai_core_shared.logger import Log, LogAdapter
-from movai_core_shared.envvars import MOVAI_SPAWNER_FILE_SOCKET, MOVAI_ZMQ_SOCKET
+from movai_core_shared.envvars import MOVAI_FLOW_PORT
 from movai_core_shared.core.zmq_client import create_certificates
 from dal.scopes.robot import Robot
 from dal.models.lock import Lock
@@ -249,21 +249,8 @@ class Core:
         file_socket = None
         tcp_socket = None
         try:
-            poller = zmq.asyncio.Poller()
-            # encrypted tcp port config
             tcp_socket = context.socket(zmq.ROUTER)
-            tcp_socket.bind(f"tcp://*:{MOVAI_ZMQ_SOCKET}")
-            public_key, secret_key = create_certificates("/tmp/", "key")
-            self.robot.set_pub_key(public_key)
-            tcp_socket.curve_publickey = public_key
-            tcp_socket.curve_secretkey = secret_key
-            tcp_socket.setsockopt(zmq.CURVE_SERVER, True)
-            poller.register(tcp_socket, zmq.POLLIN)
-            self.robot.set_pub_key(public_key.decode("utf8"))  # local set
-            # local file socket config
-            file_socket = context.socket(zmq.ROUTER)
-            file_socket.bind(MOVAI_SPAWNER_FILE_SOCKET)
-            poller.register(file_socket, zmq.POLLIN)
+            tcp_socket.bind(f"tcp://*:{MOVAI_FLOW_PORT}")
         except OSError as e:
             LOGGER.error("failed to init to spawner file socket")
             LOGGER.error(e)
@@ -271,11 +258,8 @@ class Core:
             return
         while self.RUNNING and file_socket:
             try:
-                sock = dict(await poller.poll())
-                if file_socket in sock:
-                    self.loop.create_task(self._handle_socket(file_socket))
-                if tcp_socket in sock:
-                    self.loop.create_task(self._handle_socket(tcp_socket))
+                await tcp_socket.poll()
+                self.loop.create_task(self._handle_socket(tcp_socket))
             except TypeError:
                 continue
             except zmq.ZMQError:
