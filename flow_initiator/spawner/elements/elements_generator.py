@@ -22,7 +22,10 @@ class ElementsGenerator:
             robot_name: robot name, for all nodes
             network: network name, in case of container
         """
-        self.orchestrator = Orchestrator({"robot_name": robot_name})
+        try:
+            self.orchestrator = Orchestrator({"robot_name": robot_name})
+        except AttributeError:
+            self.orchestrator = None
         self.network_name = network
 
     async def elements_generator(self, *args, **kwargs):
@@ -30,7 +33,7 @@ class ElementsGenerator:
         Factory to create running elements
         by params create process/ containers/ process within running containers
         """
-        if "container_conf" not in kwargs or len(kwargs["container_conf"]) == 0:
+        if self.orchestrator is None or "container_conf" not in kwargs or len(kwargs["container_conf"]) == 0:
             # if there is no image, it will run on the host as a process
             elem = ProcessElement(*args, **kwargs)
         else:

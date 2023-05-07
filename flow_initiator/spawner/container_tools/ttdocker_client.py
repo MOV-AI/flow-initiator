@@ -1,4 +1,5 @@
 import docker
+from docker.errors import DockerException
 import requests
 from movai_core_shared.logger import Log
 from movai_core_shared.envvars import DOCKERD_ATTEMPTS
@@ -71,5 +72,9 @@ class TTDockerClient(docker.DockerClient):
     """
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.api = TTAPIClient(*args, **kwargs)
+        try:
+            super().__init__(*args, **kwargs)
+            self.api = TTAPIClient(*args, **kwargs)
+        except DockerException as e:
+            self.api = None
+            log.critical(f"Can't reach docker daemon: {type(e).__qualname__}: {str(e)}")
