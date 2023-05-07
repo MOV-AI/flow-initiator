@@ -20,13 +20,13 @@ class TTAPIClient(docker.APIClient):
     num_of_attempts = 1
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         try:
+            super().__init__(*args, **kwargs)
             self.num_of_attempts = int(DOCKERD_ATTEMPTS)
             if self.num_of_attempts <= 0:
                 raise ValueError()
-        except ValueError:
-            log.critical("wrong value: DOCKERD_ATTEMPTS must be positive integer")
+        except (ValueError, DockerException) as e:
+            log.critical(f"Can't reach docker daemon: {type(e).__qualname__}: {str(e)}")
 
     def multiple_attempts(self, function, *args, **kwargs):
         """

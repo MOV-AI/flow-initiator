@@ -222,8 +222,7 @@ class Core:
                     result = pickle.loads(_result)
                 await self.spawner.process_command(result)
 
-    @staticmethod
-    def close_port(sockets: list, context: zmq.Context) -> None:
+    def close_port(self, context: zmq.Context) -> None:
         """
         Close all the ports
         Args:
@@ -233,7 +232,7 @@ class Core:
         Returns: None
 
         """
-        for socket in sockets:
+        for socket in self.sockets:
             if isinstance(socket, zmq.Socket):
                 socket.close()
         context.terminate(1)
@@ -246,26 +245,26 @@ class Core:
         """
         context = zmq.asyncio.Context()
         file_socket = None
-        tcp_socket = None
+        self.tcp_socket = None
         try:
-            tcp_socket = context.socket(zmq.ROUTER)
-            tcp_socket.bind(f"tcp://*:{MOVAI_FLOW_PORT}")
+            self.tcp_socket = context.socket(zmq.ROUTER)
+            self.tcp_socket.bind(f"tcp://*:{MOVAI_FLOW_PORT}")
         except OSError as e:
             LOGGER.error("failed to init to spawner file socket")
             LOGGER.error(e)
-            self.close_port([file_socket, tcp_socket], context)
+            self.close_port(context)
             return
         while self.RUNNING and file_socket:
             try:
-                await tcp_socket.poll()
-                self.loop.create_task(self._handle_socket(tcp_socket))
+                req_msg = await self.file_socket.recv_multipart()
+                self.loop.create_task(self._handle_socket(req_msg))
             except TypeError:
                 continue
             except zmq.ZMQError:
                 continue
         self.close_port([file_socket], context)
 
-    async def _handle_socket(self, server: zmq.Socket):
+    async def _handle_socket(self, req_msg: list):
         """
         Handler for the zmq socket
         Args:
@@ -275,7 +274,6 @@ class Core:
 
         """
         # receive data
-        req_msg = await server.recv_multipart()
         if len(req_msg) == 3:
             # in case sender just use send
             msg_index = 2
@@ -295,7 +293,7 @@ class Core:
             LOGGER.error(e)
             req_msg[msg_index] = "can't parse command: {buffer}".encode("utf8")
         finally:
-            await server.send_multipart(req_msg)
+            await self.tcp_socket.send_multipart(req_msg)
 
     async def stop(self) -> None:
         """
