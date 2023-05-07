@@ -21,7 +21,6 @@ import rospy
 
 from movai_core_shared.logger import Log, LogAdapter
 from movai_core_shared.envvars import MOVAI_FLOW_PORT
-from movai_core_shared.core.zmq_client import create_certificates
 from dal.scopes.robot import Robot
 from dal.models.lock import Lock
 from dal.movaidb import RedisClient
