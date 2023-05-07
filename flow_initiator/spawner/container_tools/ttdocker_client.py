@@ -26,7 +26,6 @@ class TTAPIClient(docker.APIClient):
                 raise ValueError()
         except ValueError:
             log.critical("wrong value: DOCKERD_ATTEMPTS must be positive integer")
-            exit(1)
 
     def multiple_attempts(self, function, *args, **kwargs):
         """
@@ -38,7 +37,6 @@ class TTAPIClient(docker.APIClient):
             except requests.exceptions.Timeout as e:
                 log.warning(f"Timeout reading: {type(e).__qualname__}: {str(e)}")
         log.critical("Can't reach docker daemon")
-        exit(1)
 
     # todo: check how to do it for all methods
     def get(self, *args, **kwargs):
