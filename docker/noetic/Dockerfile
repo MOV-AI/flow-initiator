@@ -2,7 +2,7 @@
 ARG DOCKER_REGISTRY="registry.cloud.mov.ai"
 ARG ENV="qa"
 ARG BASE_IMAGE="spawner-base-noetic"
-ARG TAG="v3.1.19"
+ARG TAG="v3.1.20"
 FROM ${DOCKER_REGISTRY}/${ENV}/${BASE_IMAGE}:${TAG} AS Flow-Initiator
 
 # Labels
