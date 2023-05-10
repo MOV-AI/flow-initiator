@@ -234,7 +234,6 @@ class Core:
         """
         if isinstance(self.tcp_socket, zmq.Socket):
             self.tcp_socket.close()
-        context.terminate(1)
 
     async def ports_loop(self):
         """
@@ -253,9 +252,9 @@ class Core:
             LOGGER.error(e)
             self.close_port(context)
             return
-        while self.RUNNING and file_socket:
+        while self.RUNNING:
             try:
-                req_msg = await self.file_socket.recv_multipart()
+                req_msg = await self.tcp_socket.recv_multipart()
                 self.loop.create_task(self._handle_socket(req_msg))
             except TypeError:
                 continue
