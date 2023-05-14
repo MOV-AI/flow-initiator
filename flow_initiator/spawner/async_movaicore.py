@@ -29,8 +29,8 @@ from .async_spawner import Spawner
 # importing database profile automatically registers the database connections
 from rosgraph_msgs.msg import Log as RosOutMsg
 
-
-LOGGER = LogAdapter(Log.get_logger("spawner.mov.ai"))
+LOGGER = Log.get_logger("spawner.mov.ai")
+USER_LOGGER = LogAdapter(LOGGER)
 
 
 class Core:
@@ -89,21 +89,21 @@ class Core:
         """Handle Exceptions"""
         msg = context.get("exception", context["message"])
         tb_str = traceback.format_exception(etype=type(msg), value=msg, tb=msg.__traceback__)
-        LOGGER.error("\n" + "".join(tb_str))
+        USER_LOGGER.error("\n" + "".join(tb_str))
 
     def _rosout_callback(self, msg):
         """Catch ROS log output and log to system logger"""
         level = msg.level
         if level == 2:  # info
-            LOGGER.info(msg.msg, name=msg.name, function=msg.function)
+            USER_LOGGER.info(msg.msg, name=msg.name, function=msg.function)
         elif level == 4:  # warning
-            LOGGER.warning(msg.msg, name=msg.name, function=msg.function)
+            USER_LOGGER.warning(msg.msg, name=msg.name, function=msg.function)
         elif level == 8:  # error
-            LOGGER.error(msg.msg, name=msg.name, function=msg.function)
+            USER_LOGGER.error(msg.msg, name=msg.name, function=msg.function)
         elif level == 16:  # fatal/critical
-            LOGGER.critical(msg.msg, name=msg.name, function=msg.function)
+            USER_LOGGER.critical(msg.msg, name=msg.name, function=msg.function)
         else:  # default debug
-            LOGGER.debug(msg.msg, name=msg.name, function=msg.function)
+            USER_LOGGER.debug(msg.msg, name=msg.name, function=msg.function)
 
     async def connect(self) -> None:
         """Create database connections"""
