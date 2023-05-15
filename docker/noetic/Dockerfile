@@ -16,6 +16,7 @@ LABEL environment="release"
 ### Environment config
 
 ENV MOVAI_ENV=${ENV} \
+    PIP_PACKAGE_REPO=${PIP_PACKAGE_REPO} \
     USER_NAME=movai
 
 USER root
