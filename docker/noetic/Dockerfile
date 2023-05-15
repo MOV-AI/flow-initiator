@@ -2,7 +2,7 @@
 ARG DOCKER_REGISTRY="registry.cloud.mov.ai"
 ARG ENV="qa"
 ARG BASE_IMAGE="spawner-base-noetic"
-ARG TAG="v3.1.17"
+ARG TAG="v3.1.20"
 ARG PIP_PACKAGE_REPO="https://artifacts.cloud.mov.ai/repository/pypi-experimental/simple"
 
 FROM ${DOCKER_REGISTRY}/${ENV}/${BASE_IMAGE}:${TAG} AS Flow-Initiator
