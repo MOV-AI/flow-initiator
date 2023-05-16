@@ -1,11 +1,14 @@
 # flow-initator
-Flow initiator is the node orchistration tool of the MOV.AI platform.
-Respnsible for executing the flow by lunching killing and monitoring the nodes for
-activating and transisining between the Flow states, for fulfilling the flow logic
+Flow initiator is the node orchestration tool of the MOV.AI platform.
+Responsible for executing the flow by launching, killing and monitoring the nodes for
+activating and transitioning between the Flow states, for fulfilling the flow logic
+
+> Flow initiator now comes with docker client support
+
 
 ## Usage
 
-The Flow initiator is activated with the follwoing command:
+The Flow initiator is activated with the following command:
 
     python3 -m flow_initiator
 
@@ -14,6 +17,7 @@ The Flow initiator is activated with the follwoing command:
     2) movai_core_shared
 
 Parameters list that can be set through environment variables:
+
 
 
 
