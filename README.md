@@ -68,4 +68,3 @@ For ROS noetic distribution :
 Cleaning :
 
     docker-compose -f tests/docker-compose.yml down --remove-orphans --volumes
-
