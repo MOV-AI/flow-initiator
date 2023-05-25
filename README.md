@@ -10,7 +10,7 @@ activating and transitioning between the Flow states, for fulfilling the flow lo
 
 The Flow initiator is activated with the following command:
 
-    python3 -m flow_initiator
+    flow_initiator
 
 > Prerequisites : The flow initiator is depended on 2 packages:
     1) dal
