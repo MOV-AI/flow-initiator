@@ -771,6 +771,6 @@ class Spawner(CommandValidator):
         # wait for all get_keys tasks to run
         await asyncio.gather(*tasks)
 
-    async def process_emergency_unset(self, _):
+    async def process_emergency_unset(self, **_):
         """deactivate EMERGENCY button, unsetting relevant flags"""
         self.reset_emergency_params()
