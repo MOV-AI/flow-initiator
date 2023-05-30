@@ -29,8 +29,9 @@ from .async_spawner import Spawner
 # importing database profile automatically registers the database connections
 from rosgraph_msgs.msg import Log as RosOutMsg
 
-LOGGER = Log.get_logger("spawner.mov.ai")
-USER_LOGGER = LogAdapter(LOGGER)
+spawner_logger = "spawner.mov.ai"
+LOGGER = Log.get_logger(spawner_logger)
+USER_LOGGER = Log.get_user_logger(spawner_logger)
 
 
 class Core:
