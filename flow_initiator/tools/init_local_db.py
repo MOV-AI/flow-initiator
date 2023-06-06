@@ -13,7 +13,7 @@
 """
 
 from dal.models.message import Message
-from dal.models.callback import Callback
+from dal.new_models import Callback
 
 
 def main():
