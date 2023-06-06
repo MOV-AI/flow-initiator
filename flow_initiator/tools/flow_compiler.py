@@ -11,11 +11,13 @@ from collections import namedtuple
 
 from dal.models.scopestree import scopes
 from movai_core_shared.consts import MOVAI_STATE
+from dal.new_models import Node as NewNode
 
 # typing
 Flow = Node = None
 scopes_root = scopes()
 Flows = scopes().Flow  # pylint: disable=invalid-name
+
 Nodes = scopes().Node  # pylint: disable=invalid-name
 
 FlowCompiled = namedtuple("FlowCompiled", ("flow", "graph", "start"))
@@ -69,7 +71,8 @@ def _resolve_deps(graph, nodes, deps_set, node: str):
         if next_node_name in deps_set:
             # already went that way
             continue
-        next_node_temp = Nodes[nodes[next_node_name].Template]
+        # next_node_temp = Nodes[nodes[next_node_name].Template]
+        next_node_temp = NewNode(next_node_name)
         if next_node_temp.Type == MOVAI_STATE:
             # not getting into that
             continue
@@ -133,7 +136,8 @@ def flow_compile(flow: Flow) -> FlowCompiled:
     # states not dependant on other states
     sane_graph = {}
     for node_name in graph:
-        if Nodes[nodes[node_name].Template].Type != MOVAI_STATE:
+        template = NewNode(node_name)
+        if template.Type != MOVAI_STATE:
             continue
         sane_graph[node_name] = set()
         _resolve_deps(graph, nodes, sane_graph[node_name], node_name)
