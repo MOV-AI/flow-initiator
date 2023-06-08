@@ -42,6 +42,7 @@ RUN \
     rm -rf /var/lib/apt/lists/* && \
     # Clean temp files
     rm -rf /tmp/*
+COPY --chown=movai:movai sdk/ /opt/mov.ai/sdk/
 # Copy PIP package
 COPY dist /tmp/dist
 
