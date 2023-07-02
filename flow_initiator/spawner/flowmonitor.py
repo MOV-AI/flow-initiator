@@ -41,8 +41,8 @@ from movai_core_shared.envvars import (
 from movai_core_shared.logger import Log
 
 from dal.models.scopestree import scopes
-from dal.models.flow import Flow
 from dal.helpers.parsers import ParamParser
+from dal.new_models import Flow
 
 
 LOGGER = Log.get_logger("spawner.mov.ai")
@@ -67,7 +67,7 @@ class FlowMonitor:
             # unload previous loaded flow
             self.unload()
 
-            new_flow = scopes.from_path(flow_name, scope="Flow")
+            new_flow = Flow(flow_name)
             nodes_to_start = new_flow.get_start_nodes()
             if len(nodes_to_start) == 0:
                 # no start link
@@ -82,6 +82,7 @@ class FlowMonitor:
             return commands_to_launch
 
         except Exception as err:
+            LOGGER.error(str(err))
             LOGGER.error(repr(err))
             self.unload()
             return []
@@ -97,7 +98,7 @@ class FlowMonitor:
                     dependencies_down.remove(dependency)
 
             # unload data from memory
-            self.active_flow.get_first_parent("workspace").unload_all()
+            #self.active_flow.get_first_parent("workspace").unload_all()
             self.active_flow = None
 
     def transition(
