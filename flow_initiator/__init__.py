@@ -10,14 +10,10 @@
 """
 import signal
 import argparse
-import os
-import warnings
 
 from dal.movaidb import RedisClient
 from .spawner import Core
 
-warnings.simplefilter("ignore", category=DeprecationWarning)
-os.environ["PYTHONWARNINGS"] = "ignore"
 
 def main():
     """spawner entrypoint"""
