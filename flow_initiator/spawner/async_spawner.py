@@ -54,7 +54,7 @@ class Spawner(CommandValidator):
         self._logger = Log.get_logger("spawner.mov.ai")
         self._stdout = open(f"{APP_LOGS}/stdout", "w")
         self.loop = loop
-        self.lock = asyncio.Lock(loop=self.loop)
+        self.lock = asyncio.Lock()
         self.robot = robot
         self.debug = debug
         self.temp_dir = tempfile.TemporaryDirectory()
