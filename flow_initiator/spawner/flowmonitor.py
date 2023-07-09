@@ -46,6 +46,7 @@ from dal.new_models import Flow
 
 
 LOGGER = Log.get_logger("spawner.mov.ai")
+link_regex = re.compile(LINK_REGEX)
 
 
 class FlowMonitor:
@@ -211,7 +212,7 @@ class FlowMonitor:
                 from_ports = remaps[remap]["From"]
 
                 for port in to_ports + from_ports:
-                    p = re.search(LINK_REGEX, port)
+                    p = link_regex.search(port)
                     if p is not None:
                         node_inst, _, port_inst, _, port_name = p.groups()
                     else:
@@ -243,7 +244,7 @@ class FlowMonitor:
                         continue
 
                     # Lets analyse the value (right side) -> if "~" in port_inst replace by node_inst/
-                    temp_value = re.search(LINK_REGEX, value)
+                    temp_value = link_regex.search(value)
                     if temp_value is not None:
                         node_inst, _, port_inst, _, port_name = temp_value.groups()
                         if port_inst.startswith("~"):
@@ -263,7 +264,7 @@ class FlowMonitor:
                         ROS2_LIFECYCLENODE,
                     ]:
                         actionlib_types = [ROS1_ACTIONSERVER, ROS1_ACTIONCLIENT]
-                        p = re.findall(LINK_REGEX, port_remap)
+                        p = link_regex.findall(port_remap)
                         node_inst, _, port_inst, _, port_name = p[0]
                         # flow.get_node(node_name)['PortsInst'][port_inst]['Template'] in actionlib_types:
                         if (
