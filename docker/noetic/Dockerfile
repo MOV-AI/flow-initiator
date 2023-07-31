@@ -1,7 +1,7 @@
 ARG DOCKER_REGISTRY="registry.cloud.mov.ai"
 ARG ENV="qa"
 ARG BASE_IMAGE="spawner-base-noetic"
-ARG TAG="v3.1.24"
+ARG TAG="v3.1.25"
 
 # === Flow-Initiator
 FROM ${DOCKER_REGISTRY}/${ENV}/${BASE_IMAGE}:${TAG} AS Flow-Initiator
