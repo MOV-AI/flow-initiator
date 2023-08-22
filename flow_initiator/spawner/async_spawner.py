@@ -30,6 +30,7 @@ from dal.models.lock import Lock
 from dal.scopes.package import Package
 from dal.scopes.robot import Robot
 from dal.models.var import Var
+from dal.helpers.cache import ThreadSafeCache
 
 
 try:
@@ -390,6 +391,8 @@ class Spawner(CommandValidator):
             # await asyncio.wait([task])
             await self.stop_flow()
 
+        del ThreadSafeCache._instance
+        ThreadSafeCache._instance = None
         if self.flow_monitor.active_flow is None:
             self._logger.info("START flow {}".format(kwargs["flow"]))
             commmands_to_launch = self.flow_monitor.load(flow)
