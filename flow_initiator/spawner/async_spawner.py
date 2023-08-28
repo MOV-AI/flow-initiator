@@ -181,7 +181,8 @@ class Spawner(CommandValidator):
         for node_name, value in processes.items():
             tasks.append(self.terminate_process(value, node_name))
         # wait for all get_keys tasks to run
-        _values = await asyncio.gather(*tasks)
+        self.flow_monitor.unload()
+        await asyncio.gather(*tasks)
         if gdnode_exist:
             # need to check all nodes are dead before cleaning parameter server cuz dyn req
             ROS1.clean_parameter_server()
@@ -192,7 +193,6 @@ class Spawner(CommandValidator):
         Var.delete_all(scope="Flow")
 
         self._logger.info("Spawner: flow terminated.")
-        self.flow_monitor.unload()
         self.persistent_nodes_lchd = {}
         self.nodes_lchd = {}
         self.active_states = set()
@@ -355,13 +355,12 @@ class Spawner(CommandValidator):
         # func = self.commands.get(params["command"], None)
         # if func:
         #     self.loop.create_task(func(**params))
+        await self.lock.acquire()
         try:
-            await self.lock.acquire()
-
             self.validate_command(**params, active_flow=self.flow_monitor.active_flow)
 
             await self.commands[params["command"]](**params)
-        except (CommandError, ActiveFlowError) as e:
+        except Exception as e:
             self._logger.warning(str(e))
         finally:
             self.lock.release()
