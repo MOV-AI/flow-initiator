@@ -6,9 +6,9 @@ with open("README.md", "r") as fh:
 requirements = [
     "aioredis==1.3.1",
     "uvloop==0.14.0",
-    "movai-core-shared==2.4.1.27",
+    "movai-core-shared==2.4.1.30",
     "data-access-layer==2.4.1.35",
-    "gd-node==2.4.1.18",
+    "gd-node==2.4.1.19",
 ]
 
 
