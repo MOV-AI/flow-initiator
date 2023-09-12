@@ -8,13 +8,13 @@ requirements = [
     "uvloop==0.14.0",
     "movai-core-shared==2.4.1.30",
     "data-access-layer==2.4.1.35",
-    "gd-node==2.4.1.19",
+    "gd-node==2.4.1.20",
 ]
 
 
 setuptools.setup(
     name="flow-initiator",
-    version="2.4.1-46",
+    version="2.4.1-47",
     author="Backend team",
     author_email="backend@mov.ai",
     description="Dummy description",
