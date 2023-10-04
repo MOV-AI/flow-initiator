@@ -7,8 +7,8 @@ requirements = [
     "aioredis==1.3.1",
     "uvloop==0.14.0",
     "movai-core-shared==2.4.1.30",
-    "data-access-layer==2.4.1.35",
-    "gd-node==2.4.1.20",
+    "data-access-layer==2.4.1.36",
+    "gd-node==2.4.1.21",
 ]
 
 
