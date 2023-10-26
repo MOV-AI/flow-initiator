@@ -1,3 +1,12 @@
+"""
+   Copyright (C) Mov.ai  - All Rights Reserved
+   Unauthorized copying of this file, via any medium is strictly prohibited
+   Proprietary and confidential
+
+   Developers:
+   - Dor Marcous (dor@mova.ai) - 2023
+   - Erez Zomer (erez@mov.ai) - 2023
+"""
 from flow_initiator.spawner.elements import (
     ProcessElement,
     ContainerLauncher,
@@ -6,11 +15,11 @@ from flow_initiator.spawner.elements import (
 from flow_initiator.spawner.container_tools import Orchestrator
 
 
-class ElementsGenerator:
+class ElementsFactory:
     """
     Factory to create new elements
     generates 3 types:
-     -  process that runs on the host
+     - process that runs on the host
      - container that runs a single node
      - attached process to a running container
     """
@@ -28,7 +37,7 @@ class ElementsGenerator:
             self.orchestrator = None
         self.network_name = network
 
-    async def elements_generator(self, *args, **kwargs):
+    async def generate_element(self, *args, **kwargs):
         """
         Factory to create running elements
         by params create process/ containers/ process within running containers

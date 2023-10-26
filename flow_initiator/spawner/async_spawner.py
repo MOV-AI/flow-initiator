@@ -25,7 +25,7 @@ from movai_core_shared.consts import ROS2_LIFECYCLENODE
 from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
 from movai_core_shared.logger import Log
 from movai_core_shared.exceptions import CommandError, ActiveFlowError, RunError
-from flow_initiator.spawner.elements import ElementsGenerator, BaseElement
+from flow_initiator.spawner.elements import ElementsFactory, BaseElement
 
 
 try:
@@ -65,7 +65,7 @@ class Spawner:
         self.robot = robot
         if network is None:
             network = f"{NETWORK_PREFIX}-{robot.RobotName}-movai"
-        self.generator = ElementsGenerator(robot_name=robot.RobotName, network=network)
+        self.factory = ElementsFactory(robot_name=robot.RobotName, network=network)
         self.temp_dir = tempfile.TemporaryDirectory()
         self.flow_monitor = FlowMonitor()
         self.acq_locks = {}
@@ -299,7 +299,7 @@ class Spawner:
         cwd = cwd or self.temp_dir.name
         elem = None
         try:
-            elem = await self.generator.elements_generator(
+            elem = await self.factory.generate_element(
                 *command,
                 stdin=None,
                 stdout=self._stdout,
