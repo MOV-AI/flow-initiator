@@ -6,17 +6,17 @@ with open("README.md", "r") as fh:
 requirements = [
     "aioredis==1.3.1",
     "uvloop==0.14.0",
-    "movai-core-shared==2.4.1.13",
-    "data-access-layer==2.4.1.22",
-    "gd-node==2.4.1.15",
     "async-timeout==3.0.1",
-    "docker==6.1.0"
+    "docker==6.1.0",
+    "movai-core-shared==2.4.1.36",
+    "data-access-layer==2.4.1.36",
+    "gd-node==2.4.1.21",
 ]
 
 
 setuptools.setup(
     name="flow-initiator",
-    version="2.4.1-22",
+    version="2.4.1-49",
     author="Backend team",
     author_email="backend@mov.ai",
     description="Dummy description",

@@ -1,4 +1,6 @@
-# flow-initator
+[![CI - On DEV](https://github.com/MOV-AI/flow-initiator/actions/workflows/TestOnPR.yml/badge.svg?branch=dev)](https://github.com/MOV-AI/flow-initiator/actions/workflows/TestOnPR.yml) [![Deploy - On main/release](https://github.com/MOV-AI/flow-initiator/actions/workflows/DeployOnMergeMain.yml/badge.svg?branch=main)](https://github.com/MOV-AI/flow-initiator/actions/workflows/DeployOnMergeMain.yml)
+
+# flow-initiator
 Flow initiator is the node orchestration tool of the MOV.AI platform.
 Responsible for executing the flow by launching, killing and monitoring the nodes for
 activating and transitioning between the Flow states, for fulfilling the flow logic
@@ -68,3 +70,4 @@ For ROS noetic distribution :
 Cleaning :
 
     docker-compose -f tests/docker-compose.yml down --remove-orphans --volumes
+

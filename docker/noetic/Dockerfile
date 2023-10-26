@@ -1,7 +1,7 @@
 ARG DOCKER_REGISTRY="registry.cloud.mov.ai"
 ARG ENV="qa"
 ARG BASE_IMAGE="spawner-base-noetic"
-ARG TAG="v3.1.20"
+ARG TAG="v3.1.27"
 
 # === Flow-Initiator
 FROM ${DOCKER_REGISTRY}/${ENV}/${BASE_IMAGE}:${TAG} AS Flow-Initiator
@@ -42,6 +42,7 @@ RUN \
     rm -rf /var/lib/apt/lists/* && \
     # Clean temp files
     rm -rf /tmp/*
+COPY --chown=movai:movai sdk/ /opt/mov.ai/sdk/
 # Copy PIP package
 COPY dist /tmp/dist
 

@@ -17,10 +17,13 @@ import tempfile
 import time
 from typing import Union
 from subprocess import SubprocessError
+
+from dal.helpers.cache import ThreadSafeCache
 from dal.models.lock import Lock
+from dal.models.var import Var
 from dal.scopes.package import Package
 from dal.scopes.robot import Robot
-from dal.models.var import Var
+
 from movai_core_shared.consts import ROS2_LIFECYCLENODE
 from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
 from movai_core_shared.logger import Log
@@ -61,7 +64,7 @@ class Spawner:
         self._logger = Log.get_logger("spawner.mov.ai")
         self._stdout = open(f"{APP_LOGS}/stdout", "w")
         self.loop = loop
-        self.lock = asyncio.Lock(loop=self.loop)
+        self.lock = asyncio.Lock()
         self.robot = robot
         if network is None:
             network = f"{NETWORK_PREFIX}-{robot.RobotName}-movai"
@@ -210,6 +213,7 @@ class Spawner:
         for _, element in elements.items():
             tasks.append(element.kill())
         # wait for all get_keys tasks to run
+        self.flow_monitor.unload()
         await asyncio.gather(*tasks)
         if gdnode_exist:
             # need to check all nodes are dead before cleaning parameter server cuz dyn req
@@ -221,7 +225,6 @@ class Spawner:
         Var.delete_all(scope="Flow")
 
         self._logger.info("Spawner: flow terminated.")
-        self.flow_monitor.unload()
         self.persistent_nodes_lchd = {}
         self.nodes_lchd = {}
         self.active_states = set()
@@ -358,7 +361,7 @@ class Spawner:
             )
 
             await self.commands[params["command"]](**params)
-        except (CommandError, ActiveFlowError) as e:
+        except Exception as e:
             self._logger.warning(str(e))
         finally:
             self.lock.release()
@@ -393,6 +396,8 @@ class Spawner:
         if self.flow_monitor.active_flow is not None:
             await self.stop_flow()
 
+        del ThreadSafeCache._instance
+        ThreadSafeCache._instance = None
         if self.flow_monitor.active_flow is None:
             self._logger.info("START flow {}".format(kwargs["flow"]))
             # TODO: need to chenage the flow monitor to pass container_conf as a dict
