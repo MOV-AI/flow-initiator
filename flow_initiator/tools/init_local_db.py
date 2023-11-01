@@ -12,7 +12,7 @@
 
 """
 
-from dal.models.message import Message
+from dal.new_models import Message
 from dal.new_models import Callback
 
 

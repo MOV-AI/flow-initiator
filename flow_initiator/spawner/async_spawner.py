@@ -27,7 +27,7 @@ from movai_core_shared.consts import (
 )
 
 from dal.models.lock import Lock
-from dal.scopes.package import Package
+from dal.new_models import Package
 from dal.scopes.robot import Robot
 from dal.models.var import Var
 from dal.helpers.cache import ThreadSafeCache
