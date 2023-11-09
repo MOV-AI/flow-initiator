@@ -10,6 +10,7 @@
 """
 import signal
 import argparse
+
 from dal.movaidb import RedisClient
 from .spawner import Core
 
