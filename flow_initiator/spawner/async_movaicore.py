@@ -19,8 +19,8 @@ import aioredis
 import zmq.asyncio
 import rospy
 
-from movai_core_shared.logger import Log, LogAdapter
-from movai_core_shared.envvars import MOVAI_FLOW_PORT
+from movai_core_shared.logger import Log
+from movai_core_shared.envvars import SPAWNER_BIND_PORT
 from dal.scopes.robot import Robot
 from dal.models.lock import Lock
 from dal.movaidb import RedisClient
@@ -47,12 +47,8 @@ class Core:
             fargs:  arguments for initialization
         """
         type(self).RUNNING = True
-
-        # self.loop = uvloop.new_event_loop()
-        # asyncio.set_event_loop(self.loop)
         self.loop = asyncio.get_event_loop()
         self.loop.set_exception_handler(self.handle_exception)
-
         self.robot = Robot()
         del self.robot.Actions  # local  set
         del self.robot.fleet.Actions  # global set
@@ -243,11 +239,10 @@ class Core:
 
         """
         context = zmq.asyncio.Context()
-        file_socket = None
         self.tcp_socket = None
         try:
             self.tcp_socket = context.socket(zmq.ROUTER)
-            self.tcp_socket.bind(f"tcp://*:{MOVAI_FLOW_PORT}")
+            self.tcp_socket.bind(f"tcp://*:{SPAWNER_BIND_PORT}")
         except OSError as e:
             LOGGER.error("failed to init to spawner file socket")
             LOGGER.error(e)
@@ -284,8 +279,10 @@ class Core:
             return
         LOGGER.info(f"<- {buffer}")
         try:
-            request = json.loads(buffer)
-            self.loop.create_task(self.spawner.process_command(request))
+            request = json.loads(buffer).get("request")
+            req_data = request.get("req_data")
+            command_dict = req_data.get("command")
+            self.loop.create_task(self.spawner.process_command(command_dict))
             req_msg[msg_index] = "Got request & successfully proccessed".encode("utf8")
         except json.JSONDecodeError as e:
             LOGGER.error(f"can't parse command: {buffer}")
