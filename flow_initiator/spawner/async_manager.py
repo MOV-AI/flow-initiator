@@ -12,7 +12,12 @@ import asyncio
 import json
 import traceback
 
-from movai_core_shared.envvars import DEVICE_NAME, FLEET_NAME, SPAWNER_BIND_ADDR, SPAWNER_DEBUG_MODE
+from movai_core_shared.envvars import (
+    DEVICE_NAME,
+    FLEET_NAME,
+    SPAWNER_BIND_ADDR,
+    SPAWNER_DEBUG_MODE,
+)
 from movai_core_shared.logger import Log
 from movai_core_shared.core.zmq.zmq_server import ZMQServer
 
@@ -37,7 +42,9 @@ def handle_exception(context):
 
     """
     msg = context.get("exception", context["message"])
-    tb_str = traceback.format_exception(etype=type(msg), value=msg, tb=msg.__traceback__)
+    tb_str = traceback.format_exception(
+        etype=type(msg), value=msg, tb=msg.__traceback__
+    )
     USER_LOGGER.error("\n" + "".join(tb_str))
 
 
@@ -49,7 +56,7 @@ class SpawnerManager(ZMQServer):
         self.loop = asyncio.get_event_loop()
         self.loop.set_exception_handler(handle_exception)
         self.spawner = Spawner(self.loop, Robot(), fargs.verbose, "flow-private")
-        self.core = Core(self.spawner)
+        self.core = Core(self.spawner, self.loop)
 
     async def handle(self, buffer: bytes) -> None:
         """The main function to handle incoming requests by ZMQServer.
@@ -70,8 +77,8 @@ class SpawnerManager(ZMQServer):
         finally:
             await self._socket.send_multipart(response_msg)
 
-    async def startup(self):
+    def start(self):
         """A funtion which is called once at server startup and can be used for initializing
         other tasks.
         """
-        await self.core.run()
+        self.core.run()

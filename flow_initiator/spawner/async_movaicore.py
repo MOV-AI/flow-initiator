@@ -31,13 +31,12 @@ from .async_spawner import Spawner
 from rosgraph_msgs.msg import Log as RosOutMsg
 
 
-
-class Core():
+class Core:
     """Core class to run movai"""
 
     RUNNING = False
 
-    def __init__(self, spawner: Spawner):
+    def __init__(self, spawner: Spawner, loop: asyncio.AbstractEventLoop = None):
         """
         Core constructor
         Args:
@@ -47,7 +46,7 @@ class Core():
         if not isinstance(spawner, Spawner):
             raise TypeError(f"spawner argument must be of type {Spawner.__name__}")
         self.spawner = spawner
-        self.loop = asyncio.get_event_loop()
+        self.loop = loop
         self._logger = Log.get_user_logger("movaicore")
         self.robot = Robot()
         del self.robot.Actions  # local  set
@@ -86,7 +85,6 @@ class Core():
         rospy.Subscriber("rosout_agg", RosOutMsg, self._rosout_callback)
 
         self.tasks = []
-
 
     def _rosout_callback(self, msg):
         """
@@ -217,9 +215,7 @@ class Core():
         # terminate processes launched by the spawner
         await self.spawner.stop()
         tasks = [
-            task
-            for task in asyncio.all_tasks()
-            if task is not asyncio.current_task()
+            task for task in asyncio.all_tasks() if task is not asyncio.current_task()
         ]
         list(map(lambda task: task.cancel(), tasks))
         await asyncio.gather(*tasks, return_exceptions=True)
@@ -235,23 +231,24 @@ class Core():
         """
         self.RUNNING = False
 
-    async def run(self) -> None:
-        await self.connect()
-        await self.register_sub()
-        asyncio.create_task(self.spin())       
-        
+    def run(self) -> None:
+        self.loop.run_until_complete(self.spin())
+
     async def spin(self) -> None:
         """
         Runs the main loop. Exiting spin stops movai core.
         Returns: None
 
         """
+        await self.connect()
+        await self.register_sub()
         while self.RUNNING:
             # robot keep alive
             await self.spawner.fn_update_robot()
             await asyncio.sleep(3)  # Give time to other tasks to run.
         self._logger.info("STOPPING MOVAICORE AND ALL ASSOCIATED PROCESSES")
         await self.stop()
+
 
 #    async def ports_loop(self):
 #        """
