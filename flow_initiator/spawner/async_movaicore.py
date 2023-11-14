@@ -8,14 +8,14 @@
    - Tiago Paulino (tiago@mov.ai) - 2020
    - Dor Marcous (Dor@mov.ai) - 2022
 """
-import argparse
 import asyncio
 import os
 import pickle
-import traceback
+
 import json
 
 import aioredis
+from logging import Logger
 import zmq.asyncio
 import rospy
 
@@ -30,32 +30,32 @@ from .async_spawner import Spawner
 # importing database profile automatically registers the database connections
 from rosgraph_msgs.msg import Log as RosOutMsg
 
-spawner_logger = "spawner.mov.ai"
-LOGGER = Log.get_logger(spawner_logger)
-USER_LOGGER = Log.get_user_logger(spawner_logger)
 
 
-class Core:
+class Core():
     """Core class to run movai"""
 
     RUNNING = False
 
-    def __init__(self, fargs: argparse.Namespace):
+    def __init__(self, spawner: Spawner):
         """
         Core constructor
         Args:
             fargs:  arguments for initialization
         """
         type(self).RUNNING = True
+        if not isinstance(spawner, Spawner):
+            raise TypeError(f"spawner argument must be of type {Spawner.__name__}")
+        self.spawner = spawner
         self.loop = asyncio.get_event_loop()
-        self.loop.set_exception_handler(self.handle_exception)
+        self._logger = Log.get_user_logger("movaicore")
         self.robot = Robot()
         del self.robot.Actions  # local  set
         del self.robot.fleet.Actions  # global set
         # Should we add FLEET_NAME? Where?
         self.robot.set_ip(os.getenv("PUBLIC_IP", self.robot.IP))  # local set
         self.robot.set_name(os.getenv("DEVICE_NAME", self.robot.RobotName))  # local set
-        LOGGER.info(f"Robot {self.robot.RobotName} started.")
+        self._logger.info(f"Robot {self.robot.RobotName} started.")
         self.databases = None
         self.conn = None
         self.conn_sub = None
@@ -80,7 +80,6 @@ class Core:
         # [{"key": "key_pattern", "callback": callback, "channel": None, "db_pop": "db_pop", "db_sub": "db_sub"}, ]
         # db_pop: connection to pop the key
         # db_sub: connection to subscribe to key
-        self.spawner = Spawner(self.loop, self.robot, fargs.verbose, "flow-private")
 
         # subscribe to /rosout_agg
         rospy.init_node("movai_logger", anonymous=True)
@@ -88,19 +87,6 @@ class Core:
 
         self.tasks = []
 
-    def handle_exception(self, loop, context):
-        """
-        Handle Exceptions for all the threads
-        Args:
-            loop: event loop
-            context: the context of the exception
-
-        Returns: None
-
-        """
-        msg = context.get("exception", context["message"])
-        tb_str = traceback.format_exception(etype=type(msg), value=msg, tb=msg.__traceback__)
-        USER_LOGGER.error("\n" + "".join(tb_str))
 
     def _rosout_callback(self, msg):
         """
@@ -178,7 +164,7 @@ class Core:
 
         """
         for subscriber in self.subscribers:
-            LOGGER.info(
+            self._logger.info(
                 f"Subscribing to key: {subscriber['key']} - {subscriber['db_pop']} - {subscriber['db_sub']}"
             )
             key = subscriber["key"]
@@ -194,7 +180,7 @@ class Core:
         Returns: None
 
         """
-        LOGGER.info("Unregistering subscribers.")
+        self._logger.info("Unregistering subscribers.")
         for subscriber in self.subscribers:
             conn_sub = getattr(self, subscriber["db_sub"])
             await conn_sub.punsubscribe("__keyspace@*__:*%s*" % subscriber["key"])
@@ -219,109 +205,27 @@ class Core:
                     result = pickle.loads(_result)
                 await self.spawner.process_command(result)
 
-    def close_port(self, context: zmq.Context) -> None:
-        """
-        Close all the ports
-        Args:
-            sockets: list of ZMQ ports
-            context: the context that been used to open them
-
-        Returns: None
-
-        """
-        if isinstance(self.tcp_socket, zmq.Socket):
-            self.tcp_socket.close()
-
-    async def ports_loop(self):
-        """
-        Async method for the ports loop
-        Getting request from ports, and respond to the sender
-
-        """
-        context = zmq.asyncio.Context()
-        self.tcp_socket = None
-        try:
-            self.tcp_socket = context.socket(zmq.ROUTER)
-            self.tcp_socket.bind(f"tcp://*:{SPAWNER_BIND_PORT}")
-        except OSError as e:
-            LOGGER.error("failed to init to spawner file socket")
-            LOGGER.error(e)
-            self.close_port(context)
-            return
-        while self.RUNNING:
-            try:
-                req_msg = await self.tcp_socket.recv_multipart()
-                self.loop.create_task(self._handle_socket(req_msg))
-            except TypeError:
-                continue
-            except zmq.ZMQError:
-                continue
-        self.close_port(context)
-
-    async def _handle_socket(self, req_msg: list):
-        """
-        Handler for the zmq socket
-        Args:
-            server (zmq.Socket): the socket that received the message
-
-        Returns: None
-
-        """
-        # receive data
-        if len(req_msg) == 3:
-            # in case sender just use send
-            msg_index = 2
-        else:
-            # in case when sending json
-            msg_index = 1
-        buffer = req_msg[msg_index]
-        if buffer is None:
-            return
-        LOGGER.info(f"<- {buffer}")
-        try:
-            request = json.loads(buffer).get("request")
-            req_data = request.get("req_data")
-            command_dict = req_data.get("command")
-            self.loop.create_task(self.spawner.process_command(command_dict))
-            req_msg[msg_index] = "Got request & successfully proccessed".encode("utf8")
-        except json.JSONDecodeError as e:
-            LOGGER.error(f"can't parse command: {buffer}")
-            LOGGER.error(e)
-            req_msg[msg_index] = "can't parse command: {buffer}".encode("utf8")
-        finally:
-            await self.tcp_socket.send_multipart(req_msg)
-
     async def stop(self) -> None:
         """
         Calls all methods necessary to stop movai core.
         Returns: None
 
         """
-        LOGGER.info("STOP Called.")
+        self._logger.info("STOP Called.")
         await self.unregister_sub()
         self.conn.close()
         # terminate processes launched by the spawner
         await self.spawner.stop()
         tasks = [
             task
-            for task in asyncio.Task.all_tasks()
-            if task is not asyncio.tasks.Task.current_task()
+            for task in asyncio.all_tasks()
+            if task is not asyncio.current_task()
         ]
         list(map(lambda task: task.cancel(), tasks))
         await asyncio.gather(*tasks, return_exceptions=True)
 
         # clean enabled locks pool to finish any hanging threads
         Lock.enabled_locks = []
-
-    def run(self):
-        """
-        Running function, start the loop
-        Returns: None
-
-        """
-        self.loop.run_until_complete(self.spin())
-        # will exit later
-        self.loop.stop()
 
     def shutdown(self):
         """
@@ -331,19 +235,92 @@ class Core:
         """
         self.RUNNING = False
 
+    async def run(self) -> None:
+        await self.connect()
+        await self.register_sub()
+        asyncio.create_task(self.spin())       
+        
     async def spin(self) -> None:
         """
         Runs the main loop. Exiting spin stops movai core.
         Returns: None
 
         """
-        await self.connect()
-        await self.register_sub()
-
-        self.loop.create_task(self.ports_loop())
         while self.RUNNING:
             # robot keep alive
             await self.spawner.fn_update_robot()
             await asyncio.sleep(3)  # Give time to other tasks to run.
-        LOGGER.info("STOPPING MOVAICORE AND ALL ASSOCIATED PROCESSES")
+        self._logger.info("STOPPING MOVAICORE AND ALL ASSOCIATED PROCESSES")
         await self.stop()
+
+#    async def ports_loop(self):
+#        """
+#        Async method for the ports loop
+#        Getting request from ports, and respond to the sender
+#
+#        """
+#        context = zmq.asyncio.Context()
+#        self.tcp_socket = None
+#        try:
+#            self.tcp_socket = context.socket(zmq.ROUTER)
+#            self.tcp_socket.bind(f"tcp://*:{SPAWNER_BIND_PORT}")
+#        except OSError as e:
+#            self._logger.error("failed to init to spawner file socket")
+#            self._logger.error(e)
+#            self.close_port(context)
+#            return
+#        while self.RUNNING:
+#            try:
+#                req_msg = await self.tcp_socket.recv_multipart()
+#                self.loop.create_task(self._handle_socket(req_msg))
+#            except TypeError:
+#                continue
+#            except zmq.ZMQError:
+#                continue
+#        self.close_port(context)
+#
+#    async def _handle_socket(self, req_msg: list):
+#        """
+#        Handler for the zmq socket
+#        Args:
+#            server (zmq.Socket): the socket that received the message
+#
+#        Returns: None
+#
+#        """
+#        # receive data
+#        if len(req_msg) == 3:
+#            # in case sender just use send
+#            msg_index = 2
+#        else:
+#            # in case when sending json
+#            msg_index = 1
+#        buffer = req_msg[msg_index]
+#        if buffer is None:
+#            return
+#        self._logger.info(f"<- {buffer}")
+#        try:
+#            request = json.loads(buffer).get("request")
+#            req_data = request.get("req_data")
+#            command_dict = req_data.get("command")
+#            self.loop.create_task(self.spawner.process_command(command_dict))
+#            req_msg[msg_index] = "Got request & successfully proccessed".encode("utf8")
+#        except json.JSONDecodeError as e:
+#            self._logger.error(f"can't parse command: {buffer}")
+#            self._logger.error(e)
+#            req_msg[msg_index] = "can't parse command: {buffer}".encode("utf8")
+#        finally:
+#            await self.tcp_socket.send_multipart(req_msg)
+#
+#    def close_port(self, context: zmq.Context) -> None:
+#        """
+#        Close all the ports
+#        Args:
+#            sockets: list of ZMQ ports
+#            context: the context that been used to open them
+#
+#        Returns: None
+#
+#        """
+#        if isinstance(self.tcp_socket, zmq.Socket):
+#            self.tcp_socket.close()

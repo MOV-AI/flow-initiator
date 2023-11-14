@@ -8,6 +8,7 @@
 """
 import warnings
 
+from .async_manager import SpawnerManager
 from .async_spawner import Spawner
 from .async_movaicore import Core
 from .exceptions import (
@@ -19,4 +20,4 @@ from .exceptions import (
 )
 
 
-__all__ = ["Spawner", "Core"]
+__all__ = ["SpawnerManager", "Spawner", "Core"]
