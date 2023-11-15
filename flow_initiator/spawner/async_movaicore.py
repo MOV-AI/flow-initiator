@@ -231,8 +231,10 @@ class Core:
         """
         self.RUNNING = False
 
-    def run(self) -> None:
-        self.loop.run_until_complete(self.spin())
+    async def run(self) -> None:
+        await self.connect()
+        await self.register_sub()
+        asyncio.create_task(self.spin())
 
     async def spin(self) -> None:
         """
@@ -240,8 +242,6 @@ class Core:
         Returns: None
 
         """
-        await self.connect()
-        await self.register_sub()
         while self.RUNNING:
             # robot keep alive
             await self.spawner.fn_update_robot()
