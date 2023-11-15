@@ -57,6 +57,7 @@ class SpawnerManager(ZMQServer):
         self.loop.set_exception_handler(handle_exception)
         self.spawner = Spawner(self.loop, Robot(), fargs.verbose, "flow-private")
         self.core = Core(self.spawner, self.loop)
+        self.add_parallel_task(self.core.run())
 
     async def handle(self, buffer: bytes) -> None:
         """The main function to handle incoming requests by ZMQServer.
@@ -77,8 +78,8 @@ class SpawnerManager(ZMQServer):
         finally:
             await self._socket.send_multipart(response_msg)
 
-    def start(self):
+    async def startup(self):
         """A funtion which is called once at server startup and can be used for initializing
         other tasks.
         """
-        self.core.run()
+        await self.core.run()
