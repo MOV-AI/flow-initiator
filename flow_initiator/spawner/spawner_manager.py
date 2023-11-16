@@ -5,7 +5,6 @@
 
    Developers:
    - Erez Zomer (erez@mov.ai) - 2023
-   - Dor Marcous (Dor@mov.ai) - 2022
 """
 import argparse
 import asyncio
@@ -51,20 +50,22 @@ def handle_exception(context):
 
 
 class SpawnerManager:
+    """The SpawnerManager is the actual entrypoing to the Spawner app."""
+
     def __init__(self, fargs: argparse.Namespace) -> None:
         self._logger = USER_LOGGER
         self._loop = None
         self.spawner = Spawner(Robot(), fargs.verbose, "flow-private")
         self.core = SpawnerCore(self.spawner)
         self.server = SpawnerServer(self.spawner)
-        
 
     def run(self):
+        """Starts the main loop."""
         asyncio.run(self.start())
-    
+
     async def start(self):
+        """The main coroutine for starting the various components."""
         self._loop = asyncio.get_running_loop()
         self._loop.set_exception_handler(handle_exception)
         self.server.start()
         await self.core.spin()
-

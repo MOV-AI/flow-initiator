@@ -5,7 +5,6 @@
 
    Developers:
    - Erez Zomer (erez@mov.ai) - 2023
-   - Dor Marcous (Dor@mov.ai) - 2022
 """
 import argparse
 import asyncio
@@ -31,6 +30,8 @@ USER_LOGGER = Log.get_user_logger(spawner_logger)
 
 
 class SpawnerServer(ZMQServer):
+    """The spawner server class is responsible for listening for ZMQ commands."""
+
     @beartype
     def __init__(self, spawner: Spawner) -> None:
         server_name = f"{self.__class__.__name__}-{DEVICE_NAME}-{FLEET_NAME}"
@@ -45,10 +46,10 @@ class SpawnerServer(ZMQServer):
         """
         try:
             if len(buffer) == 3:
-            # in case sender just use send
+                # in case sender just use send
                 msg_index = 2
             else:
-            # in case when sending json
+                # in case when sending json
                 msg_index = 1
             msg = buffer[msg_index]
             if msg is None:
@@ -65,5 +66,3 @@ class SpawnerServer(ZMQServer):
             response_msg = "can't parse command: {buffer}".encode("utf8")
         finally:
             await self._socket.send_multipart(response_msg)
-
-
