@@ -18,6 +18,8 @@ import time
 from typing import Union
 from subprocess import SubprocessError
 
+from beartype import beartype
+
 from dal.helpers.cache import ThreadSafeCache
 from dal.models.lock import Lock
 from dal.models.var import Var
@@ -51,19 +53,20 @@ class Spawner:
 
     EMERGENCY_FLAG = False
 
+    @beartype
     def __init__(
-        self, loop: asyncio.AbstractEventLoop, robot: Robot, debug: bool = False, network: str = None
+        self, robot: Robot, debug: bool = False, network: str = None
     ):
         """
         Flow initator constructor
+
         Args:
-            loop: the asyncloop
-            robot: robot object
-            network: The docker network name
+            robot (Robot): robot object
+            debug (bool, optional): debug mode flag, default to False.
+            network (str, optional): The docker network name
         """
         self._logger = Log.get_logger("spawner.mov.ai")
         self._stdout = open(f"{APP_LOGS}/stdout", "w")
-        self.loop = loop
         self.lock = asyncio.Lock()
         self.robot = robot
         if network is None:
@@ -114,7 +117,7 @@ class Spawner:
         initial_state = self.robot.get_states().get("boot", None)
         if initial_state:
             flow_name = initial_state.get("flow", "")
-            self.loop.create_task(self.process_start(command="START", flow=flow_name))
+            asyncio.create_task(self.process_start(command="START", flow=flow_name))
 
     def should_skip_node(self, node_name: str) -> bool:
         """
@@ -161,7 +164,7 @@ class Spawner:
         self.robot.update_status(data, db="local")
 
         # run robot update in a thread executor, so it does not block
-        await self.loop.run_in_executor(
+        await asyncio.get_running_loop().run_in_executor(
             None, self.th_robot_update, self.robot.name, data
         )
 
@@ -187,7 +190,7 @@ class Spawner:
 
         tasks = []
         for _, value in elements.items():
-            tasks.append(self.loop.create_task(value.kill()))
+            tasks.append(asyncio.create_task(value.kill()))
         # wait for all get_keys tasks to run
         await asyncio.gather(*tasks)
 
@@ -424,13 +427,13 @@ class Spawner:
                     packages = self.flow_monitor.get_node_packages(command["node"])
                     await self.dump_packages(packages)
                     tasks.append(
-                        self.loop.create_task(
+                        asyncio.create_task(
                             self.launch_element(wait=False, **command)
                         )
                     )
 
                 # wait until all are launched
-                await asyncio.gather(*tasks, loop=self.loop)
+                await asyncio.gather(*tasks)
             except (SubprocessError, OSError, ValueError, TypeError) as e:
                 self._logger.critical(
                     "An error occurred while starting a flow, see errors"
@@ -473,7 +476,7 @@ class Spawner:
             return
         if self.flow_monitor.active_flow is not None:
             self._logger.info("STOP flow {}".format(kwargs["flow"]))
-            # self.loop.create_task(self.stop_flow())
+            # asyncio.create_task(self.stop_flow())
             await self.stop_flow()
         else:
             self._logger.error("No flow active. START a flow first.")
@@ -576,7 +579,7 @@ class Spawner:
                 cmd = ["ros2", "lifecycle", "set", node_name, "deactivate"]
                 await self.ros2_lifecycle(node_name, cmd)
             else:
-                self.loop.create_task(self.process_kill(node=node_name, command="kill"))
+                asyncio.create_task(self.process_kill(node=node_name, command="kill"))
                 # node_to_kill.kill())
 
         tasks = []
@@ -586,7 +589,7 @@ class Spawner:
                 await self.dump_packages(packages)
                 # launch element
                 tasks.append(
-                    self.loop.create_task(
+                    asyncio.create_task(
                         self.launch_element(wait=True, **command)
                     )
                 )
@@ -596,7 +599,7 @@ class Spawner:
                 task.cancel()
             return
 
-        await asyncio.gather(*tasks, loop=self.loop)
+        await asyncio.gather(*tasks)
 
         # activate Ros2 lifecycle nodes that are already launched
         for node_name in all_nodes_to_launch:
@@ -623,7 +626,7 @@ class Spawner:
             data = kwargs.get("data", {})
 
             self.acq_locks.update({data.get("name"): data})
-            self.loop.create_task(Lock.enable_heartbeat(**data))
+            asyncio.create_task(Lock.enable_heartbeat(**data))
 
         except Exception as e:
             self._logger.error(f"Error while processing LOCK command {str(e)}")
@@ -697,11 +700,11 @@ class Spawner:
         for command_dict in commands_to_launch:
             if command_dict["node"] in nodes_to_launch:
                 tasks.append(
-                    self.loop.create_task(
+                    asyncio.create_task(
                         self.launch_element(wait=True, **command_dict)
                     )
                 )
-        await asyncio.gather(*tasks, loop=self.loop)
+        await asyncio.gather(*tasks)
 
     async def process_kill(self, **kwargs):
         """
@@ -739,7 +742,7 @@ class Spawner:
             return
 
         await element.kill()
-        self.loop.create_task(self.clean_element(element, node))
+        asyncio.create_task(self.clean_element(element, node))
 
     async def ros2_lifecycle(self, node_name: str, command):
         """Handles ROS2 Lifecycle managed nodes
@@ -791,7 +794,7 @@ class Spawner:
                                 os.makedirs(file_path)
 
                             dumps.append(
-                                self.loop.run_in_executor(
+                                asyncio.get_running_loop().run_in_executor(
                                     executor,
                                     Package.dump,
                                     package_name,
@@ -847,7 +850,7 @@ class Spawner:
             if self.should_skip_node(node_name):
                 continue
             kwargs_local = {"command": "KILL", "node": node_name}
-            tasks.append(self.loop.create_task(self.process_kill(**kwargs_local)))
+            tasks.append(asyncio.create_task(self.process_kill(**kwargs_local)))
 
         # wait for all get_keys tasks to run
         await asyncio.gather(*tasks)
