@@ -9,14 +9,12 @@
    - Dor Marcous (Dor@mov.ai) - 2022
 """
 import asyncio
+from beartype import beartype
+from logging import Logger
 import os
 import pickle
 
-import json
-
 import aioredis
-from logging import Logger
-import zmq.asyncio
 import rospy
 
 from movai_core_shared.logger import Log
@@ -25,28 +23,28 @@ from dal.scopes.robot import Robot
 from dal.models.lock import Lock
 from dal.movaidb import RedisClient
 
-from .async_spawner import Spawner
+from .spawner import Spawner
 
 # importing database profile automatically registers the database connections
 from rosgraph_msgs.msg import Log as RosOutMsg
 
+USER_LOGGER = Log.get_user_logger("Core")
 
-class Core:
+
+class SpawnerCore:
     """Core class to run movai"""
 
     RUNNING = False
 
-    def __init__(self, spawner: Spawner, loop: asyncio.AbstractEventLoop = None):
+    @beartype
+    def __init__(self, spawner: Spawner):
         """
         Core constructor
         Args:
             fargs:  arguments for initialization
         """
         type(self).RUNNING = True
-        if not isinstance(spawner, Spawner):
-            raise TypeError(f"spawner argument must be of type {Spawner.__name__}")
         self.spawner = spawner
-        self.loop = loop
         self._logger = Log.get_user_logger("movaicore")
         self.robot = Robot()
         del self.robot.Actions  # local  set
@@ -170,7 +168,7 @@ class Core:
             conn_sub = getattr(self, subscriber["db_sub"])
             res = await conn_sub.psubscribe("__keyspace@*__:*%s*" % key)
             subscriber["channel"] = res
-            self.loop.create_task(self.task_subscriber(subscriber, conn))
+            asyncio.create_task(self.task_subscriber(subscriber, conn))
 
     async def unregister_sub(self) -> None:
         """
@@ -231,17 +229,14 @@ class Core:
         """
         self.RUNNING = False
 
-    async def run(self) -> None:
-        await self.connect()
-        await self.register_sub()
-        asyncio.create_task(self.spin())
-
     async def spin(self) -> None:
         """
         Runs the main loop. Exiting spin stops movai core.
         Returns: None
 
         """
+        await self.connect()
+        await self.register_sub()
         while self.RUNNING:
             # robot keep alive
             await self.spawner.fn_update_robot()
