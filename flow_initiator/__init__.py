@@ -11,7 +11,6 @@
 import signal
 import argparse
 from dal.movaidb import RedisClient
-from .spawner import Core
 from .spawner import SpawnerManager
 
 
@@ -40,4 +39,4 @@ def main():
     )
     args = parser.parse_args()
     app = SpawnerManager(args)
-    return app.start()
+    return app.run()
