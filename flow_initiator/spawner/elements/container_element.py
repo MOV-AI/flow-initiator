@@ -53,7 +53,7 @@ class ContainerLauncher(BaseElement):
         kwargs.pop("logger")
         self.running_args = dict(kwargs["container_conf"])
         self.running_args["name"] = kwargs["node"]
-        self.name =self.running_args["name"]
+        self.name = self.running_args["name"]
         self.running_args["env"] = kwargs["env"]
         self._orchestrator = orchestrator
         self.running_args["hostname"] = self.name

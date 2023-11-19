@@ -55,7 +55,7 @@ class SpawnerManager:
     def __init__(self, fargs: argparse.Namespace) -> None:
         self._logger = USER_LOGGER
         self._loop = None
-        self.spawner = Spawner(Robot(), fargs.verbose, "flow-private")
+        self.spawner = Spawner(Robot(), fargs.verbose)
         self.core = SpawnerCore(self.spawner)
         self.server = SpawnerServer(self.spawner)
 

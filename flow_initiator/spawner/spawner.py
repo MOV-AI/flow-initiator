@@ -28,6 +28,7 @@ from dal.scopes.robot import Robot
 
 from movai_core_shared.consts import ROS2_LIFECYCLENODE
 from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
+from movai_core_shared.common.utils import is_enteprise
 from movai_core_shared.logger import Log
 from movai_core_shared.exceptions import CommandError, ActiveFlowError, RunError
 from flow_initiator.spawner.elements import ElementsFactory, BaseElement
@@ -70,7 +71,10 @@ class Spawner:
         self.lock = asyncio.Lock()
         self.robot = robot
         if network is None:
-            network = f"{NETWORK_PREFIX}-{robot.RobotName}-movai"
+            if is_enteprise():
+                network = f"{NETWORK_PREFIX}-{robot.RobotName}-movai"
+            else:
+                network = "flow-private"
         self.factory = ElementsFactory(robot_name=robot.RobotName, network=network)
         self.temp_dir = tempfile.TemporaryDirectory()
         self.flow_monitor = FlowMonitor()
@@ -295,7 +299,6 @@ class Spawner:
         Returns: None
 
         """
-        # todo: maybe add which flow is running from
         persistent = kwargs.pop("persistent", False)
         self._logger.info(
             (
@@ -384,7 +387,6 @@ class Spawner:
 
     async def process_start(self, **kwargs):
         """Process command START"""
-        # todo: maybe start new orchestrator with new labels
         self.reset_emergency_params()
         command = kwargs.get("command", None)
         flow = kwargs.get("flow", None)
@@ -675,8 +677,6 @@ class Spawner:
                 )
             )
             return
-        # todo: think how to add multiple flow running together
-        # maybe multiple flow monitors
         commands_to_launch = self.flow_monitor.get_commands(
             [node], self.flow_monitor.active_flow
         )

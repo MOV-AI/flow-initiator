@@ -7,12 +7,14 @@
    - Dor Marcous (dor@mova.ai) - 2023
    - Erez Zomer (erez@mov.ai) - 2023
 """
+from os import walk
 from flow_initiator.spawner.elements import (
     ProcessElement,
     ContainerLauncher,
     AttachedProcessLauncher,
 )
 from flow_initiator.spawner.container_tools import Orchestrator
+from movai_core_shared import envvars
 
 
 class ElementsFactory:
@@ -37,6 +39,18 @@ class ElementsFactory:
             self.orchestrator = None
         self.network_name = network
 
+    def update_envvars(self, envvars_dict: dict, name: str):
+        """
+        Update the envvars of the container, can be override by the user
+        Args:
+            envvars_dict: dict of envvars to update
+        """
+        for envvar in dir(envvars):
+            if envvar[0].isupper() and envvar not in envvars_dict:
+                envvars_dict[envvar] = eval(f"envvars.{envvar}")
+        envvars_dict["APP_NAME"] = name
+        envvars_dict["HOSTNAME"] = name
+
     async def generate_element(self, *args, **kwargs):
         """
         Factory to create running elements
@@ -51,6 +65,7 @@ class ElementsFactory:
             kwargs.pop("stderr")
             kwargs.pop("cwd")
             conf = kwargs["container_conf"]
+            self.update_envvars(kwargs["env"], kwargs["node"])
             if "network" not in conf:
                 conf["network"] = self.network_name
             if "attach" in conf and conf["attach"]:
