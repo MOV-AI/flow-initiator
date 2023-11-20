@@ -7,6 +7,7 @@
    Developers:
    - Dor Marcous  (dor@mov.ai) - 2021
 """
+import threading
 from typing import Tuple, Optional
 from movai_core_shared.exceptions import CommandError
 from flow_initiator.spawner.elements import ContainerLauncher
@@ -38,6 +39,7 @@ class AttachedProcessLauncher(ContainerLauncher):
         self.cmd = self.running_args["command"]
         self.exit_code = None
         self.output = None
+        self.running_thread = None
 
     @property
     def return_code(self) -> Optional[int]:
@@ -46,13 +48,20 @@ class AttachedProcessLauncher(ContainerLauncher):
     @property
     def eid(self) -> Tuple[str, int]:
         # todo add feature to orchestrator something like docker container top, and filter by CMD
-        state = self._orchestrator.get_container_state(self.name)
-        return self.name, state["Pid"]
+        if self.running_thread is None:
+            return self.name, 0
+        return self.name, self.running_thread.ident
 
     async def is_running(self) -> bool:
-        return self.exit_code is None
+        """
+        Checks if the container is running
 
-    async def run(self):
+        Returns: True if running, False otherwise
+
+        """
+        return self.running_thread is not None and self.running_thread.is_alive()
+
+    def handler(self):
         """
         runs the container, or start it again if stopped
 
@@ -65,24 +74,30 @@ class AttachedProcessLauncher(ContainerLauncher):
         else:
             self._logger.error(f"container {self.name} isn't running can't attach")
 
+    async def run(self):
+        """
+        runs the container, or start it again if stopped
+
+        Returns: None
+
+        """
+        self.running_thread = threading.Thread(target=self.handler).start()
+
     async def kill(self):
         """
         A kill function for stopping
         Returns: None
 
         """
-        _, pid = self.eid
-        kill_cmd = f"kill {pid}"
-        self._orchestrator.container_execute_command(self.name, kill_cmd)
-        await self.ensure_process_kill()
+        if self.running_thread is not None:
+            self.running_thread.join()
 
     def send_terminate_signal(self):
         """
         send SIGTERM to process
         """
-        _, pid = self.eid
-        kill_cmd = f"kill -15 {pid}"
-        self._orchestrator.container_execute_command(self.name, kill_cmd)
+        if self.running_thread is not None:
+            self.running_thread.join()
 
     def send_kill_signal(self):
         """

@@ -52,7 +52,8 @@ class ContainerLauncher(BaseElement):
         # TODO: add check that container_conf containes name, and image
         kwargs.pop("logger")
         self.running_args = dict(kwargs["container_conf"])
-        self.running_args["name"] = kwargs["node"]
+        if "name" not in self.running_args:
+            self.running_args["name"] = kwargs["node"]
         self.name = self.running_args["name"]
         self.running_args["env"] = kwargs["env"]
         self._orchestrator = orchestrator
