@@ -9,6 +9,7 @@
 """
 
 import unittest
+import pytest
 
 from movai_core_shared.exceptions import CommandError, ActiveFlowError
 
@@ -24,6 +25,7 @@ class TestSpawner(unittest.TestCase):
 
     spawner = Spawner(Robot())
 
+    @pytest.mark.skip(reason="must run as system test")
     def test_command_validation(self):
         """
         Test get_dict
