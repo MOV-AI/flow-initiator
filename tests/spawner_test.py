@@ -16,14 +16,11 @@ from movai_core_shared.exceptions import CommandError, ActiveFlowError
 from dal.scopes import Robot
 
 from flow_initiator.spawner.validation import CommandValidator
-from flow_initiator.spawner.spawner import Spawner
 
 class TestSpawner(unittest.TestCase):
     """
     Test spawner
     """
-
-    spawner = Spawner(Robot())
 
     @pytest.mark.skip(reason="must run as system test")
     def test_command_validation(self):
