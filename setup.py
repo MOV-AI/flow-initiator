@@ -6,7 +6,6 @@ with open("README.md", "r") as fh:
 requirements = [
     "aioredis==1.3.1",
     "uvloop==0.14.0",
-    "async-timeout==3.0.1",
     "docker==6.1.0",
     "movai-core-shared==2.5.0.3",
     "data-access-layer==2.5.0.4",
