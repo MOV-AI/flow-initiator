@@ -10,7 +10,6 @@
 """
 import asyncio
 from beartype import beartype
-from logging import Logger
 import os
 import pickle
 
@@ -18,7 +17,7 @@ import aioredis
 import rospy
 
 from movai_core_shared.logger import Log
-from movai_core_shared.envvars import SPAWNER_BIND_PORT
+
 from dal.scopes.robot import Robot
 from dal.models.lock import Lock
 from dal.movaidb import RedisClient
@@ -244,75 +243,6 @@ class SpawnerCore:
         self._logger.info("STOPPING MOVAICORE AND ALL ASSOCIATED PROCESSES")
         await self.stop()
 
-
-#    async def ports_loop(self):
-#        """
-#        Async method for the ports loop
-#        Getting request from ports, and respond to the sender
-#
-#        """
-#        context = zmq.asyncio.Context()
-#        self.tcp_socket = None
-#        try:
-#            self.tcp_socket = context.socket(zmq.ROUTER)
-#            self.tcp_socket.bind(f"tcp://*:{SPAWNER_BIND_PORT}")
-#        except OSError as e:
-#            self._logger.error("failed to init to spawner file socket")
-#            self._logger.error(e)
-#            self.close_port(context)
-#            return
-#        while self.RUNNING:
-#            try:
-#                req_msg = await self.tcp_socket.recv_multipart()
-#                self.loop.create_task(self._handle_socket(req_msg))
-#            except TypeError:
-#                continue
-#            except zmq.ZMQError:
-#                continue
-#        self.close_port(context)
-#
-#    async def _handle_socket(self, req_msg: list):
-#        """
-#        Handler for the zmq socket
-#        Args:
-#            server (zmq.Socket): the socket that received the message
-#
-#        Returns: None
-#
-#        """
-#        # receive data
-#        if len(req_msg) == 3:
-#            # in case sender just use send
-#            msg_index = 2
-#        else:
-#            # in case when sending json
-#            msg_index = 1
-#        buffer = req_msg[msg_index]
-#        if buffer is None:
-#            return
-#        self._logger.info(f"<- {buffer}")
-#        try:
-#            request = json.loads(buffer).get("request")
-#            req_data = request.get("req_data")
-#            command_dict = req_data.get("command")
-#            self.loop.create_task(self.spawner.process_command(command_dict))
-#            req_msg[msg_index] = "Got request & successfully proccessed".encode("utf8")
-#        except json.JSONDecodeError as e:
-#            self._logger.error(f"can't parse command: {buffer}")
-#            self._logger.error(e)
-#            req_msg[msg_index] = "can't parse command: {buffer}".encode("utf8")
-#        finally:
-#            await self.tcp_socket.send_multipart(req_msg)
-#
-#    def close_port(self, context: zmq.Context) -> None:
-#        """
-#        Close all the ports
-#        Args:
-#            sockets: list of ZMQ ports
-#            context: the context that been used to open them
-#
-#        Returns: None
-#
-#        """
-#        if isinstance(self.tcp_socket, zmq.Socket):
-#            self.tcp_socket.close()
+    def run(self):
+        """Starts running the object."""
+        asyncio.create_task(self.spin())

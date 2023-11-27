@@ -30,7 +30,8 @@ from movai_core_shared.consts import ROS2_LIFECYCLENODE
 from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
 from movai_core_shared.common.utils import is_enteprise
 from movai_core_shared.logger import Log
-from movai_core_shared.exceptions import CommandError, ActiveFlowError, RunError
+from movai_core_shared.exceptions import CommandError, RunError
+
 from flow_initiator.spawner.elements import ElementsFactory, BaseElement
 
 
@@ -55,9 +56,7 @@ class Spawner:
     EMERGENCY_FLAG = False
 
     @beartype
-    def __init__(
-        self, robot: Robot, debug: bool = False, network: str = None
-    ):
+    def __init__(self, robot: Robot, debug: bool = False, network: str = None):
         """
         Flow initator constructor
 
@@ -68,7 +67,7 @@ class Spawner:
         """
         self._logger = Log.get_logger("spawner.mov.ai")
         self._stdout = open(f"{APP_LOGS}/stdout", "w")
-        self.lock = asyncio.Lock()
+        self._lock = None
         self.robot = robot
         if network is None:
             if is_enteprise():
@@ -118,6 +117,14 @@ class Spawner:
 
         # When waking up the Robot needs to launch the boot flow when configured
 
+    def _init_lock(self):
+        if self._lock is None:
+            asyncio.get_running_loop()
+            self._lock = asyncio.Lock()
+
+    def run(self):
+        """Starts running the object."""
+        self._init_lock()
         initial_state = self.robot.get_states().get("boot", None)
         if initial_state:
             flow_name = initial_state.get("flow", "")
@@ -238,7 +245,6 @@ class Spawner:
 
         # Release active locks if not persistent
         for key in list(self.acq_locks.keys()):
-
             lock = Lock(**self.acq_locks.pop(key))
 
             if not lock.persistent:
@@ -302,7 +308,9 @@ class Spawner:
         persistent = kwargs.pop("persistent", False)
         self._logger.info(
             (
-                "Launching command (persistent: {}) {}".format(persistent, " ".join(command))
+                "Launching command (persistent: {}) {}".format(
+                    persistent, " ".join(command)
+                )
             )
         )
         cwd = cwd or self.temp_dir.name
@@ -329,7 +337,14 @@ class Spawner:
                     getattr(self, "nodes_lchd")[node] = elem
             if state:
                 self.active_states.add(node)
-        except (SubprocessError, OSError, ValueError, TypeError, RunError, CommandError) as e:
+        except (
+            SubprocessError,
+            OSError,
+            ValueError,
+            TypeError,
+            RunError,
+            CommandError,
+        ) as e:
             self._logger.critical("An error occurred while starting a flow, see errors")
             self._logger.critical(e)
             if elem is not None:
@@ -360,7 +375,7 @@ class Spawner:
             return
 
         try:
-            await self.lock.acquire()
+            await self._lock.acquire()
 
             self.commands.validate_command(
                 **params, active_flow=self.flow_monitor.active_flow
@@ -370,7 +385,7 @@ class Spawner:
         except Exception as e:
             self._logger.warning(str(e))
         finally:
-            self.lock.release()
+            self._lock.release()
 
     async def process_help(self, **_):
         """
@@ -418,7 +433,9 @@ class Spawner:
             # they also need to be activated
             ros2_lifecycle_nodes_to_activate = []
             for lc_node in self.flow_monitor.load_ros2_lifecycle():
-                if lc_node["node"] not in [command["node"] for command in commands_to_launch]:
+                if lc_node["node"] not in [
+                    command["node"] for command in commands_to_launch
+                ]:
                     commands_to_launch.append(lc_node)
                 else:
                     ros2_lifecycle_nodes_to_activate.append(lc_node["node"])
@@ -429,9 +446,7 @@ class Spawner:
                     packages = self.flow_monitor.get_node_packages(command["node"])
                     await self.dump_packages(packages)
                     tasks.append(
-                        asyncio.create_task(
-                            self.launch_element(wait=False, **command)
-                        )
+                        asyncio.create_task(self.launch_element(wait=False, **command))
                     )
 
                 # wait until all are launched
@@ -591,9 +606,7 @@ class Spawner:
                 await self.dump_packages(packages)
                 # launch element
                 tasks.append(
-                    asyncio.create_task(
-                        self.launch_element(wait=True, **command)
-                    )
+                    asyncio.create_task(self.launch_element(wait=True, **command))
                 )
 
         if type(self).EMERGENCY_FLAG and not self.should_skip_node(node):
@@ -700,9 +713,7 @@ class Spawner:
         for command_dict in commands_to_launch:
             if command_dict["node"] in nodes_to_launch:
                 tasks.append(
-                    asyncio.create_task(
-                        self.launch_element(wait=True, **command_dict)
-                    )
+                    asyncio.create_task(self.launch_element(wait=True, **command_dict))
                 )
         await asyncio.gather(*tasks)
 
@@ -761,9 +772,7 @@ class Spawner:
         # packages: [{"name": package_name, "file": file_name, "path": package_relative_path}, ...]
         dumps = []
         with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-
             for package in packages:
-
                 package_name = package.get("package", None)
                 if package_name is not None:
                     try:
