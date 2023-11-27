@@ -42,8 +42,6 @@ class Core:
     def __init__(self, fargs: argparse.Namespace):
         type(self).RUNNING = True
 
-        # self.loop = uvloop.new_event_loop()
-        # asyncio.set_event_loop(self.loop)
         self.loop = asyncio.get_event_loop()
         self.loop.set_exception_handler(self.handle_exception)
 
