@@ -4,16 +4,17 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 requirements = [
-    "movai-core-shared==2.4.1.36",
-    "data-access-layer==2.4.1.36",
-    "gd-node==2.4.1.21",
+    "docker==6.1.0",
+    "movai-core-shared==2.5.0.4",
+    "data-access-layer==2.5.0.5",
+    "gd-node==2.5.0.4"
 ]
 
 # aioredis is required by data-access-layer
 
 setuptools.setup(
     name="flow-initiator",
-    version="2.4.1-49",
+    version="2.5.0-5",
     author="Backend team",
     author_email="backend@mov.ai",
     description="Dummy description",
