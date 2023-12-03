@@ -7,9 +7,9 @@ requirements = [
     "aioredis==1.3.1",
     "uvloop==0.14.0",
     "docker==6.1.0",
-    "movai-core-shared==2.5.0.4",
-    "data-access-layer==2.5.0.5",
-    "gd-node==2.5.0.4"
+    "movai-core-shared==2.5.0.6",
+    "data-access-layer==2.5.0.6",
+    "gd-node==2.5.0.5"
 ]
 
 
@@ -32,5 +32,5 @@ setuptools.setup(
             "flow_initiator = flow_initiator:main",
             "init_local_db = flow_initiator.tools.init_local_db:main"
         ]
-        },
+    },
 )
