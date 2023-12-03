@@ -32,5 +32,5 @@ setuptools.setup(
             "flow_initiator = flow_initiator:main",
             "init_local_db = flow_initiator.tools.init_local_db:main"
         ]
-        },
+    },
 )
