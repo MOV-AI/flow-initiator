@@ -28,7 +28,7 @@ from dal.scopes.robot import Robot
 
 from movai_core_shared.consts import ROS2_LIFECYCLENODE
 from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
-from movai_core_shared.common.utils import is_enteprise
+from movai_core_shared.common.utils import is_enterprise
 from movai_core_shared.logger import Log
 from movai_core_shared.exceptions import CommandError, RunError
 
@@ -70,7 +70,7 @@ class Spawner:
         self._lock = None
         self.robot = robot
         if network is None:
-            if is_enteprise():
+            if is_enterprise():
                 network = f"{NETWORK_PREFIX}-{robot.RobotName}-movai"
             else:
                 network = "flow-private"
