@@ -8,17 +8,10 @@
 """
 import argparse
 import asyncio
-import json
 import traceback
 
 from beartype import beartype
 
-from movai_core_shared.envvars import (
-    DEVICE_NAME,
-    FLEET_NAME,
-    SPAWNER_BIND_ADDR,
-    SPAWNER_DEBUG_MODE,
-)
 from movai_core_shared.logger import Log
 
 from dal.scopes.robot import Robot
@@ -67,5 +60,6 @@ class SpawnerManager:
         """The main coroutine for starting the various components."""
         self._loop = asyncio.get_running_loop()
         self._loop.set_exception_handler(handle_exception)
-        self.server.start()
-        await self.core.spin()
+        self.spawner.run()
+        self.core.run()
+        await self.server.spin()

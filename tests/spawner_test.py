@@ -9,17 +9,20 @@
 """
 
 import unittest
+import pytest
 
 from movai_core_shared.exceptions import CommandError, ActiveFlowError
 
-from flow_initiator.spawner.validation import CommandValidator
+from dal.scopes import Robot
 
+from flow_initiator.spawner.validation import CommandValidator
 
 class TestSpawner(unittest.TestCase):
     """
     Test spawner
     """
 
+    @pytest.mark.skip(reason="must run as system test")
     def test_command_validation(self):
         """
         Test get_dict
@@ -39,7 +42,7 @@ class TestSpawner(unittest.TestCase):
             "EMERGENCY_UNSET",
         ]
 
-        validator = CommandValidator()
+        validator = CommandValidator({})
 
         with self.subTest():
             command = {"command": "TRANS", "active_flow": None}
