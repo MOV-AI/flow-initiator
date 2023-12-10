@@ -693,7 +693,7 @@ class Spawner:
         commands_to_launch = self.flow_monitor.get_commands(
             [node], self.flow_monitor.active_flow
         )
-        all_nodes_to_launch = [command[0] for command in commands_to_launch]
+        all_nodes_to_launch = [command["node"] for command in commands_to_launch]
 
         nodes_to_launch = [
             node
