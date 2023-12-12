@@ -308,8 +308,7 @@ class Spawner:
         persistent = kwargs.pop("persistent", False)
         self._logger.info(
             (
-                "Launching command (persistent: {}) {}".format(
-                    persistent, " ".join(command)
+                "Launching command (persistent: {}) {}".format(persistent, " ".join(command))
                 )
             )
         )
@@ -433,9 +432,7 @@ class Spawner:
             # they also need to be activated
             ros2_lifecycle_nodes_to_activate = []
             for lc_node in self.flow_monitor.load_ros2_lifecycle():
-                if lc_node["node"] not in [
-                    command["node"] for command in commands_to_launch
-                ]:
+                if lc_node["node"] not in [command["node"] for command in commands_to_launch]:
                     commands_to_launch.append(lc_node)
                 else:
                     ros2_lifecycle_nodes_to_activate.append(lc_node["node"])
