@@ -150,7 +150,6 @@ class FlowMonitor:
         LOGGER.info(("load flow {}".format(flow.name)))
         commands_to_launch = []
         for node_name in nodes:
-
             try:
                 node_inst = flow.full.NodeInst[node_name]
                 for node_dependency in flow.get_node_dependencies(node_name):
