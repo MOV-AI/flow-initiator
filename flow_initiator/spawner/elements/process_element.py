@@ -76,7 +76,7 @@ class ProcessElement(BaseElement):
         """
         Destructor to kill all the subprocess.
         """
-        if self.proc.returncode is None:
+        if self.proc and self.proc.returncode is None:
             self.proc.kill()
 
     async def wait(self):
