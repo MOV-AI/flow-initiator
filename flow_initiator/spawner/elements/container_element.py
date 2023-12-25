@@ -56,6 +56,9 @@ class ContainerLauncher(BaseElement):
         if "name" not in self.running_args:
             self.running_args["name"] = kwargs["node"]
         self.name = self.running_args["name"]
+        # should be a list of (port: [ip, port])
+        ports = list(self.running_args.pop("ports", []))
+        self.running_args["ports"] = ports
         self.running_args["env"] = kwargs["env"]
         self._orchestrator = orchestrator
         self.running_args["hostname"] = self.name
