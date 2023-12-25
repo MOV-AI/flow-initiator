@@ -32,7 +32,7 @@ from movai_core_shared.common.utils import is_enterprise
 from movai_core_shared.logger import Log
 from movai_core_shared.exceptions import CommandError, RunError
 
-from flow_initiator.spawner.elements import ElementsFactory, BaseElement
+from flow_initiator.spawner.elements import ElementsFactory, ContainerElement, BaseElement
 
 
 try:
@@ -202,6 +202,7 @@ class Spawner:
         tasks = []
         for _, value in elements.items():
             tasks.append(asyncio.create_task(value.kill()))
+        tasks.append(asyncio.create_task(self.ContainerElement.remove_all_containers())
         # wait for all get_keys tasks to run
         await asyncio.gather(*tasks)
 
@@ -227,6 +228,7 @@ class Spawner:
         for _, element in elements.items():
             tasks.append(element.kill())
         # wait for all get_keys tasks to run
+        tasks.append(asyncio.create_task(self.ContainerElement.remove_all_containers())
         self.flow_monitor.unload()
         await asyncio.gather(*tasks)
         if gdnode_exist:

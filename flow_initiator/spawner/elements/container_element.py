@@ -19,6 +19,7 @@ class ContainerLauncher(BaseElement):
     """
     A class to control containers
     """
+    flow_containers: list = []
 
     def __init__(self, orchestrator: Orchestrator, *args, **kwargs):
         """
@@ -87,6 +88,16 @@ class ContainerLauncher(BaseElement):
 
         """
         self._orchestrator.run_container(**self.running_args)
+        ContainerLauncher.flow_containers.append(self.name)
+
+    async def remove_all_containers(self):
+        """
+        remove all containers
+        Returns: None
+
+        """
+        for container in ContainerLauncher.flow_containers:
+            self._orchestrator.container_remove(container)
 
     async def kill(self):
         """
