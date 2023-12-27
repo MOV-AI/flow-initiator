@@ -32,7 +32,7 @@ from movai_core_shared.common.utils import is_enterprise
 from movai_core_shared.logger import Log
 from movai_core_shared.exceptions import CommandError, RunError
 
-from flow_initiator.spawner.elements import ElementsFactory, ContainerElement, BaseElement
+from flow_initiator.spawner.elements import ElementsFactory, BaseElement
 
 
 try:
@@ -202,10 +202,9 @@ class Spawner:
         tasks = []
         for _, value in elements.items():
             tasks.append(asyncio.create_task(value.kill()))
-        tasks.append(asyncio.create_task(self.ContainerElement.remove_all_containers())
         # wait for all get_keys tasks to run
         await asyncio.gather(*tasks)
-
+        await self.factory.remove_all_containers()
         self.persistent_nodes_lchd = {}
         self.nodes_lchd = {}
         self.core_lchd = {}
@@ -228,9 +227,9 @@ class Spawner:
         for _, element in elements.items():
             tasks.append(element.kill())
         # wait for all get_keys tasks to run
-        tasks.append(asyncio.create_task(self.ContainerElement.remove_all_containers())
         self.flow_monitor.unload()
         await asyncio.gather(*tasks)
+        await self.factory.remove_all_containers()
         if gdnode_exist:
             # need to check all nodes are dead before cleaning parameter server cuz dyn req
             ROS1.clean_parameter_server()
