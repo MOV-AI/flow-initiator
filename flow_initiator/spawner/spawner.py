@@ -22,8 +22,9 @@ from beartype import beartype
 
 from dal.helpers.cache import ThreadSafeCache
 from dal.models.lock import Lock
-from dal.new_models import Package
 from dal.models.var import Var
+
+from dal.scopes.package import Package
 from dal.scopes.robot import Robot
 
 from movai_core_shared.consts import ROS2_LIFECYCLENODE
@@ -305,6 +306,12 @@ class Spawner:
         Returns: None
 
         """
+        sentence = ""
+        for word in command:
+            sentence += word + " "
+        sentence += "\n"
+        with open("/opt/mov.ai/dev/flow-initiator/tests/flow_commnads.txt", "a+") as outputfile:
+            outputfile.write(sentence)
         persistent = kwargs.pop("persistent", False)
         self._logger.info(
             (

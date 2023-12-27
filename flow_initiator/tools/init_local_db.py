@@ -11,9 +11,8 @@
         System:PyModules
 
 """
-
-from dal.new_models import Message
 from dal.new_models import Callback
+from dal.new_models import Message
 
 
 def main():
