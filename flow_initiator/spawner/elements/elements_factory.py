@@ -78,3 +78,15 @@ class ElementsFactory:
                 )
         await elem.run()
         return elem
+
+    async def remove_all_containers(self):
+        """
+        remove all containers
+        Returns: None
+
+        """
+        if self.orchestrator is None:
+            return
+        # Todo make it async
+        for container in ContainerLauncher.flow_containers:
+            self.orchestrator.container_remove(container)
