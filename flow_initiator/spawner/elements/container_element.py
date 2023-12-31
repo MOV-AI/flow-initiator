@@ -35,7 +35,7 @@ class ContainerLauncher(BaseElement):
              network: network name for the container
              network_id: network id for the container, instead of network id
              command: optional command to run the container
-             ports: open network ports for this container, list of (port: [ip, port])
+             ports: open network ports for this container, dict of {port: (ip, port)}
              auto_remove (bool): if to remove the container, when it's stopped.
              labels (dict): label for the container
              mounts: mounts drive option
@@ -58,7 +58,7 @@ class ContainerLauncher(BaseElement):
         # if user will define the name of the container on container conf,
         # it will override the node name, meaning static container name
         self.name = self.running_args["name"]
-        # should be a list of (port: [ip, port])
+        # should be a dict of {port: (ip, port)} or {port: port}
         ports = eval(self.running_args.pop("ports", "None"))
         self.running_args["ports"] = ports
         self.running_args["env"] = kwargs["env"]
