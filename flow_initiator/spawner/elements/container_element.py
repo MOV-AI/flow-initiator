@@ -55,7 +55,12 @@ class ContainerLauncher(BaseElement):
         self.running_args = dict(kwargs["container_conf"])
         if "name" not in self.running_args:
             self.running_args["name"] = kwargs["node"]
+        # if user will define the name of the container on container conf,
+        # it will override the node name, meaning static container name
         self.name = self.running_args["name"]
+        # should be a list of (port: [ip, port])
+        ports = eval(self.running_args.pop("ports", "None"))
+        self.running_args["ports"] = ports
         self.running_args["env"] = kwargs["env"]
         self._orchestrator = orchestrator
         self.running_args["hostname"] = self.name
