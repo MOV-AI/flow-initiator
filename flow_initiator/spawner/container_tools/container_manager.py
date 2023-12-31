@@ -64,6 +64,7 @@ class ContainerManager(DockerBaseManager):
         Args:
             container_name: name of the container
             cmd: command to execute
+            **kwargs: extra arguments to pass to the ``docker exec`` command.
 
         Returns:
             (ExecResult): A tuple of (exit_code, output)

@@ -204,7 +204,7 @@ class Spawner:
             tasks.append(asyncio.create_task(value.kill()))
         # wait for all get_keys tasks to run
         await asyncio.gather(*tasks)
-
+        await self.factory.remove_all_containers()
         self.persistent_nodes_lchd = {}
         self.nodes_lchd = {}
         self.core_lchd = {}
@@ -229,6 +229,7 @@ class Spawner:
         # wait for all get_keys tasks to run
         self.flow_monitor.unload()
         await asyncio.gather(*tasks)
+        await self.factory.remove_all_containers()
         if gdnode_exist:
             # need to check all nodes are dead before cleaning parameter server cuz dyn req
             ROS1.clean_parameter_server()
