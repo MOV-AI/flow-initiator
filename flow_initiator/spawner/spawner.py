@@ -306,12 +306,6 @@ class Spawner:
         Returns: None
 
         """
-        sentence = ""
-        for word in command:
-            sentence += word + " "
-        sentence += "\n"
-        with open("/opt/mov.ai/dev/flow-initiator/tests/flow_commnads.txt", "a+") as outputfile:
-            outputfile.write(sentence)
         persistent = kwargs.pop("persistent", False)
         self._logger.info(
             (
