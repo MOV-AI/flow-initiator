@@ -71,7 +71,6 @@ def _resolve_deps(graph, nodes, deps_set, node: str):
         if next_node_name in deps_set:
             # already went that way
             continue
-        # next_node_temp = Nodes[nodes[next_node_name].Template]
         next_node_temp = NewNode(next_node_name)
         if next_node_temp.Type == MOVAI_STATE:
             # not getting into that
