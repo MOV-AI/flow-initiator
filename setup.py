@@ -4,14 +4,14 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 requirements = [
-    "aioredis==1.3.1",
     "uvloop==0.14.0",
     "docker==6.1.2",
-    "movai-core-shared==2.5.0.6",
-    "data-access-layer==2.5.0.6",
-    "gd-node==2.5.0.6"
+    "movai-core-shared==2.5.0.10",
+    "data-access-layer==2.5.0.7",
+    "gd-node==2.5.0.7"
 ]
 
+# aioredis is required by data-access-layer
 
 setuptools.setup(
     name="flow-initiator",
