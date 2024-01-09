@@ -41,7 +41,7 @@ from movai_core_shared.logger import Log
 
 from dal.models.scopestree import scopes
 from dal.helpers.parsers import ParamParser
-from dal.new_models import Flow
+from dal.om import Flow
 
 
 LOGGER = Log.get_logger("spawner.mov.ai")

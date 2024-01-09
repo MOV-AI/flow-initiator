@@ -11,7 +11,7 @@ from collections import namedtuple
 
 from dal.models.scopestree import scopes
 from movai_core_shared.consts import MOVAI_STATE
-from dal.new_models import Node as NewNode
+from dal.om import Node as NewNode
 
 # typing
 Flow = Node = None
