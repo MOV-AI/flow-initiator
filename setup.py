@@ -6,8 +6,8 @@ with open("README.md", "r") as fh:
 requirements = [
     "uvloop==0.14.0",
     "docker==6.1.2",
-    "movai-core-shared==2.5.0.10",
-    "data-access-layer==2.5.0.8",
+    "movai-core-shared==2.5.0.11",
+    "data-access-layer==2.5.0.9",
     "gd-node==2.5.0.7"
 ]
 
