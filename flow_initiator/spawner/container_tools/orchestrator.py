@@ -369,18 +369,19 @@ class Orchestrator:
         self._images.tag_image(commit_image, new_repo=repo, new_tag=snapshot_tag)
         return snapshot_tag
 
-    def container_execute_command(self, name: str, cmd: str):
+    def container_execute_command(self, name: str, cmd: str, **kwargs):
         """
         Run a command on a running container
         Args:
             name: name of the container
             cmd: command to run
+            **kwargs: extra arguments for the command
 
          Returns:
         (ExecResult): A tuple of (exit_code, output)
 
         """
-        return self._containers.container_execute_command(name, cmd)
+        return self._containers.container_execute_command(name, cmd, **kwargs)
 
     container_execute_command.__doc__ = (
         ContainerManager.container_execute_command.__doc__
