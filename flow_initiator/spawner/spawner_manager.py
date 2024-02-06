@@ -10,19 +10,16 @@ import argparse
 import asyncio
 import traceback
 
-from beartype import beartype
-
 from movai_core_shared.logger import Log
-
 from dal.scopes.robot import Robot
 
 from flow_initiator.spawner.spawner_core import SpawnerCore
 from flow_initiator.spawner.spawner import Spawner
 from flow_initiator.spawner.spawner_server import SpawnerServer
 
-spawner_logger = "spawner.mov.ai"
-LOGGER = Log.get_logger(spawner_logger)
-USER_LOGGER = Log.get_user_logger(spawner_logger)
+SPAWNER_LOGGER = "spawner.mov.ai"
+LOGGER = Log.get_logger(SPAWNER_LOGGER)
+USER_LOGGER = Log.get_user_logger(SPAWNER_LOGGER)
 
 
 def handle_exception(context):
@@ -36,9 +33,7 @@ def handle_exception(context):
 
     """
     msg = context.get("exception", context["message"])
-    tb_str = traceback.format_exception(
-        etype=type(msg), value=msg, tb=msg.__traceback__
-    )
+    tb_str = traceback.format_exception(etype=type(msg), value=msg, tb=msg.__traceback__)
     USER_LOGGER.error("\n" + "".join(tb_str))
 
 
