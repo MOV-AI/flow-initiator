@@ -15,6 +15,7 @@ from beartype import beartype
 from movai_core_shared.envvars import (
     DEVICE_NAME,
     FLEET_NAME,
+    SPAWNER_BIND_ADDR,
     SPAWNER_DEBUG_MODE,
 )
 from movai_core_shared.logger import Log
@@ -33,7 +34,7 @@ class SpawnerServer(ZMQServer):
     @beartype
     def __init__(self, spawner: Spawner) -> None:
         server_name = f"{self.__class__.__name__}-{DEVICE_NAME}-{FLEET_NAME}"
-        zmq_bind_addr = f"ipc:///opt/mov.ai/comm/{server_name}.sock"
+        zmq_bind_addr = SPAWNER_BIND_ADDR
         super().__init__(server_name, zmq_bind_addr, SPAWNER_DEBUG_MODE)
         self.spawner = spawner
 
@@ -60,9 +61,9 @@ class SpawnerServer(ZMQServer):
             command_dict = req_data.get("command_data")
             asyncio.create_task(self.spawner.process_command(command_dict))
             response_msg = "Got request & successfully proccessed".encode("utf8")
-        except json.JSONDecodeError as e:
+        except json.JSONDecodeError as exc:
             self._logger.error(f"can't parse command: {buffer}")
-            self._logger.error(e)
+            self._logger.error(exc)
             response_msg = "can't parse command: {buffer}".encode("utf8")
         finally:
             await self._socket.send_multipart(response_msg)
