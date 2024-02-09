@@ -204,7 +204,7 @@ class Spawner:
             tasks.append(asyncio.create_task(value.kill()))
         # wait for all get_keys tasks to run
         await asyncio.gather(*tasks)
-
+        await self.factory.remove_all_containers()
         self.persistent_nodes_lchd = {}
         self.nodes_lchd = {}
         self.core_lchd = {}
@@ -229,6 +229,7 @@ class Spawner:
         # wait for all get_keys tasks to run
         self.flow_monitor.unload()
         await asyncio.gather(*tasks)
+        await self.factory.remove_all_containers()
         if gdnode_exist:
             # need to check all nodes are dead before cleaning parameter server cuz dyn req
             ROS1.clean_parameter_server()
@@ -307,12 +308,7 @@ class Spawner:
         """
         persistent = kwargs.pop("persistent", False)
         self._logger.info(
-            (
-                "Launching command (persistent: {}) {}".format(
-                    persistent, " ".join(command)
-                )
-            )
-        )
+                "Launching command (persistent: {}) {}".format(persistent, " ".join(command)))
         cwd = cwd or self.temp_dir.name
         elem = None
         try:
@@ -433,9 +429,7 @@ class Spawner:
             # they also need to be activated
             ros2_lifecycle_nodes_to_activate = []
             for lc_node in self.flow_monitor.load_ros2_lifecycle():
-                if lc_node["node"] not in [
-                    command["node"] for command in commands_to_launch
-                ]:
+                if lc_node["node"] not in [command["node"] for command in commands_to_launch]:
                     commands_to_launch.append(lc_node)
                 else:
                     ros2_lifecycle_nodes_to_activate.append(lc_node["node"])

@@ -17,7 +17,6 @@ import aioredis
 import rospy
 
 from movai_core_shared.logger import Log
-
 from dal.scopes.robot import Robot
 from dal.models.lock import Lock
 from dal.movaidb import RedisClient

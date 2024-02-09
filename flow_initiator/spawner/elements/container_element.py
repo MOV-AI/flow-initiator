@@ -19,6 +19,7 @@ class ContainerLauncher(BaseElement):
     """
     A class to control containers
     """
+    flow_containers: list = []
 
     def __init__(self, orchestrator: Orchestrator, *args, **kwargs):
         """
@@ -34,7 +35,7 @@ class ContainerLauncher(BaseElement):
              network: network name for the container
              network_id: network id for the container, instead of network id
              command: optional command to run the container
-             ports: open network ports for this container, list of (port: [ip, port])
+             ports: open network ports for this container, dict of {port: (ip, port)}
              auto_remove (bool): if to remove the container, when it's stopped.
              labels (dict): label for the container
              mounts: mounts drive option
@@ -54,7 +55,12 @@ class ContainerLauncher(BaseElement):
         self.running_args = dict(kwargs["container_conf"])
         if "name" not in self.running_args:
             self.running_args["name"] = kwargs["node"]
+        # if user will define the name of the container on container conf,
+        # it will override the node name, meaning static container name
         self.name = self.running_args["name"]
+        # should be a dict of {port: (ip, port)} or {port: port}
+        ports = eval(self.running_args.pop("ports", "None"))
+        self.running_args["ports"] = ports
         self.running_args["env"] = kwargs["env"]
         self._orchestrator = orchestrator
         self.running_args["hostname"] = self.name
@@ -87,6 +93,7 @@ class ContainerLauncher(BaseElement):
 
         """
         self._orchestrator.run_container(**self.running_args)
+        ContainerLauncher.flow_containers.append(self.name)
 
     async def kill(self):
         """

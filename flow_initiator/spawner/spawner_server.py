@@ -6,10 +6,9 @@
    Developers:
    - Erez Zomer (erez@mov.ai) - 2023
 """
-import argparse
 import asyncio
 import json
-import traceback
+
 
 from beartype import beartype
 
@@ -24,9 +23,9 @@ from movai_core_shared.core.zmq.zmq_server import ZMQServer
 
 from flow_initiator.spawner.spawner import Spawner
 
-spawner_logger = "spawner.mov.ai"
-LOGGER = Log.get_logger(spawner_logger)
-USER_LOGGER = Log.get_user_logger(spawner_logger)
+SPAWNER_LOGGER = "spawner.mov.ai"
+LOGGER = Log.get_logger(SPAWNER_LOGGER)
+USER_LOGGER = Log.get_user_logger(SPAWNER_LOGGER)
 
 
 class SpawnerServer(ZMQServer):
@@ -35,7 +34,8 @@ class SpawnerServer(ZMQServer):
     @beartype
     def __init__(self, spawner: Spawner) -> None:
         server_name = f"{self.__class__.__name__}-{DEVICE_NAME}-{FLEET_NAME}"
-        super().__init__(server_name, SPAWNER_BIND_ADDR, SPAWNER_DEBUG_MODE)
+        zmq_bind_addr = SPAWNER_BIND_ADDR
+        super().__init__(server_name, zmq_bind_addr, SPAWNER_DEBUG_MODE)
         self.spawner = spawner
 
     async def handle(self, buffer: bytes) -> None:
@@ -44,6 +44,7 @@ class SpawnerServer(ZMQServer):
         Args:
             buffer (bytes): The buffer that the server was able to read.
         """
+        response_msg = None
         try:
             if len(buffer) == 3:
                 # in case sender just use send
@@ -60,9 +61,9 @@ class SpawnerServer(ZMQServer):
             command_dict = req_data.get("command_data")
             asyncio.create_task(self.spawner.process_command(command_dict))
             response_msg = "Got request & successfully proccessed".encode("utf8")
-        except json.JSONDecodeError as e:
+        except json.JSONDecodeError as exc:
             self._logger.error(f"can't parse command: {buffer}")
-            self._logger.error(e)
+            self._logger.error(exc)
             response_msg = "can't parse command: {buffer}".encode("utf8")
         finally:
             await self._socket.send_multipart(response_msg)
