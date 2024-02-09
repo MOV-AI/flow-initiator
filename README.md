@@ -1,19 +1,25 @@
-# flow-initator
-Flow initiator is the node orchistration tool of the MOV.AI platform. 
-Respnsible for executing the flow by lunching killing and monitoring the nodes for 
-activating and transisining between the Flow states, for fulfilling the flow logic
+[![CI - On DEV](https://github.com/MOV-AI/flow-initiator/actions/workflows/TestOnPR.yml/badge.svg?branch=dev)](https://github.com/MOV-AI/flow-initiator/actions/workflows/TestOnPR.yml) [![Deploy - On main/release](https://github.com/MOV-AI/flow-initiator/actions/workflows/DeployOnMergeMain.yml/badge.svg?branch=main)](https://github.com/MOV-AI/flow-initiator/actions/workflows/DeployOnMergeMain.yml)
+
+# flow-initiator
+Flow initiator is the node orchestration tool of the MOV.AI platform.
+Responsible for executing the flow by launching, killing and monitoring the nodes for
+activating and transitioning between the Flow states, for fulfilling the flow logic
+
+> Flow initiator now comes with docker client support
+
 
 ## Usage
 
-The Flow initiator is activated with the follwoing command: 
+The Flow initiator is activated with the following command:
 
-    python3 -m flow_initiator
+    flow_initiator
 
 > Prerequisites : The flow initiator is depended on 2 packages:
     1) dal
     2) movai_core_shared
 
 Parameters list that can be set through environment variables:
+
 
 
 
@@ -39,11 +45,6 @@ The complete build process requires 2 steps :
 
 ## build docker images
 
-For ROS melodic distribution :
-
-    docker build -t flow_initiator:melodic -f docker/melodic/Dockerfile .
-
-
 For ROS noetic distribution :
 
     docker build -t flow_initiator:noetic -f docker/noetic/Dockerfile .
@@ -51,12 +52,9 @@ For ROS noetic distribution :
 
 ## Basic Run
 
-For ROS melodic distribution :
-
-    docker run -t flow_initiator:melodic
-
 For ROS noetic distribution :
 
+    docker run -t flow_initiator:noetic
 
 You don't need to worry about the 4th digit, as the CI system does the automatic bump of it.
 =======
@@ -64,16 +62,12 @@ You don't need to worry about the 4th digit, as the CI system does the automatic
 
 ## Development stack
 
-For ROS melodic distribution :
-
-    export FLOW_INITIATOR_DISTRO=melodic
-    docker-compose -f tests/docker-compose.yml up -d
-
 For ROS noetic distribution :
 
-    export FLOW_INITIATOR_DISTRO=noetic
-    docker-compose -f tests/docker-compose.yml up -d
+    sudo chmod 777 -Rf  tests/{logs,shared,userspace}
+    docker-compose -f tests/docker-compose.yml up --build -d
 
+Cleaning :
 
-
+    docker-compose -f tests/docker-compose.yml down --remove-orphans --volumes
 

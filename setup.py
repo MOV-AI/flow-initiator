@@ -4,15 +4,18 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 requirements = [
-    "aioredis==1.3.1",
     "uvloop==0.14.0",
-    "gd-node==2.4.1.*"
+    "docker==6.1.2",
+    "movai-core-shared==2.5.0.11",
+    "data-access-layer==2.5.0.9",
+    "gd-node==2.5.0.7"
 ]
 
+# aioredis is required by data-access-layer
 
 setuptools.setup(
     name="flow-initiator",
-    version="2.4.1-13",
+    version="2.5.0-7",
     author="Backend team",
     author_email="backend@mov.ai",
     description="Dummy description",
@@ -24,10 +27,10 @@ setuptools.setup(
     classifiers=["Programming Language :: Python :: 3"],
     install_requires=requirements,
     entry_points={
-        "console_scripts":[
+        "console_scripts": [
             "flow_compiler = flow_initiator.tools.flow_compiler:main",
             "flow_initiator = flow_initiator:main",
             "init_local_db = flow_initiator.tools.init_local_db:main"
         ]
-        },
+    },
 )

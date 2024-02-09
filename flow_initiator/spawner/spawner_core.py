@@ -8,51 +8,49 @@
    - Tiago Paulino (tiago@mov.ai) - 2020
    - Dor Marcous (Dor@mov.ai) - 2022
 """
-import argparse
 import asyncio
+from beartype import beartype
 import os
 import pickle
-import traceback
 
 import aioredis
-
 import rospy
 
-from movai_core_shared.logger import Log, LogAdapter
-
+from movai_core_shared.logger import Log
 from dal.scopes.robot import Robot
 from dal.models.lock import Lock
 from dal.movaidb import RedisClient
 
-from .async_spawner import Spawner
+from .spawner import Spawner
 
 # importing database profile automatically registers the database connections
 from rosgraph_msgs.msg import Log as RosOutMsg
 
+USER_LOGGER = Log.get_user_logger("Core")
 
-LOGGER = LogAdapter(Log.get_logger("spawner.mov.ai"))
 
-
-class Core:
+class SpawnerCore:
     """Core class to run movai"""
 
     RUNNING = False
 
-    def __init__(self, fargs: argparse.Namespace):
+    @beartype
+    def __init__(self, spawner: Spawner):
+        """
+        Core constructor
+        Args:
+            fargs:  arguments for initialization
+        """
         type(self).RUNNING = True
-
-        # self.loop = uvloop.new_event_loop()
-        # asyncio.set_event_loop(self.loop)
-        self.loop = asyncio.get_event_loop()
-        self.loop.set_exception_handler(self.handle_exception)
-
+        self.spawner = spawner
+        self._logger = Log.get_user_logger("movaicore")
         self.robot = Robot()
         del self.robot.Actions  # local  set
         del self.robot.fleet.Actions  # global set
         # Should we add FLEET_NAME? Where?
         self.robot.set_ip(os.getenv("PUBLIC_IP", self.robot.IP))  # local set
         self.robot.set_name(os.getenv("DEVICE_NAME", self.robot.RobotName))  # local set
-        LOGGER.info(f"Robot {self.robot.RobotName} started.")
+        self._logger.info(f"Robot {self.robot.RobotName} started.")
         self.databases = None
         self.conn = None
         self.conn_sub = None
@@ -77,7 +75,6 @@ class Core:
         # [{"key": "key_pattern", "callback": callback, "channel": None, "db_pop": "db_pop", "db_sub": "db_sub"}, ]
         # db_pop: connection to pop the key
         # db_sub: connection to subscribe to key
-        self.spawner = Spawner(self.loop, self.robot, fargs.verbose)
 
         # subscribe to /rosout_agg
         rospy.init_node("movai_logger", anonymous=True)
@@ -85,28 +82,33 @@ class Core:
 
         self.tasks = []
 
-    def handle_exception(self, loop, context):
-        """Handle Exceptions"""
-        msg = context.get("exception", context["message"])
-        tb_str = traceback.format_exception(etype=type(msg), value=msg, tb=msg.__traceback__)
-        LOGGER.error("\n" + "".join(tb_str))
-
     def _rosout_callback(self, msg):
-        """Catch ROS log output and log to system logger"""
+        """
+        Catch ROS log output and log to system logger
+        Args:
+            msg: the ros message
+
+        Returns: None
+
+        """
         level = msg.level
         if level == 2:  # info
-            LOGGER.info(msg.msg, name=msg.name, function=msg.function)
+            USER_LOGGER.info(msg.msg, name=msg.name, function=msg.function)
         elif level == 4:  # warning
-            LOGGER.warning(msg.msg, name=msg.name, function=msg.function)
+            USER_LOGGER.warning(msg.msg, name=msg.name, function=msg.function)
         elif level == 8:  # error
-            LOGGER.error(msg.msg, name=msg.name, function=msg.function)
+            USER_LOGGER.error(msg.msg, name=msg.name, function=msg.function)
         elif level == 16:  # fatal/critical
-            LOGGER.critical(msg.msg, name=msg.name, function=msg.function)
+            USER_LOGGER.critical(msg.msg, name=msg.name, function=msg.function)
         else:  # default debug
-            LOGGER.debug(msg.msg, name=msg.name, function=msg.function)
+            USER_LOGGER.debug(msg.msg, name=msg.name, function=msg.function)
 
     async def connect(self) -> None:
-        """Create database connections"""
+        """
+        Create database connections
+        Returns: None
+
+        """
 
         self.databases = await RedisClient.get_client()
 
@@ -125,8 +127,18 @@ class Core:
         _conn_local_sub = await self.databases.local_pubsub.acquire()
         self.conn_local_sub = aioredis.Redis(_conn_local_sub)
 
-    async def task_subscriber(self, subscriber: str, connection: aioredis.Redis) -> None:
-        """Calls a callback every time it gets a message."""
+    async def task_subscriber(
+        self, subscriber: dict, connection: aioredis.Redis
+    ) -> None:
+        """
+        Calls a callback every time it gets a message
+        Args:
+            subscriber (dict): the subscriber dict with the configuration.
+            connection (aioredis.Redis): the connection
+
+        Returns: None
+
+        """
         channel = subscriber["channel"][0]
         callback = subscriber["callback"]
 
@@ -140,9 +152,13 @@ class Core:
                 pass
 
     async def register_sub(self) -> None:
-        """Subscribe to key."""
+        """
+        Subscribe to key.
+        Returns: None
+
+        """
         for subscriber in self.subscribers:
-            LOGGER.info(
+            self._logger.info(
                 f"Subscribing to key: {subscriber['key']} - {subscriber['db_pop']} - {subscriber['db_sub']}"
             )
             key = subscriber["key"]
@@ -150,17 +166,29 @@ class Core:
             conn_sub = getattr(self, subscriber["db_sub"])
             res = await conn_sub.psubscribe("__keyspace@*__:*%s*" % key)
             subscriber["channel"] = res
-            self.loop.create_task(self.task_subscriber(subscriber, conn))
+            asyncio.create_task(self.task_subscriber(subscriber, conn))
 
     async def unregister_sub(self) -> None:
-        """Unsubscribe key"""
-        LOGGER.info("Unregistering subscribers.")
+        """
+        Unsubscribe key
+        Returns: None
+
+        """
+        self._logger.info("Unregistering subscribers.")
         for subscriber in self.subscribers:
             conn_sub = getattr(self, subscriber["db_sub"])
             await conn_sub.punsubscribe("__keyspace@*__:*%s*" % subscriber["key"])
 
     async def callback(self, msg: tuple, connection: aioredis.Redis) -> None:
-        """Callback that processes commands coming from redis"""
+        """
+        Callback that processes commands coming from redis
+        Args:
+            msg (tuple): the  redis message
+            connection (aioredis.Redis): the connection
+
+        Returns: None
+
+        """
         _, key = msg[0].decode("utf-8").split(":", 1)
         if msg[1].decode("utf-8") == "rpush":
             if connection:
@@ -172,16 +200,18 @@ class Core:
                 await self.spawner.process_command(result)
 
     async def stop(self) -> None:
-        """Calls all methods necessary to stop movai core."""
-        LOGGER.info("STOP Called.")
+        """
+        Calls all methods necessary to stop movai core.
+        Returns: None
+
+        """
+        self._logger.info("STOP Called.")
         await self.unregister_sub()
         self.conn.close()
         # terminate processes launched by the spawner
         await self.spawner.stop()
         tasks = [
-            task
-            for task in asyncio.Task.all_tasks()
-            if task is not asyncio.tasks.Task.current_task()
+            task for task in asyncio.all_tasks() if task is not asyncio.current_task()
         ]
         list(map(lambda task: task.cancel(), tasks))
         await asyncio.gather(*tasks, return_exceptions=True)
@@ -189,22 +219,29 @@ class Core:
         # clean enabled locks pool to finish any hanging threads
         Lock.enabled_locks = []
 
-    def run(self):
-
-        self.loop.run_until_complete(self.spin())
-        # will exit later
-        self.loop.stop()
-
     def shutdown(self):
+        """
+        Shutdown function, closing everything.
+        Returns: None
+
+        """
         self.RUNNING = False
 
     async def spin(self) -> None:
-        """Runs the main loop. Exiting spin stops movai core."""
+        """
+        Runs the main loop. Exiting spin stops movai core.
+        Returns: None
+
+        """
         await self.connect()
         await self.register_sub()
         while self.RUNNING:
             # robot keep alive
             await self.spawner.fn_update_robot()
             await asyncio.sleep(3)  # Give time to other tasks to run.
-        LOGGER.info("STOPPING MOVAICORE AND ALL ASSOCIATED PROCESSES")
+        self._logger.info("STOPPING MOVAICORE AND ALL ASSOCIATED PROCESSES")
         await self.stop()
+
+    def run(self):
+        """Starts running the object."""
+        asyncio.create_task(self.spin())

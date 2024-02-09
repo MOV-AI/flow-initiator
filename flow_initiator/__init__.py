@@ -4,14 +4,14 @@
    Proprietary and confidential
 
    Developers:
-   - Tiago Teixeira (tiago.teixeira@mov.ai) - 2020
+   - Dor Marcous  (dor@mov.ai) - 2021
 
     Spawner module initialization
 """
 import signal
 import argparse
 from dal.movaidb import RedisClient
-from .spawner import Core
+from .spawner import SpawnerManager
 
 
 def main():
@@ -38,5 +38,5 @@ def main():
         default=1,
     )
     args = parser.parse_args()
-    app = Core(args)
+    app = SpawnerManager(args)
     return app.run()
