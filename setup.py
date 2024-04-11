@@ -9,7 +9,7 @@ requirements = [
     "docker==6.1.2",
     "movai-core-shared==2.5.0.12",
     "data-access-layer==2.5.0.12",
-    "gd-node==2.5.0.6"
+    "gd-node==2.5.0.9"
 ]
 
 
