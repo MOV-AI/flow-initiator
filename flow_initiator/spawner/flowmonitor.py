@@ -169,7 +169,7 @@ class FlowMonitor:
                             to_launch = {
                                 "node": node_dependency,
                                 "command": cmd,
-                                "presistent": node_dep_inst.is_persistent,
+                                "persistent": node_dep_inst.is_persistent,
                                 "state": is_state,
                                 "env": self.get_node_EnvVars(node_dependency, flow),
                                 "container_conf": self.get_container_conf(node_dependency, flow),
