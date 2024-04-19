@@ -8,7 +8,7 @@ requirements = [
     "uvloop==0.14.0",
     "docker==6.1.2",
     "movai-core-shared==2.5.0.14",
-    "data-access-layer==2.5.0.14",
+    "data-access-layer==2.5.0.15",
     "gd-node==2.5.0.10"
 ]
 
