@@ -14,12 +14,13 @@
 
 from dal.models.message import Message
 from dal.models.callback import Callback
-
+import os, signal
 
 def main():
     """initialize redis local db"""
     Message.export_portdata(db="local")
     Callback.export_modules()
+    os.kill(os.getpid(), signal.SIGKILL)
 
 
 if __name__ == "__main__":
