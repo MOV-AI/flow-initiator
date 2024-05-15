@@ -20,6 +20,8 @@ def main():
     """initialize redis local db"""
     Message.export_portdata(db="local")
     Callback.export_modules()
+    # TODO: this is a bit overkill, we should change how we are getting all the python packages/modules (without actually executing)
+    # export module is launching a set of processes that might run unwanted code => Security risk
     os.kill(os.getpid(), signal.SIGKILL)
 
 
