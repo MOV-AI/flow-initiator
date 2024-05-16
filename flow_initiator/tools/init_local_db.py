@@ -11,10 +11,12 @@
         System:PyModules
 
 """
+import os
+import signal
 
-from dal.models.message import Message
 from dal.models.callback import Callback
-import os, signal
+from dal.models.message import Message
+
 
 def main():
     """initialize redis local db"""
