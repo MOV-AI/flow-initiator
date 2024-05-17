@@ -16,10 +16,17 @@ import signal
 
 from dal.models.callback import Callback
 from dal.models.message import Message
+from dal.movaidb import MovaiDB
 
 
 def main():
     """initialize redis local db"""
+
+    # Connect to DBs
+    MovaiDB(db="global")
+    MovaiDB(db="local")
+
+    # Load data
     Message.export_portdata(db="local")
     Callback.export_modules()
     # TODO: this is a bit overkill, we should change how we are getting all the python packages/modules (without actually executing)
