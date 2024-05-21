@@ -17,11 +17,6 @@ import signal
 from dal.models.callback import Callback
 from dal.models.message import Message
 
-###### Temp fix for: https://movai.atlassian.net/browse/BP-1216 ######
-import json
-from dal.scopes.system import System
-PYTHON_IMPORTS_FILE="python_imports.json"
-######################################################################
 
 def main():
     """initialize redis local db"""
@@ -32,16 +27,23 @@ def main():
     # Callback.export_modules()
 
     # Here we upload the python modules that are already saved in the file
+    import json
+    from dal.scopes.system import System
+
+    # Get the path to the file
+    # https://setuptools.readthedocs.io/en/latest/userguide/datafiles.html#accessing-data-files-at-runtime
+    data_path = os.path.join(os.path.dirname(__file__), 'python_imports.json')
+
     # This code is copy pasted from the Callback.export_modules() function
     try:
         # currently using the old api
-        mods = System("PyModules", db="local")  # scopes('local').System['PyModules', 'cache']
+        mods = System("PyModules", db="local")
     except Exception:  # pylint: disable=broad-except
         mods = System(
             "PyModules", new=True, db="local"
-        )  # scopes('local').create('System', 'PyModules')
+        )
 
-    with open(PYTHON_IMPORTS_FILE, "r") as f:
+    with open(data_path, "r") as f:
         mods.Value = json.load(f)
     ######################################################################
 
