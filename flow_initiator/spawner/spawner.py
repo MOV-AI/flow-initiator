@@ -307,7 +307,7 @@ class Spawner:
 
         """
         persistent = kwargs.pop("persistent", False)
-        self._logger.info(
+        self._logger.debug(
                 "Launching command (persistent: {}) {}".format(persistent, " ".join(command)))
         cwd = cwd or self.temp_dir.name
         elem = None
