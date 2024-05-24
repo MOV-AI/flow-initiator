@@ -24,6 +24,7 @@ setuptools.setup(
     url="https://github.com/MOV-AI/flow-initiator",
     packages=setuptools.find_packages(),
     include_package_data=True,
+    data_files=['flow_initiator/tools/python_imports.json'],
     classifiers=["Programming Language :: Python :: 3"],
     install_requires=requirements,
     entry_points={
