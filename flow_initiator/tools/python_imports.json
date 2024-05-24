@@ -1,0 +1,4652 @@
+{
+    "API2": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "Application": {
+                "classes": [
+                    "Application"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "Callback": {
+                "classes": [
+                    "Callback"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "Configuration": {
+                "classes": [
+                    "Config",
+                    "Configuration"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "Exceptions": {
+                "isPkg": false
+            },
+            "Fleet": {
+                "classes": [
+                    "Task",
+                    "TaskEntry",
+                    "TaskTemplate"
+                ],
+                "consts": [
+                    "SharedDataEntry",
+                    "SharedDataTemplate"
+                ],
+                "functions": [],
+                "isPkg": false
+            },
+            "Flow": {
+                "classes": [
+                    "Flow"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "GraphicScene": {
+                "classes": [
+                    "GraphicScene"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "Layer1": {
+                "classes": [],
+                "consts": [
+                    "MovaiDB"
+                ],
+                "functions": [],
+                "isPkg": false
+            },
+            "Lock": {
+                "classes": [
+                    "Lock"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "Message": {
+                "classes": [
+                    "Message"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "Node": {
+                "classes": [
+                    "Node"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "Package": {
+                "classes": [
+                    "Package"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "Redis": {
+                "isPkg": false
+            },
+            "Robot": {
+                "classes": [
+                    "FleetRobot",
+                    "Robot"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "Role": {
+                "classes": [
+                    "Role"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "Scopes": {
+                "classes": [
+                    "Application",
+                    "Form",
+                    "GraphicAsset",
+                    "Hash",
+                    "Helpers",
+                    "Layout",
+                    "List",
+                    "Ports",
+                    "Scope",
+                    "Struct",
+                    "System",
+                    "TaskTemplate",
+                    "Widget"
+                ],
+                "consts": [
+                    "Annotation",
+                    "SharedDataEntry",
+                    "SharedDataTemplate"
+                ],
+                "functions": [],
+                "isPkg": false
+            },
+            "StateMachine": {
+                "classes": [
+                    "SMVars",
+                    "StateMachine"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "Var": {
+                "classes": [
+                    "Var"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            }
+        }
+    },
+    "dal": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "api": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "dalapi": {
+                        "isPkg": false
+                    },
+                    "gitapi": {
+                        "classes": [
+                            "BaseArchive",
+                            "BranchAlreadyExist",
+                            "FileDoesNotExist",
+                            "FileSystem",
+                            "GitCommandError",
+                            "GitError",
+                            "GitLink",
+                            "GitManager",
+                            "GitPermissionErr",
+                            "GitRepo",
+                            "HEAD",
+                            "IndexFile",
+                            "InvalidGitRepositoryError",
+                            "Log",
+                            "MasterGitManager",
+                            "NoChangesToCommit",
+                            "Path",
+                            "PushInfo",
+                            "Repo",
+                            "RepositoryDoesNotExist",
+                            "SlaveGitManager",
+                            "SlaveManagerCannotChange",
+                            "TagAlreadyExist",
+                            "TagReference",
+                            "VersionDoesNotExist"
+                        ],
+                        "consts": [
+                            "GIT_BASE_FOLDER",
+                            "MOVAI_BASE_FOLDER",
+                            "MOVAI_FOLDER_NAME",
+                            "logger"
+                        ],
+                        "functions": [
+                            "abstractmethod",
+                            "expanduser",
+                            "getenv",
+                            "path_join"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            },
+            "archive": {
+                "classes": [],
+                "consts": [
+                    "Archive"
+                ],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "basearchive": {
+                        "classes": [
+                            "ArchiveAlreadyRegistered",
+                            "ArchiveNotRegistered",
+                            "BaseArchive",
+                            "Log",
+                            "NoActiveArchiveRegistered",
+                            "Path"
+                        ],
+                        "consts": [
+                            "Any",
+                            "DEFAULT_MOVAI_GIT_USER",
+                            "LOGGER"
+                        ],
+                        "functions": [
+                            "abstractmethod",
+                            "getenv"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            },
+            "backup": {
+                "classes": [
+                    "BackupManager",
+                    "RestoreManager"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "backup": {
+                        "classes": [
+                            "BackupJob",
+                            "BackupManager",
+                            "Log",
+                            "Model",
+                            "ScopesTree",
+                            "ZipFile",
+                            "datetime"
+                        ],
+                        "consts": [
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "restore": {
+                        "classes": [
+                            "BadZipFile",
+                            "Log",
+                            "RestoreJob",
+                            "RestoreManager",
+                            "ZipFile",
+                            "datetime"
+                        ],
+                        "consts": [
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    }
+                }
+            },
+            "classes": {
+                "classes": [
+                    "Singleton"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "authentication": {
+                        "classes": [
+                            "AuthService"
+                        ],
+                        "consts": [
+                            "authentications"
+                        ],
+                        "functions": [
+                            "search"
+                        ],
+                        "isPkg": false
+                    },
+                    "common": {
+                        "classes": [],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "gitlink": {
+                                "classes": [
+                                    "GitCommandError",
+                                    "GitLink",
+                                    "RepositoryDoesNotExist"
+                                ],
+                                "consts": [],
+                                "functions": [
+                                    "join",
+                                    "search"
+                                ],
+                                "isPkg": false
+                            },
+                            "singleton": {
+                                "classes": [
+                                    "Singleton"
+                                ],
+                                "consts": [],
+                                "functions": [],
+                                "isPkg": false
+                            }
+                        }
+                    },
+                    "filesystem": {
+                        "classes": [
+                            "FileSystem"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "filesystem": {
+                                "classes": [
+                                    "FileSystem",
+                                    "Path"
+                                ],
+                                "consts": [],
+                                "functions": [
+                                    "dirname",
+                                    "expanduser",
+                                    "isdir",
+                                    "isfile",
+                                    "islink",
+                                    "json_dump",
+                                    "remove",
+                                    "rename",
+                                    "rmtree",
+                                    "symlink",
+                                    "unlink"
+                                ],
+                                "isPkg": false
+                            }
+                        }
+                    },
+                    "protocols": {
+                        "classes": [
+                            "ContextClientIn",
+                            "ContextClientOut",
+                            "ContextServerIn",
+                            "ContextServerOut",
+                            "Var_Subscriber",
+                            "WSRedisSub"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "redis": {
+                                "classes": [
+                                    "ContextClientIn",
+                                    "ContextClientOut",
+                                    "ContextMsg",
+                                    "ContextProtocolIn",
+                                    "ContextProtocolOut",
+                                    "ContextServerIn",
+                                    "ContextServerOut"
+                                ],
+                                "consts": [
+                                    "MovaiDB"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            },
+                            "redissub": {
+                                "classes": [
+                                    "BaseIport",
+                                    "GD_Message",
+                                    "Robot",
+                                    "Var_Subscriber"
+                                ],
+                                "consts": [
+                                    "Any",
+                                    "MovaiDB",
+                                    "RedisClient",
+                                    "gdnode_modules"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            },
+                            "wsredissub": {
+                                "classes": [
+                                    "GD_Callback",
+                                    "Log",
+                                    "WSMsgType",
+                                    "WSRedisSub"
+                                ],
+                                "consts": [
+                                    "LOGGER",
+                                    "MovaiDB",
+                                    "RedisClient",
+                                    "gdnode_modules"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            }
+                        }
+                    },
+                    "utils": {
+                        "classes": [],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "local_robot_info": {
+                                "classes": [
+                                    "LocalRobotInfo"
+                                ],
+                                "consts": [
+                                    "MovaiDB"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            },
+                            "secretkey": {
+                                "classes": [
+                                    "Log",
+                                    "MovaiDB",
+                                    "SecretKey",
+                                    "SecretKeyAlreadyExist",
+                                    "SecretKeyDoesNotExist"
+                                ],
+                                "consts": [],
+                                "functions": [
+                                    "current_time_string",
+                                    "generate_secret_string"
+                                ],
+                                "isPkg": false
+                            },
+                            "token": {
+                                "isPkg": false
+                            }
+                        }
+                    }
+                }
+            },
+            "data": {
+                "classes": [
+                    "ObjectDeserializer",
+                    "ObjectSerializer",
+                    "SchemaNode",
+                    "SchemaObjectNode",
+                    "SchemaPropertyNode",
+                    "SchemasTree",
+                    "TreeNode",
+                    "VersionObject",
+                    "WorkspaceManager",
+                    "WorkspaceObject"
+                ],
+                "consts": [
+                    "schemas"
+                ],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "archive": {
+                        "classes": [
+                            "ClientConnectorError",
+                            "ClientSession",
+                            "ContentTypeError",
+                            "RemoteArchive",
+                            "RemoteArchiveAsync",
+                            "URL"
+                        ],
+                        "consts": [
+                            "CHUNK_SIZE"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "mixins": {
+                        "classes": [
+                            "ChildrenCmpMixin",
+                            "ValueCmpMixin"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "schema": {
+                        "classes": [
+                            "CallableNode",
+                            "DictNode",
+                            "ObjectDeserializer",
+                            "ObjectNode",
+                            "PluginManager",
+                            "PropertyNode",
+                            "Resource",
+                            "SchemaDeserializer",
+                            "SchemaNode",
+                            "SchemaObjectNode",
+                            "SchemaPropertyNode",
+                            "SchemaVersionNode",
+                            "SchemasTree",
+                            "TreeNode",
+                            "VersionNode"
+                        ],
+                        "consts": [
+                            "dir_path",
+                            "schemas"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "serialization": {
+                        "classes": [
+                            "ABC",
+                            "ObjectDeserializer",
+                            "ObjectNode",
+                            "ObjectSerializer",
+                            "PropertyNode",
+                            "SerializableObject",
+                            "SimpleDeserializer",
+                            "SimpleSerializer",
+                            "TreeNode"
+                        ],
+                        "consts": [],
+                        "functions": [
+                            "abstractmethod"
+                        ],
+                        "isPkg": false
+                    },
+                    "shared": {
+                        "classes": [],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "vault": {
+                                "classes": [
+                                    "Log",
+                                    "SecretKey",
+                                    "timedelta"
+                                ],
+                                "consts": [
+                                    "DEFAULT_JWT_ACCESS_DELTA_SECS",
+                                    "DEFAULT_JWT_REFRESH_DELTA_DAYS",
+                                    "FLEET_NAME",
+                                    "JWT_ACCESS_EXPIRATION_DELTA",
+                                    "JWT_REFRESH_EXPIRATION_DELTA",
+                                    "JWT_SECRET_KEY",
+                                    "environ"
+                                ],
+                                "functions": [
+                                    "find_spec",
+                                    "generate_secret_string",
+                                    "getenv"
+                                ],
+                                "isPkg": false
+                            }
+                        }
+                    },
+                    "tree": {
+                        "classes": [
+                            "ABC",
+                            "CallableNode",
+                            "ChildrenCmpMixin",
+                            "DictNode",
+                            "ListNode",
+                            "ObjectNode",
+                            "OrderedDict",
+                            "PropertyNode",
+                            "TreeNode",
+                            "ValueCmpMixin",
+                            "abstractproperty"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "version": {
+                        "classes": [
+                            "ABC",
+                            "CallableNode",
+                            "VersionNode",
+                            "VersionObject",
+                            "abstractproperty"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "workspace": {
+                        "classes": [
+                            "ABC",
+                            "DictNode",
+                            "Persistence",
+                            "WorkspaceManager",
+                            "WorkspaceNode",
+                            "WorkspaceObject",
+                            "abstractproperty"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    }
+                }
+            },
+            "db_handlers": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "base_db_handler": {
+                        "isPkg": false
+                    }
+                }
+            },
+            "exceptions": {
+                "classes": [
+                    "ArchiveAlreadyRegistered",
+                    "ArchiveNotRegistered",
+                    "BranchAlreadyExist",
+                    "FileDoesNotExist",
+                    "GitPermissionErr",
+                    "GitUserErr",
+                    "NoActiveArchiveRegistered",
+                    "NoChangesToCommit",
+                    "RepositoryDoesNotExist",
+                    "SchemaTypeNotKnown",
+                    "SchemaVersionError",
+                    "SlaveManagerCannotChange",
+                    "TagAlreadyExist",
+                    "ValidationError",
+                    "VersionDoesNotExist"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "exceptions": {
+                        "classes": [
+                            "ArchiveAlreadyRegistered",
+                            "ArchiveErr",
+                            "ArchiveException",
+                            "ArchiveNotRegistered",
+                            "BranchAlreadyExist",
+                            "DalException",
+                            "FileDoesNotExist",
+                            "GitErr",
+                            "GitException",
+                            "GitPermissionErr",
+                            "GitUserErr",
+                            "IntEnum",
+                            "NoActiveArchiveRegistered",
+                            "NoChangesToCommit",
+                            "RepositoryDoesNotExist",
+                            "SchemaErr",
+                            "SchemaException",
+                            "SchemaTypeNotKnown",
+                            "SchemaVersionError",
+                            "SlaveManagerCannotChange",
+                            "TagAlreadyExist",
+                            "ValidationErr",
+                            "ValidationError",
+                            "ValidationException",
+                            "VersionDoesNotExist"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    }
+                }
+            },
+            "helpers": {
+                "classes": [
+                    "GFlow",
+                    "Helpers"
+                ],
+                "consts": [],
+                "functions": [
+                    "flatten"
+                ],
+                "isPkg": true,
+                "modules": {
+                    "cache": {
+                        "classes": [
+                            "TTLCache",
+                            "ThreadSafeCache"
+                        ],
+                        "consts": [
+                            "CACHE_SIZE_MB",
+                            "TTL_SECONDS",
+                            "average_object_size",
+                            "max_entries"
+                        ],
+                        "functions": [
+                            "Lock"
+                        ],
+                        "isPkg": false
+                    },
+                    "flow": {
+                        "classes": [
+                            "GFlow"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "gflow": {
+                                "classes": [
+                                    "GFlow",
+                                    "Log",
+                                    "Template"
+                                ],
+                                "consts": [
+                                    "MOVAI_TRANSITIONFOR",
+                                    "MOVAI_TRANSITIONTO",
+                                    "ROS1_NODELETCLIENT",
+                                    "ROS1_NODELETSERVER",
+                                    "ROS1_PLUGINCLIENT",
+                                    "ROS1_PLUGINSERVER"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            }
+                        }
+                    },
+                    "helpers": {
+                        "classes": [
+                            "Helpers"
+                        ],
+                        "consts": [],
+                        "functions": [
+                            "flatten"
+                        ],
+                        "isPkg": false
+                    },
+                    "parsers": {
+                        "classes": [
+                            "Log",
+                            "MovaiDB",
+                            "ParamParser",
+                            "Var"
+                        ],
+                        "consts": [
+                            "scopes"
+                        ],
+                        "functions": [
+                            "get_string_from_template"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            },
+            "models": {
+                "classes": [],
+                "consts": [
+                    "call_args",
+                    "call_args_list",
+                    "call_count",
+                    "called",
+                    "method_calls",
+                    "mock_calls",
+                    "return_value",
+                    "side_effect"
+                ],
+                "functions": [
+                    "assert_any_call",
+                    "assert_called",
+                    "assert_called_once",
+                    "assert_called_once_with",
+                    "assert_called_with",
+                    "assert_has_calls",
+                    "assert_not_called",
+                    "attach_mock",
+                    "configure_mock",
+                    "mock_add_spec",
+                    "reset_mock"
+                ],
+                "isPkg": true,
+                "modules": {
+                    "acl": {
+                        "classes": [
+                            "ACLManager",
+                            "Acl",
+                            "Log",
+                            "NewACLManager",
+                            "ScopesTree"
+                        ],
+                        "consts": [
+                            "CREATE_PERMISSION",
+                            "DELETE_PERMISSION",
+                            "Dict",
+                            "EXECUTE_PERMISSION",
+                            "List",
+                            "READ_PERMISSION",
+                            "RESET_PERMISSION",
+                            "REST_SCOPES",
+                            "UPDATE_PERMISSION",
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "aclobject": {
+                        "classes": [
+                            "AclGroup",
+                            "AclObject",
+                            "AclObjectAlreadyExist",
+                            "AclObjectDoesNotExist",
+                            "AclObjectError",
+                            "AclObjectIDMismatch",
+                            "AclObjectInvalidAttribute",
+                            "AclUser",
+                            "Model",
+                            "ScopesTree",
+                            "datetime"
+                        ],
+                        "consts": [
+                            "List",
+                            "scopes"
+                        ],
+                        "functions": [
+                            "create_principal_name"
+                        ],
+                        "isPkg": false
+                    },
+                    "application": {
+                        "classes": [
+                            "Application",
+                            "Model"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "baseuser": {
+                        "classes": [
+                            "BaseUser",
+                            "InvalidStructure",
+                            "Model",
+                            "NewACLManager",
+                            "ScopesTree",
+                            "UserAlreadyExist",
+                            "UserDoesNotExist",
+                            "UserPermissionsError",
+                            "datetime"
+                        ],
+                        "consts": [
+                            "List",
+                            "scopes"
+                        ],
+                        "functions": [
+                            "create_principal_name"
+                        ],
+                        "isPkg": false
+                    },
+                    "callback": {
+                        "classes": [
+                            "Callback",
+                            "Log",
+                            "Model",
+                            "System"
+                        ],
+                        "consts": [
+                            "Any",
+                            "Dict",
+                            "List",
+                            "logger",
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "configuration": {
+                        "classes": [
+                            "Configuration",
+                            "Model",
+                            "MovaiDB",
+                            "ThreadSafeCache"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "container": {
+                        "classes": [
+                            "Container",
+                            "ScopeNode",
+                            "ScopeObjectNode"
+                        ],
+                        "consts": [
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "flow": {
+                        "classes": [
+                            "Flow",
+                            "GFlow",
+                            "Log",
+                            "Model",
+                            "ParamParser",
+                            "SimpleNamespace"
+                        ],
+                        "consts": [
+                            "ROS1_NODELETSERVER",
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "flowlinks": {
+                        "classes": [
+                            "FlowLinks",
+                            "ScopeNode",
+                            "ScopePropertyNode",
+                            "Template"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "form": {
+                        "classes": [
+                            "Form",
+                            "Model"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "internaluser": {
+                        "classes": [
+                            "BaseUser",
+                            "InternalUser",
+                            "Model",
+                            "PasswordComplexityError",
+                            "PasswordError",
+                            "SecurePassword",
+                            "User"
+                        ],
+                        "consts": [
+                            "DEFAULT_ROLE_NAME",
+                            "INTERNAL_DOMAIN"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "ldapconfig": {
+                        "classes": [
+                            "LdapConfig",
+                            "LdapConfigAlreadyExist",
+                            "LdapConfigDoesNotExist",
+                            "LdapConfigMissingParameter",
+                            "Model",
+                            "ScopesTree",
+                            "SecurePassword"
+                        ],
+                        "consts": [
+                            "LDAP_KEY_LENGTH",
+                            "scopes"
+                        ],
+                        "functions": [
+                            "generate_secret_string"
+                        ],
+                        "isPkg": false
+                    },
+                    "lock": {
+                        "classes": [
+                            "Lock",
+                            "Log",
+                            "MovaiDB",
+                            "MovaiException",
+                            "Robot"
+                        ],
+                        "consts": [
+                            "SCOPES",
+                            "logger"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "message": {
+                        "classes": [
+                            "Log",
+                            "Message",
+                            "Model",
+                            "System",
+                            "deque"
+                        ],
+                        "consts": [
+                            "Dict",
+                            "List",
+                            "logger",
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "model": {
+                        "classes": [
+                            "ABC",
+                            "DoesNotExist",
+                            "Log",
+                            "Model",
+                            "SchemaPropertyNode",
+                            "ScopeInstanceVersionNode",
+                            "ScopeNode",
+                            "ScopesTree",
+                            "TreeNode",
+                            "datetime"
+                        ],
+                        "consts": [
+                            "scopes"
+                        ],
+                        "functions": [
+                            "import_module"
+                        ],
+                        "isPkg": false
+                    },
+                    "node": {
+                        "classes": [
+                            "Model",
+                            "Node"
+                        ],
+                        "consts": [
+                            "MOVAI_STATE",
+                            "ROS1_NODELET",
+                            "ROS1_PLUGIN",
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "nodeinst": {
+                        "classes": [
+                            "Log",
+                            "NodeInst",
+                            "ScopeNode",
+                            "ScopeObjectNode"
+                        ],
+                        "consts": [
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "package": {
+                        "classes": [
+                            "Model",
+                            "Package"
+                        ],
+                        "consts": [
+                            "Tuple",
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "packagefile": {
+                        "classes": [
+                            "PackageFile",
+                            "PackageFileChecksum",
+                            "PackageFileValue",
+                            "PropertyNode",
+                            "ScopeNode",
+                            "ScopeObjectNode",
+                            "ScopePropertyNode"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "ports": {
+                        "classes": [
+                            "Model",
+                            "Ports"
+                        ],
+                        "consts": [
+                            "ROS1_NODELETCLIENT",
+                            "ROS1_NODELETSERVER",
+                            "TRANSITION_TYPE"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "remoteuser": {
+                        "classes": [
+                            "BaseUser",
+                            "Model",
+                            "RemoteUser"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "role": {
+                        "classes": [
+                            "AclObject",
+                            "InternalUser",
+                            "Model",
+                            "NewACLManager",
+                            "RemoteUser",
+                            "Role",
+                            "RoleAlreadyExist",
+                            "RoleDoesNotExist",
+                            "RoleError"
+                        ],
+                        "consts": [
+                            "ADMIN_ROLE",
+                            "DEFAULT_ROLE_NAME",
+                            "DEPLOYER_ROLE",
+                            "Dict",
+                            "OPERATOR_ROLE",
+                            "READ_PERMISSION",
+                            "UPDATE_PERMISSION",
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "scopestree": {
+                        "classes": [
+                            "ABC",
+                            "CallableNode",
+                            "DictNode",
+                            "ObjectDeserializer",
+                            "ObjectNode",
+                            "ObjectSerializer",
+                            "Persistence",
+                            "PersistentObject",
+                            "PropertyNode",
+                            "SchemaNode",
+                            "SchemaObjectNode",
+                            "SchemaPropertyNode",
+                            "ScopeAttributeDeserializer",
+                            "ScopeAttributeSerializer",
+                            "ScopeDictNode",
+                            "ScopeInstanceNode",
+                            "ScopeInstanceVersionNode",
+                            "ScopeNode",
+                            "ScopeObjectNode",
+                            "ScopePropertyNode",
+                            "ScopeWorkspace",
+                            "ScopesTree",
+                            "SerializableObject",
+                            "TreeNode",
+                            "VersionObject",
+                            "WorkspaceNode",
+                            "WorkspaceObject"
+                        ],
+                        "consts": [
+                            "schemas",
+                            "scopes"
+                        ],
+                        "functions": [
+                            "import_module"
+                        ],
+                        "isPkg": false
+                    },
+                    "system": {
+                        "classes": [
+                            "Model",
+                            "System"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "user": {
+                        "classes": [
+                            "ACLManager",
+                            "Model",
+                            "ScopesTree",
+                            "User",
+                            "UserDoesNotExist",
+                            "datetime"
+                        ],
+                        "consts": [
+                            "Dict",
+                            "JWT_ACCESS_EXPIRATION_DELTA",
+                            "JWT_REFRESH_EXPIRATION_DELTA",
+                            "JWT_SECRET_KEY",
+                            "List",
+                            "Union",
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "var": {
+                        "classes": [
+                            "MovaiDB",
+                            "Var"
+                        ],
+                        "consts": [
+                            "SCOPES"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "widget": {
+                        "classes": [
+                            "Model",
+                            "Widget"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    }
+                }
+            },
+            "movaidb": {
+                "classes": [],
+                "consts": [
+                    "MovaiDB",
+                    "Redis",
+                    "RedisClient",
+                    "call_args",
+                    "call_args_list",
+                    "call_count",
+                    "called",
+                    "method_calls",
+                    "mock_calls",
+                    "return_value",
+                    "side_effect"
+                ],
+                "functions": [
+                    "assert_any_call",
+                    "assert_called",
+                    "assert_called_once",
+                    "assert_called_once_with",
+                    "assert_called_with",
+                    "assert_has_calls",
+                    "assert_not_called",
+                    "attach_mock",
+                    "configure_mock",
+                    "mock_add_spec",
+                    "reset_mock"
+                ],
+                "isPkg": true,
+                "modules": {
+                    "database": {
+                        "classes": [
+                            "AioRedisClient",
+                            "DeepDiff",
+                            "InvalidStructure",
+                            "Log",
+                            "MovaiDB",
+                            "Pipeline",
+                            "Redis",
+                            "Resource",
+                            "Singleton",
+                            "SubscribeManager"
+                        ],
+                        "consts": [
+                            "Any",
+                            "LOGGER",
+                            "Tuple",
+                            "dal_directory"
+                        ],
+                        "functions": [
+                            "getenv",
+                            "split"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            },
+            "plugins": {
+                "classes": [
+                    "FilePlugin"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "classes": {
+                        "classes": [
+                            "Persistence",
+                            "PersistencePlugin",
+                            "PersistentObject",
+                            "Plugin",
+                            "PluginManager",
+                            "Resource",
+                            "ResourceException",
+                            "ResourcePlugin"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "persistence": {
+                                "classes": [
+                                    "ABC",
+                                    "Log",
+                                    "Persistence",
+                                    "PersistencePlugin",
+                                    "PersistentObject",
+                                    "Plugin",
+                                    "PluginManager",
+                                    "abstractproperty"
+                                ],
+                                "consts": [],
+                                "functions": [
+                                    "abstractmethod"
+                                ],
+                                "isPkg": false
+                            },
+                            "plugin": {
+                                "classes": [
+                                    "Plugin",
+                                    "PluginManager"
+                                ],
+                                "consts": [],
+                                "functions": [
+                                    "abstractmethod",
+                                    "import_module"
+                                ],
+                                "isPkg": false
+                            },
+                            "resource": {
+                                "classes": [
+                                    "Plugin",
+                                    "PluginManager",
+                                    "Resource",
+                                    "ResourceException",
+                                    "ResourcePlugin"
+                                ],
+                                "consts": [],
+                                "functions": [
+                                    "abstractmethod",
+                                    "urlparse"
+                                ],
+                                "isPkg": false
+                            }
+                        }
+                    },
+                    "persistence": {
+                        "classes": [],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "filesystem": {
+                                "classes": [
+                                    "FilesystemPlugin"
+                                ],
+                                "consts": [],
+                                "functions": [],
+                                "isPkg": true,
+                                "modules": {
+                                    "filesystem": {
+                                        "classes": [
+                                            "BinasciiError",
+                                            "FilesystemPlugin",
+                                            "Log",
+                                            "Model",
+                                            "Persistence",
+                                            "PersistencePlugin",
+                                            "Plugin",
+                                            "RemoteArchive",
+                                            "RestoreManager",
+                                            "SchemaPropertyNode",
+                                            "ScopeInstanceVersionNode",
+                                            "ScopesTree",
+                                            "TreeNode",
+                                            "datetime"
+                                        ],
+                                        "consts": [
+                                            "schemas"
+                                        ],
+                                        "functions": [
+                                            "urlparse"
+                                        ],
+                                        "isPkg": false
+                                    }
+                                }
+                            },
+                            "git": {
+                                "classes": [
+                                    "GitPlugin"
+                                ],
+                                "consts": [],
+                                "functions": [],
+                                "isPkg": true,
+                                "modules": {
+                                    "git": {
+                                        "classes": [
+                                            "GitPlugin",
+                                            "JsonValidator",
+                                            "Log",
+                                            "Persistence",
+                                            "PersistencePlugin",
+                                            "Plugin",
+                                            "ScopeInstanceVersionNode"
+                                        ],
+                                        "consts": [
+                                            "Archive",
+                                            "default_version"
+                                        ],
+                                        "functions": [
+                                            "abstractmethod"
+                                        ],
+                                        "isPkg": false
+                                    }
+                                }
+                            },
+                            "redis": {
+                                "classes": [
+                                    "RedisPlugin"
+                                ],
+                                "consts": [],
+                                "functions": [],
+                                "isPkg": true,
+                                "modules": {
+                                    "redis": {
+                                        "classes": [
+                                            "ConnectionPool",
+                                            "Model",
+                                            "MovaiDB",
+                                            "Persistence",
+                                            "PersistencePlugin",
+                                            "Plugin",
+                                            "Redis",
+                                            "RedisPlugin",
+                                            "ResponseError",
+                                            "SchemaNode",
+                                            "SchemaPropertyNode",
+                                            "ScopeInstanceVersionNode",
+                                            "ScopesTree",
+                                            "TreeNode"
+                                        ],
+                                        "consts": [
+                                            "schemas"
+                                        ],
+                                        "functions": [],
+                                        "isPkg": false
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "resources": {
+                        "classes": [],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "file": {
+                                "classes": [
+                                    "FilePlugin"
+                                ],
+                                "consts": [],
+                                "functions": [],
+                                "isPkg": true,
+                                "modules": {
+                                    "file": {
+                                        "classes": [
+                                            "BytesIO",
+                                            "FilePlugin",
+                                            "JSONDecodeError",
+                                            "Plugin",
+                                            "Resource",
+                                            "ResourceException",
+                                            "ResourcePlugin",
+                                            "StringIO"
+                                        ],
+                                        "consts": [],
+                                        "functions": [
+                                            "getcwd",
+                                            "getenv",
+                                            "listdir",
+                                            "load"
+                                        ],
+                                        "isPkg": false
+                                    }
+                                }
+                            },
+                            "redis": {
+                                "classes": [
+                                    "RedisPlugin"
+                                ],
+                                "consts": [],
+                                "functions": [],
+                                "isPkg": true,
+                                "modules": {
+                                    "driver": {
+                                        "classes": [
+                                            "BytesIO",
+                                            "JSONDecodeError",
+                                            "RedisPlugin",
+                                            "Resource",
+                                            "ResourceException",
+                                            "ResourcePlugin",
+                                            "StringIO"
+                                        ],
+                                        "consts": [],
+                                        "functions": [
+                                            "load"
+                                        ],
+                                        "isPkg": false
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "schema": {
+                        "classes": [],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "version10": {
+                                "classes": [
+                                    "SchemaV1Deserializer"
+                                ],
+                                "consts": [],
+                                "functions": [],
+                                "isPkg": true,
+                                "modules": {
+                                    "version10": {
+                                        "classes": [
+                                            "ObjectDeserializer",
+                                            "Plugin",
+                                            "SchemaAttributeDeserializer",
+                                            "SchemaDeserializer",
+                                            "SchemaObjectNode",
+                                            "SchemaPropertyNode",
+                                            "SchemaV1Deserializer",
+                                            "TreeNode"
+                                        ],
+                                        "consts": [],
+                                        "functions": [],
+                                        "isPkg": false
+                                    }
+                                }
+                            },
+                            "version20": {
+                                "classes": [
+                                    "SchemaV2Deserializer"
+                                ],
+                                "consts": [],
+                                "functions": [],
+                                "isPkg": true,
+                                "modules": {
+                                    "version20": {
+                                        "classes": [
+                                            "ObjectDeserializer",
+                                            "Plugin",
+                                            "SchemaDeserializer",
+                                            "SchemaV2Deserializer",
+                                            "TreeNode"
+                                        ],
+                                        "consts": [],
+                                        "functions": [],
+                                        "isPkg": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "scopes": {
+                "classes": [],
+                "consts": [
+                    "call_args",
+                    "call_args_list",
+                    "call_count",
+                    "called",
+                    "method_calls",
+                    "mock_calls",
+                    "return_value",
+                    "side_effect"
+                ],
+                "functions": [
+                    "assert_any_call",
+                    "assert_called",
+                    "assert_called_once",
+                    "assert_called_once_with",
+                    "assert_called_with",
+                    "assert_has_calls",
+                    "assert_not_called",
+                    "attach_mock",
+                    "configure_mock",
+                    "mock_add_spec",
+                    "reset_mock"
+                ],
+                "isPkg": true,
+                "modules": {
+                    "application": {
+                        "classes": [
+                            "Application",
+                            "Scope"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "callback": {
+                        "classes": [
+                            "Callback",
+                            "MovaiDB",
+                            "Scope"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "configuration": {
+                        "classes": [
+                            "Box",
+                            "Config",
+                            "Configuration",
+                            "DoesNotExist",
+                            "MovaiDB",
+                            "Scope",
+                            "ThreadSafeCache"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "fleetrobot": {
+                        "classes": [
+                            "FleetRobot",
+                            "Log",
+                            "MessageClient",
+                            "MovaiDB",
+                            "Scope"
+                        ],
+                        "consts": [
+                            "COMMAND_HANDLER_MSG_TYPE",
+                            "DEVICE_NAME",
+                            "MESSAGE_SERVER_PORT",
+                            "SPAWNER_BIND_ADDR",
+                            "logger"
+                        ],
+                        "functions": [
+                            "is_enterprise"
+                        ],
+                        "isPkg": false
+                    },
+                    "flow": {
+                        "classes": [
+                            "Configuration",
+                            "DoesNotExist",
+                            "Flow",
+                            "Log",
+                            "MovaiDB",
+                            "Node",
+                            "Ports",
+                            "Scope",
+                            "Var",
+                            "product"
+                        ],
+                        "consts": [
+                            "CONFIG_REGEX",
+                            "LINK_REGEX",
+                            "LOGGER",
+                            "MOVAI_STATE",
+                            "MOVAI_TRANSITIONFOR",
+                            "MOVAI_TRANSITIONTO",
+                            "ROS1_NODELET",
+                            "ROS1_NODELETCLIENT",
+                            "ROS1_NODELETSERVER",
+                            "ROS1_PLUGIN",
+                            "ROS1_PLUGINCLIENT",
+                            "ROS1_PLUGINSERVER",
+                            "ROS2_LIFECYCLENODE",
+                            "TRANSITION_TYPE"
+                        ],
+                        "functions": [
+                            "flatten"
+                        ],
+                        "isPkg": false
+                    },
+                    "form": {
+                        "classes": [
+                            "Form",
+                            "Scope"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "message": {
+                        "classes": [
+                            "Message",
+                            "MovaiDB",
+                            "Scope"
+                        ],
+                        "consts": [],
+                        "functions": [
+                            "iterate_message"
+                        ],
+                        "isPkg": false
+                    },
+                    "node": {
+                        "classes": [
+                            "Helpers",
+                            "Log",
+                            "MovaiDB",
+                            "Node",
+                            "Scope"
+                        ],
+                        "consts": [
+                            "LOGGER",
+                            "MOVAI_NODE",
+                            "MOVAI_SERVER",
+                            "MOVAI_STATE",
+                            "MOVAI_TRANSITIONFOR",
+                            "MOVAI_TRANSITIONTO",
+                            "ROS1_NODE",
+                            "ROS1_NODELET",
+                            "ROS1_PLUGIN"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "package": {
+                        "classes": [
+                            "FileStruct",
+                            "Helpers",
+                            "Log",
+                            "MovaiDB",
+                            "Package",
+                            "Scope",
+                            "Struct"
+                        ],
+                        "consts": [
+                            "LOGGER"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "ports": {
+                        "classes": [
+                            "Ports",
+                            "Scope"
+                        ],
+                        "consts": [
+                            "ROS1_NODELETCLIENT",
+                            "ROS1_NODELETSERVER",
+                            "TRANSITION_TYPE"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "robot": {
+                        "classes": [
+                            "Configuration",
+                            "DoesNotExist",
+                            "FleetRobot",
+                            "MessageClient",
+                            "MovaiDB",
+                            "Robot",
+                            "Scope"
+                        ],
+                        "consts": [
+                            "COMMAND_HANDLER_MSG_TYPE",
+                            "DEVICE_NAME",
+                            "SPAWNER_BIND_ADDR"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "role": {
+                        "classes": [
+                            "Role",
+                            "Scope"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "scope": {
+                        "classes": [
+                            "AlreadyExist",
+                            "DoesNotExist",
+                            "MovaiDB",
+                            "Scope",
+                            "Struct"
+                        ],
+                        "consts": [
+                            "SCHEMA_FOLDER_PATH"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "statemachine": {
+                        "classes": [
+                            "MovaiDB",
+                            "SMVars",
+                            "Scope",
+                            "StateMachine"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "structures": {
+                        "classes": [
+                            "AlreadyExist",
+                            "Hash",
+                            "Helpers",
+                            "List",
+                            "MovaiDB",
+                            "Struct"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "system": {
+                        "classes": [
+                            "Scope",
+                            "System"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "user": {
+                        "classes": [
+                            "ACLManager",
+                            "Scope",
+                            "User",
+                            "datetime"
+                        ],
+                        "consts": [
+                            "JWT_ACCESS_EXPIRATION_DELTA",
+                            "JWT_REFRESH_EXPIRATION_DELTA",
+                            "JWT_SECRET_KEY"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "widget": {
+                        "classes": [
+                            "Scope",
+                            "Widget"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    }
+                }
+            },
+            "tools": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "backup": {
+                        "classes": [
+                            "Backup",
+                            "BackupException",
+                            "ExportException",
+                            "Exporter",
+                            "Factory",
+                            "ImportException",
+                            "Importer",
+                            "RemoveException",
+                            "Remover"
+                        ],
+                        "consts": [
+                            "_re_config",
+                            "_re_envvar",
+                            "_re_place_holder"
+                        ],
+                        "functions": [
+                            "_from_path",
+                            "import_module",
+                            "main",
+                            "test_reachable"
+                        ],
+                        "isPkg": false
+                    },
+                    "edit_yaml": {
+                        "classes": [],
+                        "consts": [],
+                        "functions": [
+                            "main"
+                        ],
+                        "isPkg": false
+                    },
+                    "secret_key": {
+                        "isPkg": false
+                    }
+                }
+            },
+            "validation": {
+                "classes": [
+                    "JsonValidator",
+                    "Schema",
+                    "Template"
+                ],
+                "consts": [
+                    "SCHEMA_FOLDER_PATH",
+                    "default_version"
+                ],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "schema": {
+                        "classes": [
+                            "FileSystem",
+                            "RefResolver",
+                            "Schema",
+                            "SchemaVersionError",
+                            "ValidationError"
+                        ],
+                        "consts": [],
+                        "functions": [
+                            "abspath",
+                            "dirname",
+                            "json_validate",
+                            "load_json"
+                        ],
+                        "isPkg": false
+                    },
+                    "template": {
+                        "classes": [
+                            "Resource",
+                            "ResourceException",
+                            "SimpleNamespace",
+                            "Template"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "validator": {
+                        "classes": [
+                            "JsonValidator",
+                            "Path",
+                            "Schema",
+                            "SchemaTypeNotKnown",
+                            "SchemaVersionError",
+                            "ValidationError"
+                        ],
+                        "consts": [],
+                        "functions": [
+                            "dirname",
+                            "isdir",
+                            "listdir",
+                            "load_json",
+                            "realpath",
+                            "search"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            }
+        }
+    },
+    "deprecated": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "api": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "core": {
+                        "classes": [
+                            "Log"
+                        ],
+                        "consts": [
+                            "LOGGER"
+                        ],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "redis": {
+                                "classes": [
+                                    "Log",
+                                    "Redis",
+                                    "RedisClient"
+                                ],
+                                "consts": [
+                                    "LOGGER"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            }
+                        }
+                    },
+                    "models": {
+                        "classes": [],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "fleetrobot": {
+                                "classes": [
+                                    "FleetRobot",
+                                    "Log"
+                                ],
+                                "consts": [
+                                    "LOGGER"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            },
+                            "robot": {
+                                "classes": [
+                                    "Log",
+                                    "Robot"
+                                ],
+                                "consts": [
+                                    "LOGGER"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            },
+                            "shareddataentry": {
+                                "classes": [
+                                    "SharedDataEntry"
+                                ],
+                                "consts": [],
+                                "functions": [],
+                                "isPkg": false
+                            },
+                            "var": {
+                                "classes": [
+                                    "Log",
+                                    "Var"
+                                ],
+                                "consts": [
+                                    "LOGGER"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            }
+                        }
+                    }
+                }
+            },
+            "gdnode": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "protocols": {
+                        "classes": [],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "movai": {
+                                "classes": [
+                                    "ContextMsg",
+                                    "Log"
+                                ],
+                                "consts": [
+                                    "LOGGER"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            }
+                        }
+                    },
+                    "taskgenerator": {
+                        "classes": [
+                            "TaskGenerator"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    }
+                }
+            },
+            "healthnode": {
+                "classes": [
+                    "Log"
+                ],
+                "consts": [
+                    "HealthNode",
+                    "LOGGER"
+                ],
+                "functions": [],
+                "isPkg": false
+            }
+        }
+    },
+    "flow_initiator": {
+        "classes": [
+            "RedisClient",
+            "SpawnerManager"
+        ],
+        "consts": [],
+        "functions": [
+            "main"
+        ],
+        "isPkg": true,
+        "modules": {
+            "spawner": {
+                "classes": [
+                    "Spawner",
+                    "SpawnerCore",
+                    "SpawnerManager",
+                    "SpawnerServer"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "container_tools": {
+                        "classes": [
+                            "ContainerManager",
+                            "DockerBaseManager",
+                            "ImageManager",
+                            "NetworkManager",
+                            "Orchestrator",
+                            "TTDockerClient",
+                            "VolumeManager"
+                        ],
+                        "consts": [],
+                        "functions": [
+                            "check_dockerd"
+                        ],
+                        "isPkg": true,
+                        "modules": {
+                            "container_manager": {
+                                "classes": [
+                                    "Container",
+                                    "ContainerApiMixin",
+                                    "ContainerCollection",
+                                    "ContainerManager",
+                                    "DockerBaseManager",
+                                    "Log",
+                                    "Mount",
+                                    "NotFound",
+                                    "OrchestratorException"
+                                ],
+                                "consts": [
+                                    "List",
+                                    "Optional",
+                                    "Union",
+                                    "log"
+                                ],
+                                "functions": [
+                                    "check_dockerd"
+                                ],
+                                "isPkg": false
+                            },
+                            "docker_base_manager": {
+                                "classes": [
+                                    "APIError",
+                                    "DockerBaseManager",
+                                    "Log",
+                                    "NotFound",
+                                    "OrchestratorException",
+                                    "TTDockerClient"
+                                ],
+                                "consts": [
+                                    "Callable",
+                                    "DOCKER_REGISTRY",
+                                    "Optional",
+                                    "log"
+                                ],
+                                "functions": [
+                                    "check_dockerd",
+                                    "wraps"
+                                ],
+                                "isPkg": false
+                            },
+                            "image_manager": {
+                                "classes": [
+                                    "APIError",
+                                    "DockerBaseManager",
+                                    "Image",
+                                    "ImageLoadError",
+                                    "ImageManager",
+                                    "ImageNotFound",
+                                    "Log"
+                                ],
+                                "consts": [
+                                    "Optional",
+                                    "log"
+                                ],
+                                "functions": [
+                                    "check_dockerd"
+                                ],
+                                "isPkg": false
+                            },
+                            "network_manager": {
+                                "classes": [
+                                    "Container",
+                                    "ContainerApiMixin",
+                                    "DockerBaseManager",
+                                    "Log",
+                                    "Network",
+                                    "NetworkManager",
+                                    "NotFound"
+                                ],
+                                "consts": [
+                                    "Optional",
+                                    "Union",
+                                    "log"
+                                ],
+                                "functions": [
+                                    "check_dockerd"
+                                ],
+                                "isPkg": false
+                            },
+                            "orchestrator": {
+                                "classes": [
+                                    "ContainerManager",
+                                    "FailedUpgradeCertificate",
+                                    "ImageManager",
+                                    "Log",
+                                    "NetworkManager",
+                                    "Orchestrator",
+                                    "OrchestratorException",
+                                    "VolumeManager"
+                                ],
+                                "consts": [
+                                    "Optional",
+                                    "log"
+                                ],
+                                "functions": [
+                                    "gethostname",
+                                    "localtime"
+                                ],
+                                "isPkg": false
+                            },
+                            "ttdocker_client": {
+                                "classes": [
+                                    "DockerException",
+                                    "Log",
+                                    "TTAPIClient",
+                                    "TTDockerClient"
+                                ],
+                                "consts": [
+                                    "DOCKERD_ATTEMPTS",
+                                    "log"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            },
+                            "volume_manager": {
+                                "classes": [
+                                    "DockerBaseManager",
+                                    "Log",
+                                    "NotFound",
+                                    "Volume",
+                                    "VolumeManager"
+                                ],
+                                "consts": [
+                                    "Optional",
+                                    "log"
+                                ],
+                                "functions": [
+                                    "check_dockerd"
+                                ],
+                                "isPkg": false
+                            }
+                        }
+                    },
+                    "elements": {
+                        "classes": [
+                            "AttachedProcessLauncher",
+                            "BaseElement",
+                            "ContainerLauncher",
+                            "ElementType",
+                            "ElementsFactory",
+                            "ProcessElement"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "attached_element": {
+                                "classes": [
+                                    "AttachedProcessLauncher",
+                                    "CommandError",
+                                    "ContainerLauncher"
+                                ],
+                                "consts": [
+                                    "DEFAULT_LABELS",
+                                    "Optional",
+                                    "Tuple"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            },
+                            "base_element": {
+                                "classes": [
+                                    "ABC",
+                                    "BaseElement",
+                                    "ElementType",
+                                    "RunError"
+                                ],
+                                "consts": [
+                                    "Optional",
+                                    "TIMEOUT_PROCESS_SIGINT",
+                                    "TIMEOUT_PROCESS_SIGTERM",
+                                    "Tuple"
+                                ],
+                                "functions": [
+                                    "abstractmethod"
+                                ],
+                                "isPkg": false
+                            },
+                            "container_element": {
+                                "classes": [
+                                    "BaseElement",
+                                    "ContainerLauncher",
+                                    "Orchestrator"
+                                ],
+                                "consts": [
+                                    "Optional",
+                                    "SRC_LOC",
+                                    "Tuple"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            },
+                            "element_type": {
+                                "classes": [
+                                    "ElementType",
+                                    "Enum",
+                                    "auto"
+                                ],
+                                "consts": [],
+                                "functions": [],
+                                "isPkg": false
+                            },
+                            "elements_factory": {
+                                "classes": [
+                                    "AttachedProcessLauncher",
+                                    "ContainerLauncher",
+                                    "ElementsFactory",
+                                    "Orchestrator",
+                                    "ProcessElement"
+                                ],
+                                "consts": [],
+                                "functions": [
+                                    "walk"
+                                ],
+                                "isPkg": false
+                            },
+                            "process_element": {
+                                "classes": [
+                                    "BaseElement",
+                                    "ProcessElement",
+                                    "RunError"
+                                ],
+                                "consts": [
+                                    "Optional",
+                                    "Tuple"
+                                ],
+                                "functions": [],
+                                "isPkg": false
+                            }
+                        }
+                    },
+                    "exceptions": {
+                        "classes": [
+                            "ActiveFlowError",
+                            "CommandError",
+                            "FailedUpgradeCertificate",
+                            "FirmwareUpdateException",
+                            "NotInstalled",
+                            "OrchestratorException",
+                            "RobotConfigException",
+                            "RunError",
+                            "SystemStartupException"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "flowmonitor": {
+                        "classes": [
+                            "Flow",
+                            "FlowMonitor",
+                            "Log",
+                            "ParamParser",
+                            "SimpleNamespace"
+                        ],
+                        "consts": [
+                            "APP_PATH",
+                            "ENVIRON_GDNODE",
+                            "ENVIRON_ROS1",
+                            "ENVIRON_ROS2",
+                            "LINK_REGEX",
+                            "LOGGER",
+                            "MOVAI_NODE",
+                            "MOVAI_SERVER",
+                            "MOVAI_STATE",
+                            "ROS1_ACTIONCLIENT",
+                            "ROS1_ACTIONSERVER",
+                            "ROS1_LIB",
+                            "ROS1_NODE",
+                            "ROS1_NODELET",
+                            "ROS1_NODELET_CMD",
+                            "ROS1_PLUGIN",
+                            "ROS2_LIB",
+                            "ROS2_LIFECYCLENODE",
+                            "ROS2_NODE",
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "spawner": {
+                        "classes": [
+                            "BaseElement",
+                            "CommandError",
+                            "CommandValidator",
+                            "ElementsFactory",
+                            "FlowMonitor",
+                            "Lock",
+                            "Log",
+                            "Package",
+                            "ROS1",
+                            "Robot",
+                            "RunError",
+                            "Spawner",
+                            "SubprocessError",
+                            "ThreadSafeCache",
+                            "Var"
+                        ],
+                        "consts": [
+                            "APP_LOGS",
+                            "ENVIRON_ROS2",
+                            "NETWORK_PREFIX",
+                            "ROS2_LIFECYCLENODE",
+                            "Union",
+                            "gdnode_exist"
+                        ],
+                        "functions": [
+                            "beartype",
+                            "is_enterprise"
+                        ],
+                        "isPkg": false
+                    },
+                    "spawner_core": {
+                        "classes": [
+                            "Lock",
+                            "Log",
+                            "RedisClient",
+                            "Robot",
+                            "RosOutMsg",
+                            "Spawner",
+                            "SpawnerCore"
+                        ],
+                        "consts": [
+                            "USER_LOGGER"
+                        ],
+                        "functions": [
+                            "beartype"
+                        ],
+                        "isPkg": false
+                    },
+                    "spawner_manager": {
+                        "classes": [
+                            "Log",
+                            "Robot",
+                            "Spawner",
+                            "SpawnerCore",
+                            "SpawnerManager",
+                            "SpawnerServer"
+                        ],
+                        "consts": [
+                            "LOGGER",
+                            "SPAWNER_LOGGER",
+                            "USER_LOGGER"
+                        ],
+                        "functions": [
+                            "handle_exception"
+                        ],
+                        "isPkg": false
+                    },
+                    "spawner_server": {
+                        "classes": [
+                            "Log",
+                            "Spawner",
+                            "SpawnerServer",
+                            "ZMQServer"
+                        ],
+                        "consts": [
+                            "DEVICE_NAME",
+                            "FLEET_NAME",
+                            "LOGGER",
+                            "SPAWNER_BIND_ADDR",
+                            "SPAWNER_DEBUG_MODE",
+                            "SPAWNER_LOGGER",
+                            "USER_LOGGER"
+                        ],
+                        "functions": [
+                            "beartype"
+                        ],
+                        "isPkg": false
+                    },
+                    "validation": {
+                        "classes": [
+                            "ActiveFlowError",
+                            "CommandError",
+                            "CommandValidator",
+                            "Log"
+                        ],
+                        "consts": [
+                            "HELP",
+                            "METHOD",
+                            "Optional",
+                            "log"
+                        ],
+                        "functions": [
+                            "format_msg",
+                            "requires_active_flow"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            },
+            "tools": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "flow_compiler": {
+                        "classes": [
+                            "FlowCompiled"
+                        ],
+                        "consts": [
+                            "Flow",
+                            "Flows",
+                            "MOVAI_STATE",
+                            "Node",
+                            "Nodes",
+                            "scopes",
+                            "scopes_root"
+                        ],
+                        "functions": [
+                            "_resolve_deps",
+                            "flatten",
+                            "flow_compile",
+                            "main",
+                            "namedtuple"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            }
+        }
+    },
+    "gd_node": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "callback": {
+                "classes": [
+                    "Alerts",
+                    "Annotation",
+                    "Callback",
+                    "CancelledError",
+                    "Configuration",
+                    "Container",
+                    "DoesNotExist",
+                    "FleetRobot",
+                    "GD_Callback",
+                    "GraphicAsset",
+                    "GraphicScene",
+                    "Layout",
+                    "Lock",
+                    "Log",
+                    "LogAdapter",
+                    "Message",
+                    "Metrics",
+                    "MovaiDB",
+                    "NodeInst",
+                    "Package",
+                    "Ports",
+                    "Robot",
+                    "SMVars",
+                    "ScopesTree",
+                    "StateMachine",
+                    "Task",
+                    "TaskEntry",
+                    "TaskTemplate",
+                    "TransitionException",
+                    "UserFunctions",
+                    "Var",
+                    "gd"
+                ],
+                "consts": [
+                    "Any",
+                    "LOGGER",
+                    "enterprise",
+                    "scopes"
+                ],
+                "functions": [
+                    "getenv"
+                ],
+                "isPkg": false
+            },
+            "message": {
+                "classes": [
+                    "GD_Message",
+                    "GD_Message2",
+                    "Message"
+                ],
+                "consts": [
+                    "Any",
+                    "ROS2_ONLY_ATTR",
+                    "ROS2_PATH"
+                ],
+                "functions": [],
+                "isPkg": false
+            },
+            "metrics": {
+                "classes": [],
+                "consts": [
+                    "call_args",
+                    "call_args_list",
+                    "call_count",
+                    "called",
+                    "method_calls",
+                    "mock_calls",
+                    "return_value",
+                    "side_effect"
+                ],
+                "functions": [
+                    "assert_any_call",
+                    "assert_called",
+                    "assert_called_once",
+                    "assert_called_once_with",
+                    "assert_called_with",
+                    "assert_has_calls",
+                    "assert_not_called",
+                    "attach_mock",
+                    "configure_mock",
+                    "mock_add_spec",
+                    "reset_mock"
+                ],
+                "isPkg": false
+            },
+            "node": {
+                "isPkg": false
+            },
+            "notifications": {
+                "classes": [
+                    "MessageClient",
+                    "Robot"
+                ],
+                "consts": [
+                    "LOCAL_MESSAGE_SERVER",
+                    "MASTER_MESSAGE_SERVER",
+                    "NOTIFICATIONS_HANDLER_MSG_TYPE",
+                    "Notify"
+                ],
+                "functions": [
+                    "_inst",
+                    "is_manager"
+                ],
+                "isPkg": false
+            },
+            "protocol": {
+                "isPkg": false
+            },
+            "protocols": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "base": {
+                        "classes": [
+                            "BaseIport",
+                            "BaseOport",
+                            "Callback"
+                        ],
+                        "consts": [
+                            "Any"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "http": {
+                        "isPkg": true,
+                        "modules": {
+                            "http_message": {
+                                "isPkg": false
+                            },
+                            "http_route": {
+                                "isPkg": false
+                            },
+                            "middleware": {
+                                "isPkg": false
+                            },
+                            "movai_widget": {
+                                "isPkg": false
+                            },
+                            "web_socket": {
+                                "isPkg": false
+                            }
+                        }
+                    },
+                    "movai": {
+                        "classes": [
+                            "BaseIport",
+                            "Callback",
+                            "ContextClientIn",
+                            "ContextClientOut",
+                            "ContextMsg",
+                            "ContextServerIn",
+                            "ContextServerOut",
+                            "Exit",
+                            "GD_User",
+                            "Init",
+                            "Log",
+                            "MovaiDB",
+                            "RedisClient",
+                            "Robot",
+                            "SMVars",
+                            "StateMachine",
+                            "StateMachineProtocol",
+                            "SubscribeManager",
+                            "Transition",
+                            "TransitionException",
+                            "TransitionIn"
+                        ],
+                        "consts": [
+                            "LOGGER"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "ros1": {
+                        "classes": [
+                            "BaseIport",
+                            "Callback",
+                            "DynClient",
+                            "GD_Message",
+                            "GD_User",
+                            "Pose",
+                            "ROS1",
+                            "ROS1IportBase",
+                            "ROS1_ActionClient",
+                            "ROS1_ActionServer",
+                            "ROS1_ActionServerFeedback",
+                            "ROS1_ActionServerReply",
+                            "ROS1_Bag",
+                            "ROS1_DynReconfigure",
+                            "ROS1_Parameter",
+                            "ROS1_Publisher",
+                            "ROS1_ServiceClient",
+                            "ROS1_ServiceServer",
+                            "ROS1_ServiceServerReply",
+                            "ROS1_Subscriber",
+                            "ROS1_TFBroadcaster",
+                            "ROS1_TFSubscriber",
+                            "ROS1_Timer",
+                            "ROS1_TopicHz",
+                            "RostopicHzMsg"
+                        ],
+                        "consts": [
+                            "Any"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    }
+                }
+            },
+            "shared": {
+                "classes": [
+                    "Shared"
+                ],
+                "consts": [],
+                "functions": [
+                    "RLock"
+                ],
+                "isPkg": false
+            },
+            "user": {
+                "classes": [
+                    "GD_User",
+                    "Shared"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            }
+        }
+    },
+    "movai_calibration": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "msg": {
+                "classes": [
+                    "CalibrationResult",
+                    "CalibrationResultArray",
+                    "CalibrationSensorProc",
+                    "CalibrationStage"
+                ],
+                "consts": [
+                    "python3"
+                ],
+                "functions": [],
+                "isPkg": true,
+                "modules": {}
+            }
+        }
+    },
+    "movai_common": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "msg": {
+                "classes": [],
+                "consts": [
+                    "call_args",
+                    "call_args_list",
+                    "call_count",
+                    "called",
+                    "method_calls",
+                    "mock_calls",
+                    "return_value",
+                    "side_effect"
+                ],
+                "functions": [
+                    "assert_any_call",
+                    "assert_called",
+                    "assert_called_once",
+                    "assert_called_once_with",
+                    "assert_called_with",
+                    "assert_has_calls",
+                    "assert_not_called",
+                    "attach_mock",
+                    "configure_mock",
+                    "mock_add_spec",
+                    "reset_mock"
+                ],
+                "isPkg": true,
+                "modules": {}
+            }
+        }
+    },
+    "movai_core_enterprise": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "gdnode": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "taskgenerator": {
+                        "classes": [
+                            "GD_Callback",
+                            "Log",
+                            "ScopesTree",
+                            "TaskGenerator"
+                        ],
+                        "consts": [
+                            "logger"
+                        ],
+                        "functions": [
+                            "get_string_from_template"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            },
+            "message_client_handlers": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "alerts": {
+                        "classes": [
+                            "Alerts",
+                            "Configuration",
+                            "ConfigurationDoesNotExist",
+                            "FleetRobot",
+                            "Metrics",
+                            "Robot"
+                        ],
+                        "consts": [
+                            "ALERTS_HANDLER_METRIC_TYPE"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "metrics": {
+                        "classes": [
+                            "AsyncMessageClient",
+                            "Log",
+                            "MessageClient",
+                            "Metrics",
+                            "QueryError",
+                            "Robot"
+                        ],
+                        "consts": [
+                            "LOCAL_MESSAGE_SERVER",
+                            "MASTER_MESSAGE_SERVER",
+                            "METRICS_HANDLER_MSG_TYPE",
+                            "METRICS_QUERY_HANDLER_MSG_TYPE",
+                            "Optional"
+                        ],
+                        "functions": [
+                            "is_manager"
+                        ],
+                        "isPkg": false
+                    },
+                    "notifications": {
+                        "classes": [
+                            "MessageClient",
+                            "Notifications"
+                        ],
+                        "consts": [
+                            "LOCAL_MESSAGE_SERVER",
+                            "NOTIFICATIONS_HANDLER_MSG_TYPE"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "stress": {
+                        "classes": [
+                            "AsyncMessageClient",
+                            "Log",
+                            "Stress",
+                            "StressData"
+                        ],
+                        "consts": [
+                            "DEVICE_NAME",
+                            "FLEET_NAME",
+                            "LOCAL_MESSAGE_SERVER",
+                            "MASTER_MESSAGE_SERVER",
+                            "SERVICE_NAME",
+                            "STRESS_MEASUREMENT"
+                        ],
+                        "functions": [
+                            "is_manager"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            },
+            "models": {
+                "classes": [
+                    "Annotation",
+                    "GraphicAsset",
+                    "GraphicScene",
+                    "GraphicSceneAnnotationValue",
+                    "GraphicSceneValue",
+                    "Layout",
+                    "SharedDataEntry",
+                    "SharedDataTemplate",
+                    "TaskEntry",
+                    "TaskTemplate"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "annotation": {
+                        "classes": [
+                            "Annotation",
+                            "Log",
+                            "Model",
+                            "ScopesTree",
+                            "SimpleNamespace"
+                        ],
+                        "consts": [
+                            "Dict",
+                            "logger"
+                        ],
+                        "functions": [
+                            "generate_computed",
+                            "get_configuration_value",
+                            "get_data_type",
+                            "parameter_to_field"
+                        ],
+                        "isPkg": false
+                    },
+                    "graphicasset": {
+                        "classes": [
+                            "GraphicAsset",
+                            "Model"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "graphicscene": {
+                        "classes": [
+                            "Annotation",
+                            "GraphicScene",
+                            "Log",
+                            "Model",
+                            "Path",
+                            "Point",
+                            "Pose",
+                            "Quaternion",
+                            "SimpleNamespace"
+                        ],
+                        "consts": [
+                            "Dict",
+                            "KEYPOINT",
+                            "List",
+                            "PATH",
+                            "Union",
+                            "logger"
+                        ],
+                        "functions": [
+                            "find_edge",
+                            "get_data_type",
+                            "overrides_dict_to_object"
+                        ],
+                        "isPkg": false
+                    },
+                    "graphicscenevalue": {
+                        "classes": [
+                            "GraphicSceneAnnotationValue",
+                            "GraphicSceneValue",
+                            "Pose",
+                            "ScopeNode",
+                            "ScopePropertyNode"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "layout": {
+                        "classes": [
+                            "Layout",
+                            "Model"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "shareddataentry": {
+                        "classes": [
+                            "Log",
+                            "Model",
+                            "SharedDataEntry",
+                            "SharedDataTemplate"
+                        ],
+                        "consts": [
+                            "Any",
+                            "logger",
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "shareddatatemplate": {
+                        "classes": [
+                            "Log",
+                            "Model",
+                            "SharedDataTemplate"
+                        ],
+                        "consts": [
+                            "logger"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "taskentry": {
+                        "classes": [
+                            "Model",
+                            "TaskEntry",
+                            "TaskTemplate"
+                        ],
+                        "consts": [
+                            "scopes"
+                        ],
+                        "functions": [
+                            "get_string_from_template"
+                        ],
+                        "isPkg": false
+                    },
+                    "tasktemplate": {
+                        "classes": [
+                            "Model",
+                            "TaskTemplate"
+                        ],
+                        "consts": [
+                            "scopes"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    }
+                }
+            },
+            "scopes": {
+                "classes": [
+                    "Annotation",
+                    "GraphicAsset",
+                    "GraphicScene",
+                    "Layout",
+                    "SharedDataEntry",
+                    "SharedDataTemplate",
+                    "Task",
+                    "TaskEntry",
+                    "TaskTemplate"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "annotation": {
+                        "classes": [
+                            "Annotation",
+                            "Scope"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "graphicasset": {
+                        "classes": [
+                            "GraphicAsset",
+                            "Scope"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "graphicscene": {
+                        "classes": [
+                            "GraphicScene",
+                            "Log",
+                            "Path",
+                            "Pose",
+                            "Quaternion",
+                            "Scope"
+                        ],
+                        "consts": [
+                            "LOGGER"
+                        ],
+                        "functions": [
+                            "use_cache"
+                        ],
+                        "isPkg": false
+                    },
+                    "layout": {
+                        "classes": [
+                            "Layout",
+                            "Scope"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "shareddataentry": {
+                        "classes": [
+                            "Log",
+                            "Scope",
+                            "SharedDataEntry",
+                            "SharedDataTemplate"
+                        ],
+                        "consts": [
+                            "logger"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "shareddatatemplate": {
+                        "classes": [
+                            "Log",
+                            "Scope",
+                            "SharedDataTemplate"
+                        ],
+                        "consts": [
+                            "logger"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "task": {
+                        "classes": [
+                            "Log",
+                            "MovaiDB",
+                            "Scope",
+                            "Task"
+                        ],
+                        "consts": [
+                            "logger"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "taskentry": {
+                        "classes": [
+                            "Log",
+                            "MovaiDB",
+                            "Scope",
+                            "SharedDataEntry",
+                            "TaskEntry",
+                            "TaskTemplate"
+                        ],
+                        "consts": [
+                            "logger"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "tasktemplate": {
+                        "classes": [
+                            "Log",
+                            "MovaiDB",
+                            "Scope",
+                            "TaskTemplate"
+                        ],
+                        "consts": [
+                            "logger"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    }
+                }
+            },
+            "tools": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "alerts_tool": {
+                        "classes": [
+                            "Alerts",
+                            "Configuration",
+                            "ConfigurationDoesNotExist"
+                        ],
+                        "consts": [
+                            "MOVAI_FLEET_LOGS_VERBOSITY_LEVEL"
+                        ],
+                        "functions": [
+                            "display_alerts",
+                            "invoke_tool",
+                            "main"
+                        ],
+                        "isPkg": false
+                    },
+                    "metrics_tool": {
+                        "classes": [
+                            "AddMetric",
+                            "BaseCommand",
+                            "Commander",
+                            "GetMetric",
+                            "MetricCommands",
+                            "Metrics"
+                        ],
+                        "consts": [
+                            "MOVAI_FLEET_LOGS_VERBOSITY_LEVEL"
+                        ],
+                        "functions": [
+                            "convert_list_to_dict",
+                            "main",
+                            "parse_tags"
+                        ],
+                        "isPkg": false
+                    },
+                    "remove_object_from_scene": {
+                        "classes": [
+                            "GD_Callback"
+                        ],
+                        "consts": [],
+                        "functions": [
+                            "main",
+                            "remove_obj"
+                        ],
+                        "isPkg": false
+                    },
+                    "stress_tool": {
+                        "classes": [
+                            "Stress"
+                        ],
+                        "consts": [
+                            "logger"
+                        ],
+                        "functions": [
+                            "getLogger",
+                            "invoke_tool",
+                            "main",
+                            "run"
+                        ],
+                        "isPkg": false
+                    },
+                    "update_annotations": {
+                        "classes": [],
+                        "consts": [],
+                        "functions": [
+                            "del_folder",
+                            "main"
+                        ],
+                        "isPkg": false
+                    },
+                    "upload_graphItems": {
+                        "classes": [
+                            "GD_Callback",
+                            "GraphicScene",
+                            "UploadGraphItems"
+                        ],
+                        "consts": [],
+                        "functions": [
+                            "main"
+                        ],
+                        "isPkg": false
+                    },
+                    "upload_map": {
+                        "classes": [
+                            "Package",
+                            "Path"
+                        ],
+                        "consts": [],
+                        "functions": [
+                            "main"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            }
+        }
+    },
+    "movai_core_shared": {
+        "classes": [
+            "ActiveFlowError",
+            "AlreadyExist",
+            "CommandError",
+            "DoesNotExist",
+            "InvalidStructure",
+            "Log",
+            "LogAdapter",
+            "MovaiException",
+            "RecoveryStates",
+            "ResourceException",
+            "TransitionException"
+        ],
+        "consts": [
+            "APP_LOGS",
+            "APP_PATH",
+            "CONFIG_REGEX",
+            "ENVIRON_GDNODE",
+            "ENVIRON_GDNODE_INJECT",
+            "ENVIRON_ROS1",
+            "ENVIRON_ROS2",
+            "FLASK_HTTPENDPOINT",
+            "HTTP_ENDPOINT",
+            "HTTP_SOCKETIO",
+            "INTERNAL_DOMAIN",
+            "LD_LIBRARY_PATH",
+            "LINK_REGEX",
+            "MOVAI_DEPENDENCY",
+            "MOVAI_DEPENDS",
+            "MOVAI_FLEET_LOGS_VERBOSITY_LEVEL",
+            "MOVAI_GENERAL_VERBOSITY_LEVEL",
+            "MOVAI_HOME",
+            "MOVAI_INIT",
+            "MOVAI_LOGFILE_VERBOSITY_LEVEL",
+            "MOVAI_NODE",
+            "MOVAI_SERVER",
+            "MOVAI_STATE",
+            "MOVAI_STDOUT_VERBOSITY_LEVEL",
+            "MOVAI_TRANSITIONFOR",
+            "MOVAI_TRANSITIONTO",
+            "MOVAI_WIDGET",
+            "NAME_REGEX",
+            "NODE_TYPE",
+            "PATH",
+            "PKG_CONFIG_PATH",
+            "PORTS_TEMPLATE",
+            "PRODUCTION",
+            "PYTHONPATH",
+            "PYTHON_EXTERNAL_LIBS",
+            "RECOVERY_RESPONSE_KEY",
+            "RECOVERY_STATE_KEY",
+            "RECOVERY_TIMEOUT_IN_SECS",
+            "REDIS_LOCAL_HOST",
+            "REDIS_LOCAL_PORT",
+            "REDIS_MASTER_HOST",
+            "REDIS_MASTER_PORT",
+            "REDIS_SUBSCRIBER",
+            "REST_SCOPES",
+            "ROS1_ACTIONCLIENT",
+            "ROS1_ACTIONSERVER",
+            "ROS1_LIB",
+            "ROS1_MOVAI_WS",
+            "ROS1_NODE",
+            "ROS1_NODELET",
+            "ROS1_NODELETCLIENT",
+            "ROS1_NODELETSERVER",
+            "ROS1_NODELET_CMD",
+            "ROS1_PLUGIN",
+            "ROS1_PLUGINCLIENT",
+            "ROS1_PLUGINSERVER",
+            "ROS1_PUBLISHER",
+            "ROS1_RECONFIGURECLIENT",
+            "ROS1_SERVICECLIENT",
+            "ROS1_SERVICESERVER",
+            "ROS1_SUBSCRIBER",
+            "ROS1_TFPUBLISHER",
+            "ROS1_TFSUBSCRIBER",
+            "ROS1_TIMER",
+            "ROS1_USER_WS",
+            "ROS1_WS",
+            "ROS2_DISTRO",
+            "ROS2_LIB",
+            "ROS2_LIFECYCLENODE",
+            "ROS2_NODE",
+            "ROS2_PATH",
+            "ROSLISP_PACKAGE_DIRECTORIES",
+            "ROS_DISTRO",
+            "ROS_ETC_DIR",
+            "ROS_MASTER_URI",
+            "ROS_PACKAGE_PATH",
+            "ROS_PYTHON_VERSION",
+            "ROS_ROOT",
+            "ROS_VERSION",
+            "SCOPES_TO_TRACK",
+            "TIMEOUT_PROCESS_SIGINT",
+            "TIMEOUT_PROCESS_SIGTERM",
+            "TRANSITION_TYPE"
+        ],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "common": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "time": {
+                        "classes": [
+                            "TimeError",
+                            "datetime"
+                        ],
+                        "consts": [],
+                        "functions": [
+                            "current_time_string",
+                            "current_timestamp_float",
+                            "current_timestamp_int",
+                            "delta_time_float",
+                            "delta_time_int",
+                            "validate_time",
+                            "validate_timestamp"
+                        ],
+                        "isPkg": false
+                    },
+                    "utils": {
+                        "classes": [],
+                        "consts": [
+                            "REDIS_MASTER_HOST"
+                        ],
+                        "functions": [
+                            "create_principal_name",
+                            "get_distribution",
+                            "get_ip_address",
+                            "get_package_version",
+                            "is_enterprise",
+                            "is_manager",
+                            "run_blocking_code"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            },
+            "consts": {
+                "classes": [],
+                "consts": [
+                    "ADMIN_ROLE",
+                    "ALERTS_HANDLER_METRIC_TYPE",
+                    "CALLBACK_LOGGER",
+                    "COMMAND_HANDLER_MSG_TYPE",
+                    "CONFIG_REGEX",
+                    "CREATE_PERMISSION",
+                    "DEFAULT_CALLBACK",
+                    "DEFAULT_LOG_LIMIT",
+                    "DEFAULT_LOG_OFFSET",
+                    "DELETE_PERMISSION",
+                    "DEPLOYER_ROLE",
+                    "EXECUTE_PERMISSION",
+                    "FLASK_HTTPENDPOINT",
+                    "HTTP_ENDPOINT",
+                    "HTTP_SOCKETIO",
+                    "INFLUXDB_DB_NAMES",
+                    "INFLUXDB_HOST",
+                    "INTERNAL_DOMAIN",
+                    "LINK_REGEX",
+                    "LOGS_HANDLER_MSG_TYPE",
+                    "LOGS_INFLUX_DB",
+                    "LOGS_MEASUREMENT",
+                    "LOGS_QUERY_HANDLER_MSG_TYPE",
+                    "MAX_LOG_QUERY",
+                    "MESSAGE_SERVER_HOST",
+                    "METRICS_HANDLER_MSG_TYPE",
+                    "METRICS_INFLUX_DB",
+                    "METRICS_MEASUREMENT",
+                    "METRICS_QUERY_HANDLER_MSG_TYPE",
+                    "MIN_LOG_QUERY",
+                    "MOVAI_CONTEXTCLIENTIN",
+                    "MOVAI_DEPENDENCY",
+                    "MOVAI_DEPENDS",
+                    "MOVAI_INIT",
+                    "MOVAI_NODE",
+                    "MOVAI_SERVER",
+                    "MOVAI_STATE",
+                    "MOVAI_TRANSITION",
+                    "MOVAI_TRANSITIONFOR",
+                    "MOVAI_TRANSITIONTO",
+                    "MOVAI_WIDGET",
+                    "NAME_REGEX",
+                    "NODE_TYPE",
+                    "NOTIFICATIONS_HANDLER_MSG_TYPE",
+                    "OPERATOR_ROLE",
+                    "PID",
+                    "PORTS_TEMPLATE",
+                    "READ_PERMISSION",
+                    "REDIS_SUBSCRIBER",
+                    "RESET_PERMISSION",
+                    "ROS1_ACTIONCLIENT",
+                    "ROS1_ACTIONSERVER",
+                    "ROS1_NODE",
+                    "ROS1_NODELET",
+                    "ROS1_NODELETCLIENT",
+                    "ROS1_NODELETSERVER",
+                    "ROS1_PLUGIN",
+                    "ROS1_PLUGINCLIENT",
+                    "ROS1_PLUGINSERVER",
+                    "ROS1_PUBLISHER",
+                    "ROS1_RECONFIGURECLIENT",
+                    "ROS1_SERVICECLIENT",
+                    "ROS1_SERVICESERVER",
+                    "ROS1_SUBSCRIBER",
+                    "ROS1_TFPUBLISHER",
+                    "ROS1_TFSUBSCRIBER",
+                    "ROS1_TIMER",
+                    "ROS2_LIFECYCLENODE",
+                    "ROS2_NODE",
+                    "STRESS_INFLUX_DB",
+                    "STRESS_MEASUREMENT",
+                    "SYSLOGS_HANDLER_MSG_TYPE",
+                    "SYSLOG_MEASUREMENT",
+                    "TIMEOUT_PROCESS_SIGINT",
+                    "TIMEOUT_PROCESS_SIGTERM",
+                    "TRANSITION_TYPE",
+                    "UPDATE_PERMISSION",
+                    "USER_LOG_TAG"
+                ],
+                "functions": [
+                    "getpid"
+                ],
+                "isPkg": false
+            },
+            "core": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "base_command": {
+                        "classes": [
+                            "ABC",
+                            "BaseCommand",
+                            "Log"
+                        ],
+                        "consts": [],
+                        "functions": [
+                            "abstractmethod"
+                        ],
+                        "isPkg": false
+                    },
+                    "message_client": {
+                        "classes": [
+                            "ArgumentError",
+                            "AsyncMessageClient",
+                            "MessageClient",
+                            "MessageFormatError",
+                            "ZMQManager",
+                            "ZMQType"
+                        ],
+                        "consts": [
+                            "DEVICE_NAME",
+                            "FLEET_NAME",
+                            "SERVICE_NAME"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "secure": {
+                        "classes": [],
+                        "consts": [],
+                        "functions": [
+                            "generate_secret_bytes",
+                            "generate_secret_string"
+                        ],
+                        "isPkg": false
+                    },
+                    "securepassword": {
+                        "classes": [
+                            "Fernet",
+                            "Log",
+                            "PasswordASCIIFormatError",
+                            "SecurePassword"
+                        ],
+                        "consts": [
+                            "LOGGER"
+                        ],
+                        "functions": [
+                            "generate_secret_string",
+                            "isascii",
+                            "password_checker",
+                            "urlsafe_b64encode"
+                        ],
+                        "isPkg": false
+                    },
+                    "zmq": {
+                        "classes": [],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": true,
+                        "modules": {
+                            "zmq_base": {
+                                "classes": [
+                                    "ABC",
+                                    "ZMQBase"
+                                ],
+                                "consts": [],
+                                "functions": [
+                                    "abstractmethod",
+                                    "getLogger"
+                                ],
+                                "isPkg": false
+                            },
+                            "zmq_client": {
+                                "classes": [
+                                    "AsyncZMQClient",
+                                    "ZMQBase",
+                                    "ZMQClient"
+                                ],
+                                "consts": [
+                                    "MOVAI_ZMQ_RECV_TIMEOUT_MS",
+                                    "MOVAI_ZMQ_SEND_TIMEOUT_MS"
+                                ],
+                                "functions": [
+                                    "create_msg",
+                                    "extract_reponse"
+                                ],
+                                "isPkg": false
+                            },
+                            "zmq_helpers": {
+                                "classes": [
+                                    "MessageError"
+                                ],
+                                "consts": [
+                                    "DEVICE_NAME",
+                                    "LOGGER",
+                                    "SERVICE_NAME"
+                                ],
+                                "functions": [
+                                    "create_msg",
+                                    "extract_reponse",
+                                    "generate_zmq_identity",
+                                    "getLogger"
+                                ],
+                                "isPkg": false
+                            },
+                            "zmq_manager": {
+                                "classes": [
+                                    "ArgumentError",
+                                    "AsyncZMQClient",
+                                    "AsyncZMQPublisher",
+                                    "AsyncZMQSubscriber",
+                                    "Enum",
+                                    "ZMQBase",
+                                    "ZMQClient",
+                                    "ZMQManager",
+                                    "ZMQPublisher",
+                                    "ZMQSubscriber",
+                                    "ZMQType"
+                                ],
+                                "consts": [
+                                    "ZMQ_TYPES"
+                                ],
+                                "functions": [
+                                    "beartype",
+                                    "generate_zmq_identity",
+                                    "getLogger"
+                                ],
+                                "isPkg": false
+                            },
+                            "zmq_publisher": {
+                                "classes": [
+                                    "AsyncZMQPublisher",
+                                    "ZMQBase",
+                                    "ZMQPublisher"
+                                ],
+                                "consts": [
+                                    "MOVAI_ZMQ_SEND_TIMEOUT_MS"
+                                ],
+                                "functions": [
+                                    "create_msg"
+                                ],
+                                "isPkg": false
+                            },
+                            "zmq_server": {
+                                "classes": [
+                                    "ABC",
+                                    "ZMQServer"
+                                ],
+                                "consts": [
+                                    "MOVAI_ZMQ_SEND_TIMEOUT_MS"
+                                ],
+                                "functions": [
+                                    "abstractmethod",
+                                    "beartype"
+                                ],
+                                "isPkg": false
+                            },
+                            "zmq_subscriber": {
+                                "classes": [
+                                    "AsyncZMQSubscriber",
+                                    "ZMQBase",
+                                    "ZMQSubscriber"
+                                ],
+                                "consts": [],
+                                "functions": [
+                                    "extract_reponse"
+                                ],
+                                "isPkg": false
+                            }
+                        }
+                    }
+                }
+            },
+            "envvars": {
+                "classes": [],
+                "consts": [
+                    "ADMIN_ROLE",
+                    "APP_LOGS",
+                    "APP_PATH",
+                    "AWS_ACCESS_KEY",
+                    "DBWRITER_EMPTY_THREASHOULD",
+                    "DBWRITER_IPC_PATH",
+                    "DEBUG",
+                    "DEFAULT_JWT_ACCESS_DELTA_SECS",
+                    "DEFAULT_JWT_REFRESH_DELTA_DAYS",
+                    "DEFAULT_ROLE_NAME",
+                    "DEVICE_NAME",
+                    "DOCKERD_ATTEMPTS",
+                    "DOCKER_REGISTRY",
+                    "DOCKER_TIMEOUT",
+                    "ENVIRON_GDNODE",
+                    "ENVIRON_GDNODE_INJECT",
+                    "ENVIRON_ROS1",
+                    "ENVIRON_ROS2",
+                    "FLEET_NAME",
+                    "INFO",
+                    "LDAP_CONNECTION_RECEIVE_TIMEOUT",
+                    "LDAP_KEY_LENGTH",
+                    "LDAP_POOLING_LOOP_TIMEOUT",
+                    "LDAP_SEARCH_TIME_LIMIT",
+                    "LD_LIBRARY_PATH",
+                    "LOCAL_MESSAGE_SERVER",
+                    "LOGS_DBWRITER_BIND_ADDR",
+                    "LOGS_INFLUX_DB",
+                    "LOG_HTTP_HOST",
+                    "MASTER_MESSAGE_SERVER",
+                    "MASTER_MESSAGE_SERVER_HOST",
+                    "MASTER_MESSAGE_SERVER_PORT",
+                    "MESSAGE_SERVER_BIND_ADDR",
+                    "MESSAGE_SERVER_BIND_IP",
+                    "MESSAGE_SERVER_DEBUG_MODE",
+                    "MESSAGE_SERVER_HOST",
+                    "MESSAGE_SERVER_LOG_PUBLISHER_PORT",
+                    "MESSAGE_SERVER_PERIODIC_WRITE",
+                    "MESSAGE_SERVER_PORT",
+                    "MESSAGE_SERVER_STRESS_MODE",
+                    "METRICS_DBWRITER_BIND_ADDR",
+                    "METRICS_INFLUX_DB",
+                    "MOVAI_FLEET_LOGS_VERBOSITY_LEVEL",
+                    "MOVAI_GENERAL_VERBOSITY_LEVEL",
+                    "MOVAI_HOME",
+                    "MOVAI_IPC_PATH",
+                    "MOVAI_LOGFILE_VERBOSITY_LEVEL",
+                    "MOVAI_LOG_FILE",
+                    "MOVAI_STDOUT_VERBOSITY_LEVEL",
+                    "MOVAI_ZMQ_RECV_TIMEOUT_MS",
+                    "MOVAI_ZMQ_SEND_TIMEOUT_MS",
+                    "NOTSET",
+                    "PATH",
+                    "PKG_CONFIG_PATH",
+                    "PRODUCTION",
+                    "PYTHONPATH",
+                    "PYTHON_EXTERNAL_LIBS",
+                    "REDIS_LOCAL_HOST",
+                    "REDIS_LOCAL_PORT",
+                    "REDIS_MASTER_HOST",
+                    "REDIS_MASTER_PORT",
+                    "REST_SCOPES",
+                    "ROS1_LIB",
+                    "ROS1_MOVAI_WS",
+                    "ROS1_NODELET_CMD",
+                    "ROS1_USER_WS",
+                    "ROS1_WS",
+                    "ROS2_DISTRO",
+                    "ROS2_LIB",
+                    "ROS2_PATH",
+                    "ROSLISP_PACKAGE_DIRECTORIES",
+                    "ROS_DISTRO",
+                    "ROS_ETC_DIR",
+                    "ROS_MASTER_URI",
+                    "ROS_PACKAGE_PATH",
+                    "ROS_PYTHON_VERSION",
+                    "ROS_ROOT",
+                    "ROS_VERSION",
+                    "SCOPES_TO_TRACK",
+                    "SERVICE_NAME",
+                    "SMTP_EMAIL",
+                    "SMTP_HOST",
+                    "SMTP_PASS",
+                    "SMTP_PORT",
+                    "SMTP_USER",
+                    "SPAWNER_BIND_ADDR",
+                    "SPAWNER_DEBUG_MODE",
+                    "STRESS_DBWRITER_BIND_ADDR",
+                    "STRESS_INFLUX_DB",
+                    "SYSLOG_ENABLED",
+                    "key",
+                    "value"
+                ],
+                "functions": [],
+                "isPkg": false
+            },
+            "exceptions": {
+                "classes": [
+                    "AclObjectAlreadyExist",
+                    "AclObjectDoesNotExist",
+                    "AclObjectError",
+                    "AclObjectIDMismatch",
+                    "AclObjectInvalidAttribute",
+                    "ActiveFlowError",
+                    "AlreadyExist",
+                    "ArgumentError",
+                    "AuthorizationError",
+                    "CommandError",
+                    "ConfigurationDoesNotExist",
+                    "ConfigurationError",
+                    "DBHandlerError",
+                    "DoesNotExist",
+                    "DomainDoesNotExist",
+                    "HandlerNotFoundError",
+                    "InitializationError",
+                    "InvalidCredentials",
+                    "InvalidStructure",
+                    "InvalidToken",
+                    "LdapConfigAlreadyExist",
+                    "LdapConfigDoesNotExist",
+                    "LdapConfigError",
+                    "LdapConfigInvalidStructure",
+                    "LdapConfigMissingParameter",
+                    "LoginError",
+                    "MessageError",
+                    "MessageFormatError",
+                    "MetricError",
+                    "MovaiException",
+                    "NotSupported",
+                    "PasswordASCIIFormatError",
+                    "PasswordComplexityError",
+                    "PasswordError",
+                    "PrimaryKeyError",
+                    "QueryError",
+                    "ResourceException",
+                    "RestrictedPathError",
+                    "RoleAlreadyExist",
+                    "RoleDoesNotExist",
+                    "RoleError",
+                    "RunError",
+                    "SecretKeyAlreadyExist",
+                    "SecretKeyDoesNotExist",
+                    "SecretKeyError",
+                    "TimeError",
+                    "TokenError",
+                    "TokenExpired",
+                    "TokenRevoked",
+                    "TransitionException",
+                    "UnknownRequestError",
+                    "UserAlreadyExist",
+                    "UserDoesNotExist",
+                    "UserError",
+                    "UserPermissionsError"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "logger": {
+                "classes": [
+                    "AsyncMessageClient",
+                    "Log",
+                    "LogAdapter",
+                    "LogsQuery",
+                    "MessageClient",
+                    "RemoteHandler",
+                    "StdOutHandler",
+                    "TimedRotatingFileHandler",
+                    "datetime"
+                ],
+                "consts": [
+                    "CALLBACK_LOGGER",
+                    "DEFAULT_LOG_LIMIT",
+                    "DEFAULT_LOG_OFFSET",
+                    "DEVICE_NAME",
+                    "LOCAL_MESSAGE_SERVER",
+                    "LOGS_HANDLER_MSG_TYPE",
+                    "LOGS_MEASUREMENT",
+                    "LOGS_QUERY_HANDLER_MSG_TYPE",
+                    "LOG_FORMATTER",
+                    "LOG_FORMATTER_DATETIME",
+                    "MASTER_MESSAGE_SERVER",
+                    "MAX_LOG_QUERY",
+                    "MIN_LOG_QUERY",
+                    "MOVAI_FLEET_LOGS_VERBOSITY_LEVEL",
+                    "MOVAI_GENERAL_VERBOSITY_LEVEL",
+                    "MOVAI_LOGFILE_VERBOSITY_LEVEL",
+                    "MOVAI_LOG_FILE",
+                    "MOVAI_STDOUT_VERBOSITY_LEVEL",
+                    "PID",
+                    "SERVICE_NAME",
+                    "SEVERETY_CODES_MAPPING",
+                    "SYSLOGS_HANDLER_MSG_TYPE",
+                    "SYSLOG_ENABLED",
+                    "SYSLOG_MEASUREMENT",
+                    "S_FORMATTER",
+                    "USER_LOG_TAG",
+                    "VERSION"
+                ],
+                "functions": [
+                    "_get_console_handler",
+                    "_get_file_handler",
+                    "current_timestamp_int",
+                    "get_package_version",
+                    "get_remote_handler",
+                    "getframeinfo",
+                    "is_enterprise",
+                    "is_manager",
+                    "stack",
+                    "validate_time"
+                ],
+                "isPkg": false
+            },
+            "messages": {
+                "classes": [
+                    "NotificationDataFactory"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "alert_data": {
+                        "classes": [
+                            "Alert",
+                            "AlertData",
+                            "AlertRequest",
+                            "BaseModel",
+                            "MetricData",
+                            "Request"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "command_data": {
+                        "classes": [
+                            "BaseModel",
+                            "Command",
+                            "CommandData",
+                            "CommandReq",
+                            "Destination",
+                            "Request"
+                        ],
+                        "consts": [
+                            "Optional"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "email_data": {
+                        "classes": [
+                            "BaseModel",
+                            "ConfigDict",
+                            "EmailData",
+                            "EmailStr",
+                            "Log"
+                        ],
+                        "consts": [
+                            "DEVICE_NAME",
+                            "FLEET_NAME",
+                            "List",
+                            "NOTIFICATIONS_HANDLER_MSG_TYPE",
+                            "Optional",
+                            "logger"
+                        ],
+                        "functions": [
+                            "field_validator"
+                        ],
+                        "isPkg": false
+                    },
+                    "general_data": {
+                        "classes": [
+                            "BaseModel",
+                            "Request",
+                            "RobotInfo"
+                        ],
+                        "consts": [
+                            "Optional"
+                        ],
+                        "functions": [
+                            "print_dict"
+                        ],
+                        "isPkg": false
+                    },
+                    "log_data": {
+                        "classes": [
+                            "BaseModel",
+                            "LogData",
+                            "LogFields",
+                            "LogRequest",
+                            "LogTags",
+                            "Request",
+                            "SyslogData",
+                            "SyslogFields",
+                            "SyslogRequest",
+                            "SyslogTags"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "metric_data": {
+                        "classes": [
+                            "BaseModel",
+                            "MetricData",
+                            "MetricQueryData",
+                            "MetricQueryRequest",
+                            "MetricRequest",
+                            "QueryData",
+                            "Request"
+                        ],
+                        "consts": [
+                            "Optional"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "notification_data": {
+                        "classes": [
+                            "EmailData",
+                            "NotificationDataFactory",
+                            "SMSData",
+                            "UserData"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "sms_data": {
+                        "classes": [
+                            "SMSData"
+                        ],
+                        "consts": [
+                            "List"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "stress_data": {
+                        "classes": [
+                            "BaseModel",
+                            "Request",
+                            "StressData",
+                            "StressRequest"
+                        ],
+                        "consts": [
+                            "Optional"
+                        ],
+                        "functions": [],
+                        "isPkg": false
+                    },
+                    "user_data": {
+                        "classes": [
+                            "UserData"
+                        ],
+                        "consts": [],
+                        "functions": [],
+                        "isPkg": false
+                    }
+                }
+            },
+            "recovery": {
+                "classes": [
+                    "Enum",
+                    "RecoveryStates",
+                    "auto"
+                ],
+                "consts": [
+                    "RECOVERY_RESPONSE_KEY",
+                    "RECOVERY_STATE_KEY",
+                    "RECOVERY_TIMEOUT_IN_SECS"
+                ],
+                "functions": [],
+                "isPkg": false
+            }
+        }
+    },
+    "movai_localization": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "cfg": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "AMCL_CHECKERConfig": {
+                        "classes": [],
+                        "consts": [
+                            "all_level",
+                            "config_description",
+                            "defaults",
+                            "inf",
+                            "level",
+                            "max",
+                            "min",
+                            "param",
+                            "type"
+                        ],
+                        "functions": [
+                            "extract_params"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            }
+        }
+    },
+    "movai_move_base": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "cfg": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "MoveBaseConfig": {
+                        "classes": [],
+                        "consts": [
+                            "all_level",
+                            "config_description",
+                            "defaults",
+                            "inf",
+                            "level",
+                            "max",
+                            "min",
+                            "param",
+                            "type"
+                        ],
+                        "functions": [
+                            "extract_params"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            }
+        }
+    },
+    "movai_navigation": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "msg": {
+                "classes": [
+                    "GraphData",
+                    "GraphEdge",
+                    "GraphVertex",
+                    "NavigationGoal",
+                    "SceneData",
+                    "SceneDataArray"
+                ],
+                "consts": [
+                    "python3"
+                ],
+                "functions": [],
+                "isPkg": true,
+                "modules": {}
+            },
+            "srv": {
+                "classes": [
+                    "ApplyAnnotation",
+                    "ApplyAnnotationRequest",
+                    "ApplyAnnotationResponse",
+                    "GeneratePath",
+                    "GeneratePathRequest",
+                    "GeneratePathResponse",
+                    "Graph",
+                    "GraphRequest",
+                    "GraphResponse",
+                    "Planner",
+                    "PlannerRequest",
+                    "PlannerResponse"
+                ],
+                "consts": [
+                    "python3"
+                ],
+                "functions": [],
+                "isPkg": true,
+                "modules": {}
+            }
+        }
+    },
+    "movai_obstacle_detection": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "msg": {
+                "classes": [
+                    "Control",
+                    "Detection",
+                    "Direction",
+                    "DirectionField",
+                    "SafetyArea"
+                ],
+                "consts": [
+                    "python3"
+                ],
+                "functions": [],
+                "isPkg": true,
+                "modules": {}
+            }
+        }
+    },
+    "movai_occupancy_grid": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "msg": {
+                "classes": [
+                    "ScoredPath"
+                ],
+                "consts": [
+                    "python3"
+                ],
+                "functions": [],
+                "isPkg": true,
+                "modules": {}
+            },
+            "srv": {
+                "classes": [
+                    "ScorePath",
+                    "ScorePathRequest",
+                    "ScorePathResponse"
+                ],
+                "consts": [
+                    "python3"
+                ],
+                "functions": [],
+                "isPkg": true,
+                "modules": {}
+            }
+        }
+    },
+    "movai_odom_utils": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "cfg": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "NoiseConfig": {
+                        "classes": [],
+                        "consts": [
+                            "all_level",
+                            "config_description",
+                            "defaults",
+                            "inf",
+                            "level",
+                            "max",
+                            "min",
+                            "param",
+                            "type"
+                        ],
+                        "functions": [
+                            "extract_params"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            }
+        }
+    },
+    "movai_pcl_utils": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "cfg": {
+                "classes": [],
+                "consts": [],
+                "functions": [],
+                "isPkg": true,
+                "modules": {
+                    "ExtendedCropBoxConfig": {
+                        "classes": [],
+                        "consts": [
+                            "all_level",
+                            "config_description",
+                            "defaults",
+                            "inf",
+                            "level",
+                            "max",
+                            "min",
+                            "param",
+                            "type"
+                        ],
+                        "functions": [
+                            "extract_params"
+                        ],
+                        "isPkg": false
+                    },
+                    "ExtendedLaserScanConfig": {
+                        "classes": [],
+                        "consts": [
+                            "all_level",
+                            "config_description",
+                            "defaults",
+                            "inf",
+                            "level",
+                            "max",
+                            "min",
+                            "param",
+                            "type"
+                        ],
+                        "functions": [
+                            "extract_params"
+                        ],
+                        "isPkg": false
+                    }
+                }
+            }
+        }
+    },
+    "movai_risk_prevention": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "msg": {
+                "classes": [
+                    "MovementDetection",
+                    "SetLimits"
+                ],
+                "consts": [
+                    "python3"
+                ],
+                "functions": [],
+                "isPkg": true,
+                "modules": {}
+            }
+        }
+    },
+    "movai_robot_state": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "fms_dataclasses": {
+                "classes": [
+                    "HWStatusObject",
+                    "Levels",
+                    "RobotStatusObject",
+                    "StackStatusObject",
+                    "_BaseStatus",
+                    "_BaseStatusDefaults1",
+                    "_BaseStatusDefaults2",
+                    "_SingleHWStatusDefaults",
+                    "_StackStatusBase"
+                ],
+                "consts": [
+                    "BAT_STAT_CONV",
+                    "DEL_KEYS",
+                    "DICT_UNPACK_FN",
+                    "SUPPORTED_MSG_TYPES"
+                ],
+                "functions": [],
+                "isPkg": false
+            },
+            "robot_state_helper": {
+                "classes": [
+                    "DiagnosticStatus",
+                    "HWStatusObject",
+                    "Robot",
+                    "RobotStateHelper",
+                    "RobotStatusObject",
+                    "StackStatusObject",
+                    "Var"
+                ],
+                "consts": [
+                    "BAT_STAT_CONV",
+                    "DEL_KEYS",
+                    "DICT_UNPACK_FN",
+                    "SUPPORTED_MSG_TYPES",
+                    "Union"
+                ],
+                "functions": [],
+                "isPkg": false
+            },
+            "stack_state_handler": {
+                "classes": [
+                    "Alerts",
+                    "DiagnosticStatus",
+                    "StackStateHandler",
+                    "StateNotDefinedError"
+                ],
+                "consts": [],
+                "functions": [
+                    "deepcopy"
+                ],
+                "isPkg": false
+            }
+        }
+    },
+    "movai_scan": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "msg": {
+                "classes": [
+                    "Area"
+                ],
+                "consts": [
+                    "python3"
+                ],
+                "functions": [],
+                "isPkg": true,
+                "modules": {}
+            },
+            "srv": {
+                "classes": [
+                    "GetScan",
+                    "GetScanRequest",
+                    "GetScanResponse"
+                ],
+                "consts": [
+                    "python3"
+                ],
+                "functions": [],
+                "isPkg": true,
+                "modules": {}
+            }
+        }
+    },
+    "movai_scene_utils": {
+        "classes": [],
+        "consts": [],
+        "functions": [],
+        "isPkg": true,
+        "modules": {
+            "constants": {
+                "classes": [
+                    "BatteryState"
+                ],
+                "consts": [
+                    "POW_SUPPLY_STATUS_CONV",
+                    "TIME_FORMAT"
+                ],
+                "functions": [],
+                "isPkg": false
+            },
+            "dock_state_helper": {
+                "classes": [
+                    "AlreadyExist",
+                    "Annotation",
+                    "DockStateHelper",
+                    "DoesNotExist",
+                    "SharedDataEntry",
+                    "SharedDataTemplate",
+                    "datetime"
+                ],
+                "consts": [
+                    "POW_SUPPLY_STATUS_CONV",
+                    "STATUS_CODES",
+                    "TIME_FORMAT"
+                ],
+                "functions": [
+                    "db_connection_ok"
+                ],
+                "isPkg": false
+            },
+            "dock_states": {
+                "classes": [
+                    "DockStates",
+                    "Enum"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "ds_logic": {
+                "classes": [
+                    "BatteryState",
+                    "DOCK_STATES",
+                    "DockStateHelper",
+                    "DockStateLogic",
+                    "DoesNotExist",
+                    "GraphicScene",
+                    "Lock",
+                    "Metrics",
+                    "Robot",
+                    "SharedDataEntry",
+                    "StringArray",
+                    "TimerEvent",
+                    "Var"
+                ],
+                "consts": [],
+                "functions": [
+                    "db_connection_ok"
+                ],
+                "isPkg": false
+            },
+            "ds_manager_logic": {
+                "classes": [
+                    "DockStateHelper",
+                    "DockStateManagerLogic",
+                    "DoesNotExist",
+                    "GraphicScene",
+                    "Lock",
+                    "SharedDataEntry"
+                ],
+                "consts": [
+                    "STATUS_CODES"
+                ],
+                "functions": [],
+                "isPkg": false
+            },
+            "mock_movai_apis": {
+                "classes": [
+                    "Mock",
+                    "MockExceptions"
+                ],
+                "consts": [],
+                "functions": [],
+                "isPkg": false
+            },
+            "network_tools": {
+                "classes": [
+                    "Redis"
+                ],
+                "consts": [],
+                "functions": [
+                    "db_connection_ok"
+                ],
+                "isPkg": false
+            },
+            "status_codes": {
+                "classes": [],
+                "consts": [
+                    "STATUS_CODES"
+                ],
+                "functions": [],
+                "isPkg": false
+            }
+        }
+    }
+}
