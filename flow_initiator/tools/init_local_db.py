@@ -17,6 +17,8 @@ import signal
 # from dal.models.callback import Callback
 from dal.models.message import Message
 from dal.movaidb import MovaiDB
+import json
+from dal.scopes.system import System
 
 
 def main():
@@ -34,9 +36,6 @@ def main():
     # Callback.export_modules()
 
     # Here we upload the python modules that are already saved in the file
-    import json
-    from dal.scopes.system import System
-
     # Get the path to the file
     # https://setuptools.readthedocs.io/en/latest/userguide/datafiles.html#accessing-data-files-at-runtime
     data_path = os.path.join(os.path.dirname(__file__), "python_imports.json")
