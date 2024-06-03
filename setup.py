@@ -15,7 +15,7 @@ requirements = [
 
 setuptools.setup(
     name="flow-initiator",
-    version="2.5.0-29",
+    version="2.5.0-30",
     author="Backend team",
     author_email="backend@mov.ai",
     description="Dummy description",
