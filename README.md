@@ -1,4 +1,4 @@
-[![CI - On DEV](https://github.com/MOV-AI/flow-initiator/actions/workflows/TestOnPR.yml/badge.svg?branch=dev)](https://github.com/MOV-AI/flow-initiator/actions/workflows/TestOnPR.yml) [![Deploy - On main/release](https://github.com/MOV-AI/flow-initiator/actions/workflows/DeployOnMergeMain.yml/badge.svg?branch=main)](https://github.com/MOV-AI/flow-initiator/actions/workflows/DeployOnMergeMain.yml)
+[![CI - On releases/2.5.0](https://github.com/MOV-AI/flow-initiator/actions/workflows/TestOnPR.yml/badge.svg?branch=releases/2.5.0)](https://github.com/MOV-AI/flow-initiator/actions/workflows/TestOnPR.yml) [![Deploy - On main/release](https://github.com/MOV-AI/flow-initiator/actions/workflows/DeployOnMergeMain.yml/badge.svg?branch=main)](https://github.com/MOV-AI/flow-initiator/actions/workflows/DeployOnMergeMain.yml)
 
 # flow-initiator
 Flow initiator is the node orchestration tool of the MOV.AI platform.
@@ -23,7 +23,7 @@ Parameters list that can be set through environment variables:
 
 
 
-## Development Setup
+## releases/2.5.0elopment Setup
 
 The complete build process requires 2 steps :
 - a python module building step which will create a `.whl` file
