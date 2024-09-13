@@ -7,7 +7,7 @@ requirements = [
     "aioredis==1.3.1",
     "uvloop==0.14.0",
     "docker==6.1.2",
-    "movai-core-shared==2.5.0.17",
+    "movai-core-shared==2.5.0.18",
     "data-access-layer==2.5.0.27",
     "gd-node==2.5.0.18"
 ]
