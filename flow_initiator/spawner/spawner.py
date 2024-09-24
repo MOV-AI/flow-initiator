@@ -8,33 +8,33 @@
    - Tiago Paulino (tiago@mov.ai) - 2020
    - Dor Marcous (dor@mova.ai) - 2021
 """
+
 import asyncio
 import concurrent.futures
 import os
-import re
 import pickle
+import re
+import signal
 import tempfile
 import time
-from typing import Union
 from subprocess import SubprocessError
+from typing import Union
 
+import psutil
 from beartype import beartype
-
 from dal.helpers.cache import ThreadSafeCache
 from dal.models.lock import Lock
 from dal.models.var import Var
-
 from dal.scopes.package import Package
 from dal.scopes.robot import Robot
-
+from movai_core_shared import TIMEOUT_PROCESS_SIGINT, TIMEOUT_PROCESS_SIGTERM
+from movai_core_shared.common.utils import is_enterprise
 from movai_core_shared.consts import ROS2_LIFECYCLENODE
 from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
-from movai_core_shared.common.utils import is_enterprise
-from movai_core_shared.logger import Log
 from movai_core_shared.exceptions import CommandError, RunError
+from movai_core_shared.logger import Log
 
-from flow_initiator.spawner.elements import ElementsFactory, BaseElement
-
+from flow_initiator.spawner.elements import BaseElement, ElementsFactory
 
 try:
     # Todo: check if we can remove ros1 dependency
@@ -46,7 +46,6 @@ except ImportError:
 
 from .flowmonitor import FlowMonitor
 from .validation import CommandValidator
-
 
 NETWORK_PREFIX = os.getenv("NETWORK_PREFIX", "MovaiNetwork")
 
@@ -195,14 +194,14 @@ class Spawner:
         self.active_states = set()
         await self.fn_update_robot()
 
-        elements = {}
-        elements.update(self.core_lchd)
-        elements.update(self.nodes_lchd)
-        elements.update(self.persistent_nodes_lchd)
+        processes = {}
+        processes.update(self.core_lchd)
+        processes.update(self.nodes_lchd)
+        processes.update(self.persistent_nodes_lchd)
 
         tasks = []
-        for _, value in elements.items():
-            tasks.append(asyncio.create_task(value.kill()))
+        for node_name, value in processes.items():
+            tasks.append(self.terminate_process(value, node_name))
         # wait for all get_keys tasks to run
         await asyncio.gather(*tasks)
         await self.factory.remove_all_containers()
@@ -220,13 +219,13 @@ class Spawner:
         # todo: rm all containers that started in the flow
         self._logger.debug("Spawner: terminating active flow.")
 
-        elements = {}
-        elements.update(self.nodes_lchd)
-        elements.update(self.persistent_nodes_lchd)
+        processes = {}
+        processes.update(self.nodes_lchd)
+        processes.update(self.persistent_nodes_lchd)
 
         tasks = []
-        for _, element in elements.items():
-            tasks.append(element.kill())
+        for node_name, value in processes.items():
+            tasks.append(self.terminate_process(value, node_name))
         # wait for all get_keys tasks to run
         self.flow_monitor.unload()
         await asyncio.gather(*tasks)
@@ -251,6 +250,111 @@ class Spawner:
 
             if not lock.persistent:
                 lock.release()
+
+    async def terminate_process(self, process_key: dict, node_name: str) -> None:
+        """Terminate process
+        Args:
+            process_key: dict with process and pid
+            node_name: str with the node name
+        Returns:
+            None
+        Notes:
+            This function will send SIGTERM to the process giving it
+            the opportunity to clean up resources and gracefully shut down.
+            If the process does not terminate after a timeout it will be
+            killed with SIGINT and then SIGKILL by ensure_process_kill()
+        """
+        process = process_key["process"]
+        self._logger.info(
+            "Spawner: Trying to terminate node {} ({})".format(
+                node_name, process_key["pid"]
+            )
+        )
+        try:
+            process.send_signal(signal.SIGTERM)
+        except ProcessLookupError:
+            pass
+        finally:
+            sigterm_init = int(time.time())
+
+        await self.ensure_process_kill(process_key, node_name, sigterm_init)
+
+    async def ensure_process_kill(
+        self,
+        process_key: dict,
+        node_name: str,
+        term_time: int,
+        wait_interval: int = 0.5,
+    ) -> None:
+        """Ensure the process dies
+        Args:
+            process_key (dict) : process and pid
+            node_name (str) : the node name
+            term_time (int) : initial termination time
+            wait_interval (int) : time inteval between waits
+        Returns:
+            None
+        Raises:
+            Exception: if the process is not killed after the timeout
+        Notes:
+          terminate_process() should have been called before this function and sent SIGTERM to the process
+        """
+        timeout_term = TIMEOUT_PROCESS_SIGTERM
+        timeout_int = TIMEOUT_PROCESS_SIGINT
+
+        sigint_sent = False
+
+        pid = process_key["pid"]
+        process = process_key["process"]
+
+        t_max_sigterm = term_time + timeout_term
+        t_max_sigint = term_time + timeout_term + timeout_int
+
+        while 1:
+            # 1. Get the current time when in a new iteration of the loop
+            current_time = time.time()
+
+            # 2. Check if the process has terminated by itself (return_code is not None)
+            return_code = process.returncode
+            if return_code is not None:
+                self._logger.debug(
+                    "Node {} ({}) terminated with code {}, SIGINT sent: {}".format(
+                        node_name, str(pid), return_code, sigint_sent
+                    )
+                )
+                return return_code
+
+            # check if the process is still alive
+            if not psutil.pid_exists(pid):
+                self._logger.debug(
+                    "Node {} ({}) is not alive anymore, SIGINT sent: {}".format(
+                        node_name, str(pid), sigint_sent
+                    )
+                )
+                return None
+
+            # 3. Check if the process needs to be forcefully terminated (SIGINT)
+            if current_time > t_max_sigterm:
+                if not sigint_sent:
+                    self._logger.warning(
+                        "Sending SIGINT to node {} ({})".format(node_name, str(pid))
+                    )
+                    process.send_signal(signal.SIGINT)
+                    sigint_sent = True
+
+                    # relaunch a new iteration of the loop
+                    await asyncio.sleep(wait_interval)
+                    continue
+
+            # 4. Check if the process needs to be killed (last call)
+            if current_time > t_max_sigint:
+                self._logger.error(
+                    "Sending SIGKILL to node {} ({})".format(node_name, str(pid))
+                )
+                process.send_signal(signal.SIGKILL)
+                return None
+
+            await asyncio.sleep(wait_interval)
 
     async def clean_element(self, element: BaseElement, node_name: str) -> None:
         """
@@ -309,7 +413,10 @@ class Spawner:
         """
         persistent = kwargs.pop("persistent", False)
         self._logger.info(
-                "Launching command (persistent: {}) {}".format(persistent, " ".join(command)))
+            "Launching command (persistent: {}) {}".format(
+                persistent, " ".join(command)
+            )
+        )
         cwd = cwd or self.temp_dir.name
         elem = None
         try:
@@ -430,7 +537,9 @@ class Spawner:
             # they also need to be activated
             ros2_lifecycle_nodes_to_activate = []
             for lc_node in self.flow_monitor.load_ros2_lifecycle():
-                if lc_node["node"] not in [command["node"] for command in commands_to_launch]:
+                if lc_node["node"] not in [
+                    command["node"] for command in commands_to_launch
+                ]:
                     commands_to_launch.append(lc_node)
                 else:
                     ros2_lifecycle_nodes_to_activate.append(lc_node["node"])
@@ -591,8 +700,8 @@ class Spawner:
                 cmd = ["ros2", "lifecycle", "set", node_name, "deactivate"]
                 await self.ros2_lifecycle(node_name, cmd)
             else:
-                asyncio.create_task(self.process_kill(node=node_name, command="kill"))
-                # node_to_kill.kill())
+                node_to_kill = self.nodes_lchd[node_name]
+                asyncio.create_task(self.terminate_process(node_to_kill, node_name))
 
         tasks = []
         for command in commands_to_launch:
@@ -737,18 +846,17 @@ class Spawner:
 
         self._logger.debug(f"KILL node {node}")
 
-        element = self.nodes_lchd.get(node, None) or self.persistent_nodes_lchd.get(
+        process = self.nodes_lchd.get(node, None) or self.persistent_nodes_lchd.get(
             node, None
         )
 
-        if element is None:
+        if process is None:
             self._logger.warning(
                 "Could not kill Node {} because is not launched".format(node)
             )
             return
 
-        await element.kill()
-        asyncio.create_task(self.clean_element(element, node))
+        await self.terminate_process(process, node)
 
     async def ros2_lifecycle(self, node_name: str, command):
         """Handles ROS2 Lifecycle managed nodes
