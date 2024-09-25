@@ -381,7 +381,7 @@ class Spawner:
 
             await self.commands[params["command"]](**params)
         except Exception as e:
-            self._logger.warning(str(e))
+            self._logger.critical(str(e))
         finally:
             self._lock.release()
 

@@ -12,6 +12,7 @@ import copy
 import rosparam
 from types import SimpleNamespace
 import os
+import itertools
 
 from movai_core_shared.consts import (
     ROS1_NODELET,
@@ -193,7 +194,7 @@ class FlowMonitor:
                     }
                 )
             except Exception as e:
-                LOGGER.error(e)
+                raise e
 
         return commands_to_launch
 
@@ -211,7 +212,50 @@ class FlowMonitor:
         else:
             for remap in remaps:
                 to_ports = remaps[remap]["To"]
-                from_ports = remaps[remap]["From"]
+                from_ports = remaps[remap]["From"]  
+                
+                ros_to = []
+                ros_from = []
+                remap_links = {}
+                #node_name: str, full_port_name: str, flow: Flow
+                validate_remap_patterns = True
+                
+                for i in from_ports:
+                    if not validate_remap_patterns:
+                        break
+                    j = i.split("/")
+                    k = '/'.join(j[1:-1])
+
+                    if not flow.get_node_inst(j[0]).is_remappable:
+                        validate_remap_patterns = False
+
+                    if self.check_ros_port(j[0],k, flow): 
+                        ros_from.append(i)
+                        for link in flow.graph.graph[i]["links"]:
+                            if link not in remap_links:
+                                remap_links[link]=None
+                    
+                for i in to_ports:
+                    if not validate_remap_patterns:
+                        break
+                    j = i.split("/")
+                    k = '/'.join(j[1:-1])
+ 
+                    if not flow.get_node_inst(j[0]).is_remappable:
+                        validate_remap_patterns = False
+
+                    if self.check_ros_port(j[0],k, flow):
+                        ros_to.append(i)
+                        for link in flow.graph.graph[i]["links"]:
+                            if link not in remap_links:
+                                remap_links[link]=None
+                    
+                if validate_remap_patterns and (len(ros_to) > 1 and len(ros_from) > 1) and not(len(ros_to)*len(ros_from) == len(remap_links.keys())): 
+                    missing_links = self.check_missing_links(ros_to, ros_from, flow)
+                    
+                    LOGGER.error("Flow validator report: \nBad remap pattern detected. The ports: \n- " + '\n- '.join(missing_links.values()) + "\n will receive messages from all of these ports: \n- " + '\n- '.join(missing_links.keys()) +" \n even though some are not connected")
+                    raise Exception("Flow validation failed. Flow will not start")
+
 
                 for port in to_ports + from_ports:
                     p = re.search(LINK_REGEX, port)
@@ -228,7 +272,6 @@ class FlowMonitor:
             self.cached_remaps[flow.name] = output
         if node_name is not None:
             if node_name in output:
-                # flow.get_node_type(node_name)
                 node_type = flow.full.NodeInst[node_name].node_template.Type
                 output_list = []
                 for port_remap, value in output[node_name].items():
@@ -286,6 +329,43 @@ class FlowMonitor:
                 return output_list
             return []
         return output
+
+   
+    def check_missing_links(self, to_ports: list, from_ports: list, flow: Flow) -> dict:
+        linked_ports = set()
+        
+        for i in to_ports:
+
+            link_list = flow.graph.graph[i]["links"]
+            for j in from_ports:
+                for link_id in link_list:
+                    if flow.Links[link_id].From.str == j and flow.Links[link_id].To.str == i:
+                        linked_ports.add((j,i))
+                        
+        all_edges = set(itertools.product(from_ports, to_ports))
+
+        return dict(linked_ports ^ all_edges)
+
+   
+    def check_ros_port(self, node_name: str, port_name: str, flow: Flow) :
+        """
+        function that verifies if a specific port name has a ROS message associated
+            Args:
+                node_name (str): simplified node name (e.g. publisher2)
+                
+                port_name (str): full port name (e.g. publisher2/bool_out/out)
+                
+                flow (Flow): Current flow being analysed where the node received is in
+            
+            Returns:
+                bool: True if port name has a ROS message associateds. False otherwise
+        """
+        node_c = flow.full.NodeInst[node_name].node_template
+        return node_c.PortsInst[port_name].Template.startswith("ROS")
+
+
+
+
 
     def get_node_Parameters(self, node_name: str, flow: Flow, check_plugins: bool = True) -> list:
         """Return node parameters based on type"""
