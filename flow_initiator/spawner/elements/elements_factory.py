@@ -57,7 +57,7 @@ class ElementsFactory:
         """
         if self.orchestrator is None or "container_conf" not in kwargs or len(kwargs["container_conf"]) == 0:
             # if there is no image, it will run on the host as a process
-            elem = ProcessElement(*args, **kwargs)
+            elem = ProcessElement(*args, node_name=kwargs["node"], **kwargs)
         else:
             kwargs.pop("stdin")
             kwargs.pop("stdout")
