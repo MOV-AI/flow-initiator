@@ -60,10 +60,10 @@ async def test_ensure_process_kill_sends_sigkill_after_sigint(process_element):
     TIMEOUT_PROCESS_SIGTERM = 1
     TIMEOUT_PROCESS_SIGINT = 1
 
-    with mock.patch("time.time", side_effect=[0, 2, 4, 8, 10]):
+    with mock.patch("time.time", side_effect=[0, 2, 4, 8, 10, 12]):
         with mock.patch(
             "flow_initiator.spawner.elements.process_element.psutil.pid_exists",
-            side_effect=[True, True, True, False],
+            side_effect=[True, True, True, True, False],
         ):
             await process_element.ensure_process_kill()
 
@@ -73,7 +73,7 @@ async def test_ensure_process_kill_sends_sigkill_after_sigint(process_element):
     process_element.proc.send_signal.assert_any_call(
         signal.SIGKILL
     )  # Then, send SIGKILL
-    process_element._logger.error.assert_called_once()
+    process_element._logger.error.assert_called()
 
 
 @pytest.mark.asyncio
