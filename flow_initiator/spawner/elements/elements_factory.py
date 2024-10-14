@@ -7,7 +7,6 @@
    - Dor Marcous (dor@mova.ai) - 2023
    - Erez Zomer (erez@mov.ai) - 2023
 """
-from os import walk
 from flow_initiator.spawner.elements import (
     ProcessElement,
     ContainerLauncher,
