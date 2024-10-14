@@ -7,6 +7,7 @@
    Developers:
    - Dor Marcous  (dor@mov.ai) - 2021
 """
+
 import asyncio
 import signal
 import time
@@ -126,10 +127,8 @@ class ProcessElement(BaseElement):
 
         """
         return self.proc.returncode
-    
-    async def ensure_process_kill(
-        self, wait_interval: int = 0.5
-    ) -> None:
+
+    async def ensure_process_kill(self, wait_interval: int = 0.5) -> None:
         """Ensure the process dies
         Args:
             wait_interval (int) : time inteval between waits
@@ -170,13 +169,19 @@ class ProcessElement(BaseElement):
             # check if the process is still alive
             if not psutil.pid_exists(self.proc.pid):
                 self._logger.debug(
-                    "Node {} ({}) is not alive anymore, SIGINT sent: {}".format(node_name, str(self.proc.pid), sigint_sent)
+                    "Node {} ({}) is not alive anymore, SIGINT sent: {}".format(
+                        node_name, str(self.proc.pid), sigint_sent
+                    )
                 )
                 return None
 
             # 3. Check if the process needs to be forcefully terminated (SIGINT)
             if current_time > t_max_sigterm and not sigint_sent:
-                self._logger.warning("Sending SIGINT to node {} ({})".format(node_name, str(self.proc.pid)))
+                self._logger.warning(
+                    "Sending SIGINT to node {} ({})".format(
+                        node_name, str(self.proc.pid)
+                    )
+                )
                 self.proc.send_signal(signal.SIGINT)
                 sigint_sent = True
 
@@ -186,5 +191,9 @@ class ProcessElement(BaseElement):
 
             # 4. Check if the process needs to be killed (last call)
             if current_time > t_max_sigint:
-                self._logger.error("Sending SIGKILL to node {} ({})".format(node_name, str(self.proc.pid)))
+                self._logger.error(
+                    "Sending SIGKILL to node {} ({})".format(
+                        node_name, str(self.proc.pid)
+                    )
+                )
                 self.proc.send_signal(signal.SIGKILL)
