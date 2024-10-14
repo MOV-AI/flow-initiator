@@ -145,16 +145,13 @@ class ProcessElement(BaseElement):
         sigint_sent = False
 
         term_time = time.time()
-        print("start Time is now", term_time)
         t_max_sigterm = term_time + timeout_term
         t_max_sigint = term_time + timeout_term + timeout_int
         node_name = self.node_name or "Unknown"
-        print("max", t_max_sigint, t_max_sigterm)
 
         while 1:
             # 1. Get the current time when in a new iteration of the loop
             current_time = time.time()
-            print("Time is now", current_time)
 
             # 2. Check if the process has terminated by itself (return_code is not None)
             return_code = self.proc.returncode
