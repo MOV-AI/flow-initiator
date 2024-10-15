@@ -11,13 +11,13 @@
 import asyncio
 import signal
 import time
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 import psutil
+from movai_core_shared import TIMEOUT_PROCESS_SIGINT, TIMEOUT_PROCESS_SIGTERM
 
 from flow_initiator.spawner.elements import BaseElement
 from flow_initiator.spawner.exceptions import RunError
-from movai_core_shared import TIMEOUT_PROCESS_SIGINT, TIMEOUT_PROCESS_SIGTERM
 
 
 class ProcessElement(BaseElement):
@@ -137,7 +137,8 @@ class ProcessElement(BaseElement):
         Raises:
             Exception: if the process is not killed after the timeout
         Notes:
-          send_terminate_signal() should have been called before this function and sent SIGTERM to the process
+          send_terminate_signal() should have been called before this
+          function and sent SIGTERM to the process
         """
         timeout_term = TIMEOUT_PROCESS_SIGTERM
         timeout_int = TIMEOUT_PROCESS_SIGINT

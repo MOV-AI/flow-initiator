@@ -1,6 +1,7 @@
-import pytest
 import signal
 from unittest import mock
+
+import pytest
 
 from flow_initiator.spawner.elements.process_element import ProcessElement
 
@@ -32,11 +33,6 @@ async def test_ensure_process_kill_sends_sigint(process_element):
     process_element.proc.returncode = None  # Process still running
     process_element.proc.pid = 12345
 
-    # Set shorter timeout values for faster testing
-    global TIMEOUT_PROCESS_SIGTERM, TIMEOUT_PROCESS_SIGINT
-    TIMEOUT_PROCESS_SIGTERM = 1
-    TIMEOUT_PROCESS_SIGINT = 1
-
     with mock.patch("time.time", side_effect=[0, 2, 4, 6]):
         with mock.patch(
             "flow_initiator.spawner.elements.process_element.psutil.pid_exists",
@@ -54,11 +50,6 @@ async def test_ensure_process_kill_sends_sigkill_after_sigint(process_element):
     process_element.proc = mock.Mock()
     process_element.proc.returncode = None  # Process still running
     process_element.proc.pid = 12345
-
-    # Set shorter timeout values for faster testing
-    global TIMEOUT_PROCESS_SIGTERM, TIMEOUT_PROCESS_SIGINT
-    TIMEOUT_PROCESS_SIGTERM = 1
-    TIMEOUT_PROCESS_SIGINT = 1
 
     with mock.patch("time.time", side_effect=[0, 2, 4, 8, 10, 12]):
         with mock.patch(
