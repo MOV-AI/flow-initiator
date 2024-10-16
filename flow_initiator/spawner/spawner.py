@@ -141,8 +141,6 @@ class Spawner:
         """
 
         for regex_object in self.nodes_to_skip:
-            if len(regex_str) == 0:
-                continue
             if regex_object.match(node_name) is not None:
                 return True
         return False
@@ -848,6 +846,8 @@ class Spawner:
         type(self).EMERGENCY_FLAG = True
 
         for regex_str in data.get("nodes_to_skip", []):
+            if len(regex_str) == 0:
+                continue
             self.nodes_to_skip.append(re.compile(regex_str))
 
         tasks = []
