@@ -20,7 +20,7 @@ def main():
     """spawner entrypoint"""
     RedisClient.enable_db("db_global")
 
-    def sig_handler(signal, stackframe):
+    def sig_handler(signal, stackframe):  # noqa
         app.shutdown()
 
     signal.signal(signal.SIGINT, sig_handler)

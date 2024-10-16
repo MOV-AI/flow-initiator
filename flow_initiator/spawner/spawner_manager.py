@@ -33,7 +33,10 @@ def handle_exception(loop: asyncio.AbstractEventLoop, context: dict):
 
     """
     exc = context.get("exception")
-    message = traceback.format_exception(exc) if exc is not None else [context["message"]]
+    if exc:
+        message = traceback.format_exception(etype=type(exc), value=exc, tb=exc.__traceback__)
+    else:
+        message = [context["message"]]
     USER_LOGGER.error("\n" + "".join(message))
 
 
@@ -60,5 +63,6 @@ class SpawnerManager:
         await self.server.spin()
 
     def shutdown(self):
+        """ Shutdown core and ZMQ server """
         self.core.shutdown()
         self.server.stop()

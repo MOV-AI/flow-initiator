@@ -10,10 +10,14 @@
 """
 
 import inspect
-from typing import Any, Callable, Optional, get_type_hints
+from typing import Callable, Optional, get_type_hints
 
 from beartype.door import die_if_unbearable
-from beartype.roar import (BeartypeDecorHintNonpepException, BeartypeDecorHintPepUnsupportedException, BeartypeDoorHintViolation)
+from beartype.roar import (
+    BeartypeDecorHintNonpepException,
+    BeartypeDecorHintPepUnsupportedException,
+    BeartypeDoorHintViolation,
+)
 
 from movai_core_shared.exceptions import ActiveFlowError, CommandError
 from movai_core_shared.logger import Log
@@ -50,6 +54,8 @@ def requires_active_flow(**kwargs) -> bool:
 
 
 def validate_args_against_function(args: dict, func: Callable):
+    """Checks if the types of all the arguments sent match
+    what the function expects (considering its type hints)"""
     # Get the signature of the function
     sig = inspect.signature(func)
 
@@ -59,7 +65,9 @@ def validate_args_against_function(args: dict, func: Callable):
     for key, value in args.items():
         # Check if the key exists in the function's parameters
         if key not in sig.parameters:
-            raise ValueError(f"Unexpected argument '{key}' for function '{func.__name__}'")
+            raise ValueError(
+                f"Unexpected argument '{key}' for function '{func.__name__}'"
+            )
 
         # Check if the key has an associated type hint, and if the type matches
         expected_type = type_hints.get(key)
@@ -70,13 +78,18 @@ def validate_args_against_function(args: dict, func: Callable):
             die_if_unbearable(value, expected_type)
         except BeartypeDecorHintNonpepException:
             # problem with the typing in the codebase, let's just log and move on
-            log.debug("There's a typing problem in the flow-initiator command function '%s'", func)
+            log.debug(
+                "There's a typing problem in the flow-initiator command function '%s'",
+                func,
+            )
         except BeartypeDecorHintPepUnsupportedException:
             # beartype doesn't support this, nothing we can do
             pass
-        except BeartypeDoorHintViolation:
-            raise TypeError(f"Argument '{key}' expected type '{expected_type.__name__}', "
-                            f"but got '{type(value).__name__}'")
+        except BeartypeDoorHintViolation as exc:
+            raise TypeError(
+                f"Argument '{key}' expected type '{expected_type.__name__}', "
+                f"but got '{type(value).__name__}'"
+            ) from exc
 
     # Check if all required arguments are provided
     for param in sig.parameters.values():
@@ -125,7 +138,7 @@ class CommandValidator(dict):
             )
 
     def validate_args(self, **kwargs) -> None:
-        """ Raises a CommandError if the arguments sent don't match what the function expects """
+        """Raises a CommandError if the arguments sent don't match what the function expects"""
 
         args = kwargs.copy()
         command = args.pop("command")
