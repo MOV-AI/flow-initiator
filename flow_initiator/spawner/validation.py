@@ -30,7 +30,7 @@ HELP = 1
 
 def format_msg(error: str, msg: str, kwargs: dict) -> str:
     """Format error message"""
-    return f"\n{error}:\n" f"    {kwargs}\n" f"{msg}"
+    return f"\n{error}:\n    {kwargs}\n{msg}"
 
 
 def requires_active_flow(**kwargs) -> bool:

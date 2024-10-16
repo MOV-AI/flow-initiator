@@ -380,11 +380,9 @@ class Spawner:
         finally:
             self._lock.release()
 
-    async def process_help(self, **_):
+    async def process_help(self):
         """
         Process help command to print out the help menu with all the commands.
-        Args:
-            _: unused args
 
         Returns: None
 
