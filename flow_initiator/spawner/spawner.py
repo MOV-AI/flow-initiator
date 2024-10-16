@@ -11,29 +11,26 @@
 import asyncio
 import concurrent.futures
 import os
-import re
 import pickle
+import re
 import tempfile
 import time
-from typing import Union
 from subprocess import SubprocessError
+from typing import Any, Optional, Union
 
 from beartype import beartype
-
 from dal.helpers.cache import ThreadSafeCache
 from dal.models.lock import Lock
 from dal.models.var import Var
 from dal.scopes.package import Package
 from dal.scopes.robot import Robot
-
+from movai_core_shared.common.utils import is_enterprise
 from movai_core_shared.consts import ROS2_LIFECYCLENODE
 from movai_core_shared.envvars import APP_LOGS, ENVIRON_ROS2
-from movai_core_shared.common.utils import is_enterprise
-from movai_core_shared.logger import Log
 from movai_core_shared.exceptions import CommandError, RunError
+from movai_core_shared.logger import Log
 
-from flow_initiator.spawner.elements import ElementsFactory, BaseElement
-
+from flow_initiator.spawner.elements import BaseElement, ElementsFactory
 
 try:
     # Todo: check if we can remove ros1 dependency
@@ -45,7 +42,6 @@ except ImportError:
 
 from .flowmonitor import FlowMonitor
 from .validation import CommandValidator
-
 
 NETWORK_PREFIX = os.getenv("NETWORK_PREFIX", "MovaiNetwork")
 
@@ -128,7 +124,7 @@ class Spawner:
         initial_state = self.robot.get_states().get("boot", None)
         if initial_state:
             flow_name = initial_state.get("flow", "")
-            asyncio.create_task(self.process_start(command="START", flow=flow_name))
+            asyncio.create_task(self.process_start(flow=flow_name))
 
     def should_skip_node(self, node_name: str) -> bool:
         """
@@ -355,10 +351,11 @@ class Spawner:
         Returns: None
 
         """
-        if type(command_dict) == bytes:
+        if isinstance(command_dict, bytes):
             params = pickle.loads(command_dict)
         else:
             params = command_dict
+
         if not isinstance(params, dict):
             self._logger.error(
                 f"can't parse command {params}, only dict type is acceptable"
@@ -377,7 +374,7 @@ class Spawner:
                 **params, active_flow=self.flow_monitor.active_flow
             )
 
-            await self.commands[params["command"]](**params)
+            await self.commands[params.pop("command")](**params)
         except Exception as e:
             self._logger.critical(str(e))
         finally:
@@ -396,12 +393,10 @@ class Spawner:
         self.commands.print_help()
         self._logger.info("{:^72}".format(" ************************** "))
 
-    async def process_start(self, **kwargs):
+    async def process_start(self, flow=None):
         """Process command START"""
         self.reset_emergency_params()
-        command = kwargs.get("command", None)
-        flow = kwargs.get("flow", None)
-        if not all([command, flow]):
+        if not flow:
             self._logger.error(
                 "START command failed. Format is {}. Other parameters ignored.".format(
                     self.commands.help("START")
@@ -415,7 +410,7 @@ class Spawner:
         del ThreadSafeCache._instance
         ThreadSafeCache._instance = None
         if self.flow_monitor.active_flow is None:
-            self._logger.info("START flow {}".format(kwargs["flow"]))
+            self._logger.info("START flow {}".format(flow))
             # TODO: need to chenage the flow monitor to pass container_conf as a dict
             commands_to_launch = self.flow_monitor.load(flow)
             if len(commands_to_launch) == 0:
@@ -436,11 +431,11 @@ class Spawner:
 
             tasks = []
             try:
-                for command in commands_to_launch:
-                    packages = self.flow_monitor.get_node_packages(command["node"])
+                for command_to_launch in commands_to_launch:
+                    packages = self.flow_monitor.get_node_packages(command_to_launch["node"])
                     await self.dump_packages(packages)
                     tasks.append(
-                        asyncio.create_task(self.launch_element(wait=False, **command))
+                        asyncio.create_task(self.launch_element(wait=False, **command_to_launch))
                     )
 
                 # wait until all are launched
@@ -464,21 +459,17 @@ class Spawner:
                 cmd = ["ros2", "lifecycle", "set", node_name, "activate"]
                 await self.ros2_lifecycle(node_name, cmd)
 
-    async def process_stop(self, **kwargs):
+    async def process_stop(self, flow: Optional[str] = None):
         """
         Process command STOP, to stop flow
         Args:
-            **kwargs:
-                command (str): need to be string with "STOP"
-                flow (str): which flow to stop
+            flow (str): which flow to stop
 
         Returns: None
 
         """
         self.reset_emergency_params()
-        command = kwargs.get("command", None)
-        flow = kwargs.get("flow", None)
-        if not all([command, flow]):
+        if not flow:
             self._logger.error(
                 "STOP command failed. Format is {}. Other parameters ignored.".format(
                     self.commands.help("STOP")
@@ -486,35 +477,29 @@ class Spawner:
             )
             return
         if self.flow_monitor.active_flow is not None:
-            self._logger.info("STOP flow {}".format(kwargs["flow"]))
+            self._logger.info("STOP flow {}".format(flow))
             # asyncio.create_task(self.stop_flow())
             await self.stop_flow()
         else:
             self._logger.error("No flow active. START a flow first.")
 
-    async def process_transition(self, **kwargs):
+    async def process_transition(self, node: Optional[str] = None, port: Optional[str] = None, data: Optional[str] = None, flow: Optional[str] = None):
         """
         Process transition command, to do transition in the flow
         Args:
-            **kwargs:
-                command (str): need to be "TRANS" string
-                node (str): the node that initiated the transition
-                port (str): port name that initiated the transition.
-                data (str): transition message
+            node (str): the node that initiated the transition
+            port (str): port name that initiated the transition.
+            data (str): transition message
+            flow (str): flow name
 
         Returns:
 
         """
-        command = kwargs.get("command", None)
-        node = kwargs.get("node", None)
-        port = kwargs.get("port", None)
-        data = kwargs.get("data", None)
 
         # check if the transition is coming from the current active flow
-        ctx_flow = kwargs.get("flow", None)
-        if ctx_flow != self.flow_monitor.active_flow.Label:
+        if flow != self.flow_monitor.active_flow.Label:
             self._logger.error(
-                f"Transition from node '{node}'' in flow '{ctx_flow}' blocked. Flow '{ctx_flow}' is not running."
+                f"Transition from node '{node}'' in flow '{flow}' blocked. Flow '{flow}' is not running."
             )
             return
 
@@ -525,7 +510,7 @@ class Spawner:
             )
             return
 
-        if not all([command, node, port]):
+        if not all([node, port]):
             self._logger.error(
                 "TRANS command failed. Format is {}. Other parameters ignored.".format(
                     self.commands.help("TRANS")
@@ -590,7 +575,7 @@ class Spawner:
                 cmd = ["ros2", "lifecycle", "set", node_name, "deactivate"]
                 await self.ros2_lifecycle(node_name, cmd)
             else:
-                asyncio.create_task(self.process_kill(node=node_name, command="kill"))
+                asyncio.create_task(self.process_kill(node=node_name))
                 # node_to_kill.kill())
 
         tasks = []
@@ -619,39 +604,38 @@ class Spawner:
                 cmd = ["ros2", "lifecycle", "set", node_name, "activate"]
                 await self.ros2_lifecycle(node_name, cmd)
 
-    async def process_lock(self, **kwargs):
+    async def process_lock(self, data: Optional[dict] = None):
         """
         Process command LOCK
         This command enables Lock heartbeat for a specific Lock
         Args:
-            **kwargs:
-                data (dict): data with the name of the lock
+            data (dict): data with the name of the lock
 
         Returns: None
 
         """
 
         try:
-            data = kwargs.get("data", {})
-
+            if data is None:
+                data = {}
             self.acq_locks.update({data.get("name"): data})
             asyncio.create_task(Lock.enable_heartbeat(**data))
 
         except Exception as e:
             self._logger.error(f"Error while processing LOCK command {str(e)}")
 
-    async def process_unlock(self, **kwargs):
+    async def process_unlock(self, data: Optional[dict] = None):
         """
         Process command UNLOCK
         This command disables Lock heartbeat for a specific Lock
         Args:
-            **kwargs:
-                 data (dict): data with the name of the lock to stop the heartbeat.
+            data (dict): data with the name of the lock to stop the heartbeat.
         Returns: None
 
         """
 
-        data = kwargs.get("data", {})
+        if data is None:
+            data = {}
 
         try:
             Lock.disable_heartbeat(**data)
@@ -663,21 +647,17 @@ class Spawner:
             if "name" in data and data["name"] in self.acq_locks:
                 self.acq_locks.pop(data["name"])
 
-    async def process_run(self, **kwargs):
+    async def process_run(self, node: Optional[str] = None):
         """
         Process command RUN
         It Runs a Node Inst and all its dependencies
         Args:
-            **kwargs:
-                command (str): has to be "RUN" string
-                node (str): the name of the string
+            node (str): the name of the string
 
         Returns: None
 
         """
-        command = kwargs.get("command", None)
-        node = kwargs.get("node", None)
-        if not all([command, node]):
+        if not node:
             self._logger.error(
                 "RUN command failed. Format is {}. Other parameters ignored.".format(
                     self.commands.help("RUN")
@@ -711,23 +691,17 @@ class Spawner:
                 )
         await asyncio.gather(*tasks)
 
-    async def process_kill(self, **kwargs):
+    async def process_kill(self, node: Optional[str] = None, dependencies: Optional[Any] = None) -> None:
         """
         Process command KILL
         It Kills a Node Inst and all its dependencies (if flag dependencies is true)
         Args:
-            **kwargs:
-                command (str): has to be "KILL" string
-                node (str): the name of the string
-        Returns:
-
+            node (str): the name of the string
         """
-        command = kwargs.get("command", None)
-        node = kwargs.get("node", None)
         # TODO: option to kill dependencies
         # dependencies = kwargs.get("dependencies", False)
 
-        if not all([command, node]):
+        if not node:
             self._logger.error(
                 f"KILL command failed. Format is {self.commands.help('KILL')}."
                 f"Other parameters ignored."
@@ -749,7 +723,7 @@ class Spawner:
         await element.kill()
         asyncio.create_task(self.clean_element(element, node))
 
-    async def ros2_lifecycle(self, node_name: str, command):
+    async def ros2_lifecycle(self, node_name: str, command) -> None:
         """Handles ROS2 Lifecycle managed nodes
         create, configure, cleanup, activate, deactivate, shutdown, destroy
         """
@@ -761,7 +735,7 @@ class Spawner:
             *command, stdin=None, stdout=_stdout, env=ENVIRON_ROS2
         )
 
-    async def dump_packages(self, packages: dict):
+    async def dump_packages(self, packages: dict) -> None:
         """Dump package files"""
         # packages: [{"name": package_name, "file": file_name, "path": package_relative_path}, ...]
         dumps = []
@@ -830,18 +804,15 @@ class Spawner:
                         msg_invalid_checksum.format(checksum, file_name)
                     )
 
-    async def process_emergency_set(self, **kwargs):
+    async def process_emergency_set(self, data: Optional[dict] = None) -> None:
         """
         activates EMERGENCY button pressed, all active states will be killed unless it matches
         a specific pattern provided in data in kwargs
         Args:
-            **kwargs:
-                data (dict): a dict with nodes to skip
-
-        Returns: None
-
+            data (dict): a dict with nodes to skip
         """
-        data = kwargs.get("data", {})
+        if data is None:
+            data = {}
         self._logger.info("EMERGENCY BUTTON PRESSED, SET EMERGENCY_FLAG = True")
         type(self).EMERGENCY_FLAG = True
 
@@ -854,19 +825,13 @@ class Spawner:
         for node_name in self.active_states:
             if self.should_skip_node(node_name):
                 continue
-            kwargs_local = {"command": "KILL", "node": node_name}
-            tasks.append(asyncio.create_task(self.process_kill(**kwargs_local)))
+            tasks.append(asyncio.create_task(self.process_kill(node=node_name)))
 
         # wait for all get_keys tasks to run
         await asyncio.gather(*tasks)
 
-    async def process_emergency_unset(self, _):
+    async def process_emergency_unset(self) -> None:
         """
         deactivate EMERGENCY button, unsetting relevant flags
-        Args:
-            _: unused args
-
-        Returns: None
-
         """
         self.reset_emergency_params()

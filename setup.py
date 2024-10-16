@@ -7,6 +7,8 @@ requirements = [
     "aioredis==1.3.1",
     "uvloop==0.14.0",
     "docker==6.1.2",
+    "typeguard",  # used for runtime type checking
+    "importlib-metadata>=4.6.0",  # typeguard breaks if this is too old
     "movai-core-shared==2.5.0.18",
     "data-access-layer==2.5.0.30",
     "gd-node==2.5.0.18"
