@@ -12,7 +12,8 @@
 import inspect
 from typing import Any, Callable, Optional, get_type_hints
 
-from typeguard import check_type, TypeCheckError
+from beartype.door import die_if_unbearable
+from beartype.roar import (BeartypeDecorHintNonpepException, BeartypeDecorHintPepUnsupportedException, BeartypeDoorHintViolation)
 
 from movai_core_shared.exceptions import ActiveFlowError, CommandError
 from movai_core_shared.logger import Log
@@ -62,13 +63,18 @@ def validate_args_against_function(args: dict, func: Callable):
 
         # Check if the key has an associated type hint, and if the type matches
         expected_type = type_hints.get(key)
-
-        if expected_type is Any or not expected_type:
+        if not expected_type:
             continue
 
         try:
-            check_type(value, expected_type)
-        except TypeCheckError:
+            die_if_unbearable(value, expected_type)
+        except BeartypeDecorHintNonpepException:
+            # problem with the typing in the codebase, let's just log and move on
+            log.debug("There's a typing problem in the flow-initiator command function '%s'", func)
+        except BeartypeDecorHintPepUnsupportedException:
+            # beartype doesn't support this, nothing we can do
+            pass
+        except BeartypeDoorHintViolation:
             raise TypeError(f"Argument '{key}' expected type '{expected_type.__name__}', "
                             f"but got '{type(value).__name__}'")
 
