@@ -7,14 +7,15 @@
    Developers:
    - Dor Marcous  (dor@mov.ai) - 2021
 """
-import time
-
 import asyncio
-from abc import abstractmethod, ABC
-from typing import Tuple, Optional
+import time
+from abc import ABC, abstractmethod
+from typing import Optional, Tuple
+
+from movai_core_shared.consts import (TIMEOUT_PROCESS_SIGINT,
+                                      TIMEOUT_PROCESS_SIGTERM)
 
 from flow_initiator.spawner.elements import ElementType
-from movai_core_shared.consts import TIMEOUT_PROCESS_SIGINT, TIMEOUT_PROCESS_SIGTERM
 from flow_initiator.spawner.exceptions import RunError
 
 
@@ -48,7 +49,7 @@ class BaseElement(ABC):
         """
 
     @abstractmethod
-    def kill(self):
+    async def kill(self):
         """
         A kill function for stopping
         Returns:
