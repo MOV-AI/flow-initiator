@@ -5,6 +5,7 @@ pyros-genmsg
 py3rosmsgs
 pytest
 pytest-cov
+pytest-asyncio
 mock
 bump2version
 flake8
