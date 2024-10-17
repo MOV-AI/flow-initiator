@@ -44,7 +44,6 @@ class SpawnerServer(ZMQServer):
         Args:
             buffer (bytes): The buffer that the server was able to read.
         """
-        response_msg = None
         try:
             if len(buffer) == 3:
                 # in case sender just use send
@@ -65,5 +64,5 @@ class SpawnerServer(ZMQServer):
             self._logger.error(f"can't parse command: {buffer}")
             self._logger.error(exc)
             response_msg = "can't parse command: {buffer}".encode("utf8")
-        finally:
-            await self._socket.send_multipart(response_msg)
+
+        await self._socket.send_multipart([response_msg])
