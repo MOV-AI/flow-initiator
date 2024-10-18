@@ -7,9 +7,14 @@
    Developers:
    - Dor Marcous  (dor@mov.ai) - 2021
 """
+
 import asyncio
 import signal
-from typing import Tuple, Optional
+import time
+from typing import Optional, Tuple
+
+import psutil
+from movai_core_shared import TIMEOUT_PROCESS_SIGINT, TIMEOUT_PROCESS_SIGTERM
 
 from flow_initiator.spawner.elements import BaseElement
 from flow_initiator.spawner.exceptions import RunError
@@ -37,6 +42,7 @@ class ProcessElement(BaseElement):
         super().__init__(*args, **kwargs)
         self.cwd = kwargs.get("cwd", None)
         self.env = kwargs.get("env", None)
+        self.node_name = kwargs.get("node_name", None)
         stdout = kwargs.get("stdout", None)
         if self.commands is None or stdout is None:
             self._logger.error("RUN command failed.")
@@ -121,3 +127,71 @@ class ProcessElement(BaseElement):
 
         """
         return self.proc.returncode
+
+    async def ensure_process_kill(self, wait_interval: int = 0.5) -> None:
+        """Ensure the process dies
+        Args:
+            wait_interval (int) : time inteval between waits
+        Returns:
+            None
+        Raises:
+            Exception: if the process is not killed after the timeout
+        Notes:
+          send_terminate_signal() should have been called before this
+          function and sent SIGTERM to the process
+        """
+        timeout_term = TIMEOUT_PROCESS_SIGTERM
+        timeout_int = TIMEOUT_PROCESS_SIGINT
+
+        sigint_sent = False
+
+        term_time = time.time()
+        t_max_sigterm = term_time + timeout_term
+        t_max_sigint = term_time + timeout_term + timeout_int
+        node_name = self.node_name or "Unknown"
+
+        while 1:
+            # 1. Get the current time when in a new iteration of the loop
+            current_time = time.time()
+
+            # 2. Check if the process has terminated by itself (return_code is not None)
+            return_code = self.proc.returncode
+            if return_code is not None:
+                self._logger.debug(
+                    "Node {} ({}) terminated with code {}, SIGINT sent: {}".format(
+                        node_name, str(self.proc.pid), return_code, sigint_sent
+                    )
+                )
+                return return_code
+
+            # check if the process is still alive
+            if not psutil.pid_exists(self.proc.pid):
+                self._logger.debug(
+                    "Node {} ({}) is not alive anymore, SIGINT sent: {}".format(
+                        node_name, str(self.proc.pid), sigint_sent
+                    )
+                )
+                return None
+
+            # 3. Check if the process needs to be forcefully terminated (SIGINT)
+            if current_time > t_max_sigterm and not sigint_sent:
+                self._logger.warning(
+                    "Sending SIGINT to node {} ({})".format(
+                        node_name, str(self.proc.pid)
+                    )
+                )
+                self.proc.send_signal(signal.SIGINT)
+                sigint_sent = True
+
+                # relaunch a new iteration of the loop
+                await asyncio.sleep(wait_interval)
+                continue
+
+            # 4. Check if the process needs to be killed (last call)
+            if current_time > t_max_sigint:
+                self._logger.error(
+                    "Sending SIGKILL to node {} ({})".format(
+                        node_name, str(self.proc.pid)
+                    )
+                )
+                self.proc.send_signal(signal.SIGKILL)

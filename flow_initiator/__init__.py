@@ -8,9 +8,11 @@
 
     Spawner module initialization
 """
-import signal
 import argparse
+import signal
+
 from dal.movaidb import RedisClient
+
 from .spawner import SpawnerManager
 
 
@@ -18,7 +20,9 @@ def main():
     """spawner entrypoint"""
     RedisClient.enable_db("db_global")
 
-    sig_handler = lambda sig, *_: app.shutdown()
+    def sig_handler(signal, stackframe):  # noqa
+        app.shutdown()
+
     signal.signal(signal.SIGINT, sig_handler)
     signal.signal(signal.SIGTERM, sig_handler)
 
