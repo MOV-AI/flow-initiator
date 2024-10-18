@@ -82,7 +82,12 @@ class ProcessElement(BaseElement):
         """
         Destructor to kill all the subprocess.
         """
-        if self.proc.returncode is None:
+        if not self.proc:
+            self._logger.info(
+                "ProcessElement deleted before process was started (node: %s)",
+                self.node_name,
+            )
+        elif self.proc.returncode is None:
             self.proc.kill()
 
     async def wait(self):
