@@ -9,20 +9,28 @@
 """
 
 import unittest
+from unittest import mock
 import pytest
 
+from flow_initiator.spawner.spawner import Spawner
 from movai_core_shared.exceptions import CommandError, ActiveFlowError
 
-from dal.scopes import Robot
-
 from flow_initiator.spawner.validation import CommandValidator
+
 
 class TestSpawner(unittest.TestCase):
     """
     Test spawner
     """
 
-    @pytest.mark.skip(reason="must run as system test")
+    def setUp(self) -> None:
+        with mock.patch("dal.scopes.robot.MovaiDB"):
+            with mock.patch("dal.scopes.robot.MessageClient"):
+                from dal.scopes.robot import Robot
+
+                self.robot = mock.MagicMock(spec=Robot)
+                self.robot.RobotName = "robot_123"
+
     def test_command_validation(self):
         """
         Test get_dict
@@ -42,7 +50,8 @@ class TestSpawner(unittest.TestCase):
             "EMERGENCY_UNSET",
         ]
 
-        validator = CommandValidator({})
+        with mock.patch("flow_initiator.spawner.spawner.open"):
+            validator = Spawner(self.robot).commands
 
         with self.subTest():
             command = {"command": "TRANS", "active_flow": None}
