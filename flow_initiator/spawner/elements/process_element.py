@@ -105,11 +105,6 @@ class ProcessElement(BaseElement):
         self._logger.info(
             "Spawner: Trying to terminate process({})".format(self.proc.pid)
         )
-        try:
-            self.proc.send_signal(signal.SIGINT)
-        except ProcessLookupError:
-            self._logger.warning("can't kill process can't found it")
-
         await self.ensure_process_kill()
 
     def send_terminate_signal(self):
@@ -179,13 +174,12 @@ class ProcessElement(BaseElement):
                 return None
 
             # 3. Check if the process needs to be forcefully terminated (SIGINT)
-            if current_time > t_max_sigterm and not sigint_sent:
+            if current_time > t_max_sigterm and current_time <= t_max_sigint:
+                signal_to_send = signal.SIGINT if not sigint_sent else signal.SIGTERM
                 self._logger.warning(
-                    "Sending SIGINT to node {} ({})".format(
-                        node_name, str(self.proc.pid)
-                    )
+                    f"Sending {signal_to_send.name} to node {node_name} ({self.proc.pid})"
                 )
-                self.proc.send_signal(signal.SIGINT)
+                self.proc.send_signal(signal_to_send)
                 sigint_sent = True
 
                 # relaunch a new iteration of the loop
@@ -200,3 +194,4 @@ class ProcessElement(BaseElement):
                     )
                 )
                 self.proc.send_signal(signal.SIGKILL)
+                await asyncio.sleep(wait_interval)
